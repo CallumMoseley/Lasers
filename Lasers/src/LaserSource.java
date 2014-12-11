@@ -19,6 +19,11 @@ public class LaserSource
 		this.direction = direction;
 	}
 	
+	public int getDirection()
+	{
+		return direction;
+	}
+	
 	public static void loadSprite(String file)
 	{
 		try

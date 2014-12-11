@@ -8,12 +8,34 @@ public class Level
 	private ArrayList<Block> blocks;
 	private ArrayList<Mirror> mirrors;
 	private ArrayList<LaserSource> sources;
+	private boolean isSimulating;
 	
 	public Level()
 	{
 		 blocks = new ArrayList<Block>();
 		 mirrors = new ArrayList<Mirror>();
 		 sources = new ArrayList<LaserSource>();
+		 
+		 isSimulating = false;
+	}
+
+	public boolean runLaser()
+	{
+		isSimulating = true;
+		ArrayList<Vector2> laser = new ArrayList<Vector2>();
+		laser.add(new Vector2(sources.get(0).getDirection() * 90));
+		
+		boolean wallHit = false;
+		
+		// Simulate the laser bouncing until it hits a wall
+		while (!wallHit)
+		{
+			// Check for collisions
+			
+			// Reflect if mirror	
+		}
+		
+		return true;
 	}
 	
 	public void loadLevel(String file)
@@ -61,6 +83,11 @@ public class Level
 		for (int source = 0; source < sources.size(); source++)
 		{
 			sources.get(source).draw(g);
+		}
+		
+		if (isSimulating)
+		{
+			// Draw lasers
 		}
 	}
 }

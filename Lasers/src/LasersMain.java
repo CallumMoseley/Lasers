@@ -1,5 +1,5 @@
 /**
- * A puzzle game made for an ICS3U6 project
+ * A puzzle game made for ICS3U as a final project
  * The goal of the game is to place mirrors in a level to reflect a laser to a target
  * @author Callum Moseley
  * @version December 2014

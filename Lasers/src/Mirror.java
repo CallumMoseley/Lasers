@@ -13,15 +13,22 @@ public class Mirror
 	private int x;
 	private int y;
 	private int angle;
+	private Vector2 normal;
 	
 	public Mirror(int x, int y, int angle)
 	{
 		this.x = x;
 		this.y = y;
 		this.angle = angle;
+		normal = new Vector2(angle).getNormalized();
 	}
 	
-	static void loadSprite(String file)
+	public Vector2 reflect(Vector2 incident)
+	{
+		return Vector2.reflect(incident, normal);
+	}
+	
+	public static void loadSprite(String file)
 	{
 		try
 		{
