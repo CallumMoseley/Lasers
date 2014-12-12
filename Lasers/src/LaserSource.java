@@ -40,4 +40,14 @@ public class LaserSource
 	{
 		g.drawImage(sprite, x * 32, y * 32, null);
 	}
+
+	public int getX()
+	{
+		return x;
+	}
+
+	public int getY()
+	{
+		return y;
+	}
 }

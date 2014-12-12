@@ -1,3 +1,6 @@
+import java.awt.Color;
+import java.awt.Graphics;
+
 public class Ray
 {
 	private double x;
@@ -32,5 +35,11 @@ public class Ray
 	public Vector2 getVector()
 	{
 		return vector;
+	}
+
+	public void draw(Graphics g)
+	{
+		g.setColor(Color.RED);
+		g.drawLine((int)x, (int)y, (int)(x + vector.getX()), (int)(y + vector.getY()));
 	}
 }

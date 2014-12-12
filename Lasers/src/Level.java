@@ -8,6 +8,7 @@ public class Level
 	private ArrayList<Block> blocks;
 	private ArrayList<Mirror> mirrors;
 	private ArrayList<LaserSource> sources;
+	private ArrayList<Ray> laser;
 	private boolean isSimulating;
 	
 	public Level()
@@ -15,6 +16,7 @@ public class Level
 		 blocks = new ArrayList<Block>();
 		 mirrors = new ArrayList<Mirror>();
 		 sources = new ArrayList<LaserSource>();
+		 laser = new ArrayList<Ray>();
 		 
 		 isSimulating = false;
 	}
@@ -22,17 +24,18 @@ public class Level
 	public boolean runLaser()
 	{
 		isSimulating = true;
-		ArrayList<Vector2> laser = new ArrayList<Vector2>();
-		laser.add(new Vector2(sources.get(0).getDirection() * 90));
+		laser.add(new Ray(sources.get(0).getX() * 32 + 14, sources.get(0).getY() * 32 + 15, new Vector2(sources.get(0).getDirection() * 90 + 1)));
+		laser.get(0).getVector().multiply(500);
 		
-		boolean wallHit = false;
+		boolean wallHit = true;
 		
 		// Simulate the laser bouncing until it hits a wall
 		while (!wallHit)
 		{
 			// Check for collisions
 			
-			// Reflect if mirror	
+			// Reflect if mirror
+			// Add reflection to laser
 		}
 		
 		return true;
@@ -68,6 +71,7 @@ public class Level
 		{
 			e.printStackTrace();
 		}
+		runLaser();
 	}
 
 	public void draw(Graphics g)
@@ -84,10 +88,9 @@ public class Level
 		{
 			sources.get(source).draw(g);
 		}
-		
-		if (isSimulating)
+		for (int laserSeg = 0; laserSeg < laser.size(); laserSeg++)
 		{
-			// Draw lasers
+			laser.get(laserSeg).draw(g);
 		}
 	}
 }

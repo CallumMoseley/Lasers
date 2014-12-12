@@ -15,6 +15,12 @@ public class Vector2
 		this.y = y;
 	}
 	
+	public Vector2(double angle)
+	{
+		y = Math.sin(Math.toRadians(angle));
+		x = Math.cos(Math.toRadians(angle));
+	}
+	
 	public double getX()
 	{
 		return x;
@@ -23,12 +29,6 @@ public class Vector2
 	public double getY()
 	{
 		return y;
-	}
-	
-	public Vector2(double angle)
-	{
-		y = Math.sin(angle);
-		x = Math.cos(angle);
 	}
 	
 	public void add(Vector2 v)
