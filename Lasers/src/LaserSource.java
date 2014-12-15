@@ -12,6 +12,12 @@ public class LaserSource
 	private int y;
 	private int direction;
 	
+	/**
+	 * Initializes the laser source with position and direction
+	 * @param x the x coordinate of the laser source
+	 * @param y the y coordinate of the laser source
+	 * @param direction the direction of the laser source
+	 */
 	public LaserSource(int x, int y, int direction)
 	{
 		this.x = x;
@@ -19,11 +25,19 @@ public class LaserSource
 		this.direction = direction;
 	}
 	
+	/**
+	 * Gets the direction of the laser source object
+	 * @return the direction
+	 */
 	public int getDirection()
 	{
 		return direction;
 	}
 	
+	/**
+	 * Loads an image as the sprite for all laser source objects
+	 * @param file the file name of the image to load 
+	 */
 	public static void loadSprite(String file)
 	{
 		try
@@ -36,16 +50,28 @@ public class LaserSource
 		}
 	}
 
+	/**
+	 * Draws the laser source
+	 * @param g the graphics object to draw with
+	 */
 	public void draw(Graphics g)
 	{
-		g.drawImage(sprite, x * 32, y * 32, null);
+		g.drawImage(sprite, x, y, null);
 	}
 
+	/**
+	 * Gets the x coordinate
+	 * @return the x coordinate
+	 */
 	public int getX()
 	{
 		return x;
 	}
 
+	/**
+	 * Gets the y coordinate
+	 * @return the y coordinate
+	 */
 	public int getY()
 	{
 		return y;

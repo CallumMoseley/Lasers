@@ -5,42 +5,79 @@ import java.util.ArrayList;
 
 public class Level
 {
+	private final int SQUARE_SIZE = 32;
+
 	private ArrayList<Block> blocks;
 	private ArrayList<Mirror> mirrors;
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
 	private boolean isSimulating;
-	
+
 	public Level()
 	{
-		 blocks = new ArrayList<Block>();
-		 mirrors = new ArrayList<Mirror>();
-		 sources = new ArrayList<LaserSource>();
-		 laser = new ArrayList<Ray>();
-		 
-		 isSimulating = false;
+		blocks = new ArrayList<Block>();
+		mirrors = new ArrayList<Mirror>();
+		sources = new ArrayList<LaserSource>();
+		laser = new ArrayList<Ray>();
+
+		isSimulating = false;
 	}
 
 	public boolean runLaser()
 	{
 		isSimulating = true;
-		laser.add(new Ray(sources.get(0).getX() * 32 + 14, sources.get(0).getY() * 32 + 15, new Vector2(sources.get(0).getDirection() * 90 + 1)));
-		laser.get(0).getVector().multiply(500);
-		
-		boolean wallHit = true;
-		
-		// Simulate the laser bouncing until it hits a wall
-		while (!wallHit)
+
+		// Get the first laser segment, from the source
+		laser.add(new Ray(new Vector2(sources.get(0).getX() + 14, sources
+				.get(0).getY() + 15), new Vector2(
+				sources.get(0).getDirection() * 90)));
+		laser.get(0).getDirection().multiply(500);
+
+		Ray current = laser.get(0);
+		boolean isMirror = true;
+
+		// Simulate the laser bouncing while it hits mirrors
+		while (isMirror)
 		{
-			// Check for collisions
-			
-			// Reflect if mirror
-			// Add reflection to laser
+			isMirror = false;
+			boolean isTarget = false;
+
+			Vector2 closest = new Vector2(Double.POSITIVE_INFINITY,
+					Double.POSITIVE_INFINITY);
+			Vector2 closestDifference = Vector2.subtract(closest,
+					current.getDirection());
+
+			// Check for block collisions
+			for (int block = 0; block < blocks.size(); block++)
+			{
+				Vector2 collision = current.intersects(blocks.get(block));
+				if (!collision.equals(new Vector2(Double.POSITIVE_INFINITY,
+						Double.POSITIVE_INFINITY)))
+				{
+					Vector2 difference = Vector2.subtract(collision,
+							current.getPosition());
+					if (difference.getLength() < Vector2.subtract(closest,
+							current.getPosition()).getLength())
+					{
+						closest = collision;
+						closestDifference = difference;
+					}
+				}
+			}
+
+			current.getDirection().normalize();
+			current.getDirection().multiply(closestDifference.getLength());
+
+			if (isMirror)
+			{
+				// Calculate reflection
+				// Add reflected ray to laser
+			}
 		}
-		
+
 		return true;
 	}
-	
+
 	public void loadLevel(String file)
 	{
 		try
@@ -55,11 +92,13 @@ public class Level
 					char nextCh = line.charAt(pos);
 					if (nextCh == 'X')
 					{
-						blocks.add(new Block(pos, lineNo));
+						blocks.add(new Block(pos * SQUARE_SIZE, lineNo
+								* SQUARE_SIZE));
 					}
 					else if (nextCh == 'L')
 					{
-						sources.add(new LaserSource(pos, lineNo, 0));
+						sources.add(new LaserSource(pos * SQUARE_SIZE, lineNo
+								* SQUARE_SIZE, 0));
 					}
 				}
 				line = br.readLine();

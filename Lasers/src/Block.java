@@ -11,12 +11,31 @@ public class Block
 	private int x;
 	private int y;
 	
+	/**
+	 * Initializes the block
+	 * @param x the x coordinate of the block
+	 * @param y the y coordinate of the block
+	 */
 	public Block(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
 	}
 	
+	public int getX()
+	{
+		return x;
+	}
+	
+	public int getY()
+	{
+		return y;
+	}
+	
+	/**
+	 * Loads an image file for all blocks
+	 * @param file the filename of the image
+	 */
 	public static void loadSprite(String file)
 	{
 		try
@@ -29,8 +48,12 @@ public class Block
 		}
 	}
 
+	/**
+	 * Draws the block
+	 * @param g the graphics object to draw with
+	 */
 	public void draw(Graphics g)
 	{
-		g.drawImage(sprite, 32 * x, 32 * y, null);
+		g.drawImage(sprite, x, y, null);
 	}
 }
