@@ -31,6 +31,11 @@ public class Ray
 		return new Vector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 
+	public Vector2 intersects(Mirror mirror)
+	{
+		return new Vector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+	}
+
 	public Vector2 getPosition()
 	{
 		return pos;

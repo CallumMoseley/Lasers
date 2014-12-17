@@ -1,3 +1,10 @@
+/**
+ * Contains all the data for a the current level loaded in the game, as well as handling running logic
+ * 
+ * @author Callum Moseley
+ * @version 2014-12-17
+ */
+
 import java.awt.Graphics;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -5,6 +12,10 @@ import java.util.ArrayList;
 
 public class Level
 {
+	private final int NONE = 0;
+	private final int BLOCK = 1;
+	private final int MIRROR = 2;
+	private final int TARGET = 3;
 	private final int SQUARE_SIZE = 32;
 
 	private ArrayList<Block> blocks;
@@ -23,6 +34,12 @@ public class Level
 		isSimulating = false;
 	}
 
+	/**
+	 * Simulates all lasers being emitted and reflecting off mirrors, until the
+	 * laser hits an opaque object. Also finds whether the laser hit all
+	 * targets.
+	 * @return whether all targets were hit or not
+	 */
 	public boolean runLaser()
 	{
 		isSimulating = true;
@@ -34,14 +51,14 @@ public class Level
 		laser.get(0).getDirection().multiply(500);
 
 		Ray current = laser.get(0);
-		boolean isMirror = true;
+		int objectHit = NONE;
 
-		// Simulate the laser bouncing while it hits mirrors
-		while (isMirror)
+		// Simulate the laser bouncing while it hits mirrors. Finds the point of
+		// intersection first with all blocks, then all mirrors, then all
+		// targets. The interaction that is handled will be the closest one to
+		// the current laser segment's point.
+		while (objectHit == MIRROR)
 		{
-			isMirror = false;
-			boolean isTarget = false;
-
 			Vector2 closest = new Vector2(Double.POSITIVE_INFINITY,
 					Double.POSITIVE_INFINITY);
 			Vector2 closestDifference = Vector2.subtract(closest,
@@ -56,11 +73,29 @@ public class Level
 				{
 					Vector2 difference = Vector2.subtract(collision,
 							current.getPosition());
-					if (difference.getLength() < Vector2.subtract(closest,
-							current.getPosition()).getLength())
+					if (difference.getLength() < closestDifference.getLength())
 					{
 						closest = collision;
 						closestDifference = difference;
+						objectHit = BLOCK;
+					}
+				}
+			}
+
+			// Check for mirror collisions
+			for (int mirror = 0; mirror < blocks.size(); mirror++)
+			{
+				Vector2 collision = current.intersects(mirrors.get(mirror));
+				if (!collision.equals(new Vector2(Double.POSITIVE_INFINITY,
+						Double.POSITIVE_INFINITY)))
+				{
+					Vector2 difference = Vector2.subtract(collision,
+							current.getPosition());
+					if (difference.getLength() < closestDifference.getLength())
+					{
+						closest = collision;
+						closestDifference = difference;
+						objectHit = MIRROR;
 					}
 				}
 			}
@@ -68,7 +103,7 @@ public class Level
 			current.getDirection().normalize();
 			current.getDirection().multiply(closestDifference.getLength());
 
-			if (isMirror)
+			if (objectHit == MIRROR)
 			{
 				// Calculate reflection
 				// Add reflected ray to laser

@@ -32,7 +32,7 @@ public class LaserPanel extends JPanel
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		if (inGame)
 		{
-			currentLevel.draw(g);
+			currentLevel.draw(g); 
 		}
 	}
 }
