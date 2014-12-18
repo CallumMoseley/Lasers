@@ -33,7 +33,7 @@ public class Ray
 
 	public Vector2 intersects(Mirror mirror)
 	{
-		return new Vector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+		return new Vector2(dir.getX(), dir.getY());
 	}
 
 	public Vector2 getPosition()

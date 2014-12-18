@@ -20,7 +20,7 @@ public class Mirror
 		this.x = x;
 		this.y = y;
 		this.angle = angle;
-		normal = new Vector2(angle).getNormalized();
+		normal = new Vector2(angle + 135).getNormalized();
 	}
 	
 	public Vector2 reflect(Vector2 incident)

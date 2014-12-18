@@ -30,6 +30,8 @@ public class Level
 		mirrors = new ArrayList<Mirror>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
+		
+		mirrors.add(new Mirror(534, 255, 0));
 
 		isSimulating = false;
 	}
@@ -57,12 +59,14 @@ public class Level
 		// intersection first with all blocks, then all mirrors, then all
 		// targets. The interaction that is handled will be the closest one to
 		// the current laser segment's point.
-		while (objectHit == MIRROR)
+		do
 		{
 			Vector2 closest = new Vector2(Double.POSITIVE_INFINITY,
 					Double.POSITIVE_INFINITY);
 			Vector2 closestDifference = Vector2.subtract(closest,
 					current.getDirection());
+			
+			int mirrorHit = -1;
 
 			// Check for block collisions
 			for (int block = 0; block < blocks.size(); block++)
@@ -83,7 +87,7 @@ public class Level
 			}
 
 			// Check for mirror collisions
-			for (int mirror = 0; mirror < blocks.size(); mirror++)
+			for (int mirror = 0; mirror < mirrors.size(); mirror++)
 			{
 				Vector2 collision = current.intersects(mirrors.get(mirror));
 				if (!collision.equals(new Vector2(Double.POSITIVE_INFINITY,
@@ -96,6 +100,7 @@ public class Level
 						closest = collision;
 						closestDifference = difference;
 						objectHit = MIRROR;
+						mirrorHit = mirror;
 					}
 				}
 			}
@@ -105,10 +110,16 @@ public class Level
 
 			if (objectHit == MIRROR)
 			{
-				// Calculate reflection
-				// Add reflected ray to laser
+				// Calculate reflected ray
+				Vector2 newDir = mirrors.get(mirrorHit).reflect(current.getDirection());
+				Vector2 newPos = Vector2.add(current.getPosition(), current.getDirection());
+				
+				Ray newRay = new Ray(newPos, newDir);
+
+				// Append the new ray to the current laser
+				laser.add(newRay);
 			}
-		}
+		} while (/*objectHit == MIRROR*/false);
 
 		return true;
 	}
@@ -162,9 +173,12 @@ public class Level
 		{
 			sources.get(source).draw(g);
 		}
-		for (int laserSeg = 0; laserSeg < laser.size(); laserSeg++)
+		if (isSimulating)
 		{
-			laser.get(laserSeg).draw(g);
+			for (int laserSeg = 0; laserSeg < laser.size(); laserSeg++)
+			{
+				laser.get(laserSeg).draw(g);
+			}
 		}
 	}
 }
