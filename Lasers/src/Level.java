@@ -31,11 +31,13 @@ public class Level
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
 		
-		mirrors.add(new Mirror(534, 255, 0));
+		mirrors.add(new Mirror(500, 250, 30));
+		mirrors.add(new Mirror(250, 410, 90));
+		mirrors.add(new Mirror(120, 585, 10));
 
 		isSimulating = false;
 	}
-
+	
 	/**
 	 * Simulates all lasers being emitted and reflecting off mirrors, until the
 	 * laser hits an opaque object. Also finds whether the laser hit all
@@ -52,7 +54,6 @@ public class Level
 				sources.get(0).getDirection() * 90)));
 		laser.get(0).getDirection().multiply(500);
 
-		Ray current = laser.get(0);
 		int objectHit = NONE;
 
 		// Simulate the laser bouncing while it hits mirrors. Finds the point of
@@ -61,11 +62,13 @@ public class Level
 		// the current laser segment's point.
 		do
 		{
+			Ray current = laser.get(laser.size() - 1);
 			Vector2 closest = new Vector2(Double.POSITIVE_INFINITY,
 					Double.POSITIVE_INFINITY);
 			Vector2 closestDifference = Vector2.subtract(closest,
 					current.getDirection());
 			
+			objectHit = NONE;
 			int mirrorHit = -1;
 
 			// Check for block collisions
@@ -77,7 +80,7 @@ public class Level
 				{
 					Vector2 difference = Vector2.subtract(collision,
 							current.getPosition());
-					if (difference.getLength() < closestDifference.getLength())
+					if (difference.getLength() > 1 && difference.getLength() < closestDifference.getLength())
 					{
 						closest = collision;
 						closestDifference = difference;
@@ -95,7 +98,7 @@ public class Level
 				{
 					Vector2 difference = Vector2.subtract(collision,
 							current.getPosition());
-					if (difference.getLength() < closestDifference.getLength())
+					if (difference.getLength() > 1 && difference.getLength() < closestDifference.getLength())
 					{
 						closest = collision;
 						closestDifference = difference;
@@ -106,7 +109,14 @@ public class Level
 			}
 
 			current.getDirection().normalize();
-			current.getDirection().multiply(closestDifference.getLength());
+			if (closestDifference.getLength() != Double.POSITIVE_INFINITY)
+			{
+				current.getDirection().multiply(closestDifference.getLength());
+			}
+			else
+			{
+				current.getDirection().multiply(1000);
+			}
 
 			if (objectHit == MIRROR)
 			{
@@ -119,7 +129,7 @@ public class Level
 				// Append the new ray to the current laser
 				laser.add(newRay);
 			}
-		} while (/*objectHit == MIRROR*/false);
+		} while (objectHit == MIRROR);
 
 		return true;
 	}

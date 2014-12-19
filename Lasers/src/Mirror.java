@@ -28,6 +28,21 @@ public class Mirror
 		return Vector2.reflect(incident, normal);
 	}
 	
+	public int getX()
+	{
+		return x;
+	}
+	
+	public int getY()
+	{
+		return y;
+	}
+	
+	public int getAngle()
+	{
+		return angle;
+	}
+	
 	public static void loadSprite(String file)
 	{
 		try

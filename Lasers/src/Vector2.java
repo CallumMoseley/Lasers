@@ -85,6 +85,11 @@ public class Vector2
 	{
 		return Math.toDegrees(Math.atan(y / x));
 	}
+	
+	public Vector2 clone()
+	{
+		return new Vector2(x, y);
+	}
 
 	// Static methods
 
@@ -111,6 +116,11 @@ public class Vector2
 	public static double dotProduct(Vector2 a, Vector2 b)
 	{
 		return a.dotProduct(b);
+	}
+	
+	public static double crossProduct(Vector2 a, Vector2 b)
+	{
+		return a.x * b.y - a.y * b.x;
 	}
 
 	public static Vector2 reflect(Vector2 incident, Vector2 normal)
