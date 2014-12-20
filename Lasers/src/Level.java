@@ -2,7 +2,7 @@
  * Contains all the data for a the current level loaded in the game, as well as handling running logic
  * 
  * @author Callum Moseley
- * @version 2014-12-17
+ * @version December 2014
  */
 
 import java.awt.Graphics;
@@ -134,6 +134,10 @@ public class Level
 		return true;
 	}
 
+	/**
+	 * Loads a level from a file
+	 * @param file the filename of the file containing the level
+	 */
 	public void loadLevel(String file)
 	{
 		try
@@ -141,16 +145,20 @@ public class Level
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = br.readLine();
 			int lineNo = 0;
+			// Read every line and process its characters
 			while (line != null && !line.equals(""))
 			{
+				// Read every character, and add the object
 				for (int pos = 0; pos < line.length(); pos++)
 				{
 					char nextCh = line.charAt(pos);
+					// X's are solid blocks
 					if (nextCh == 'X')
 					{
 						blocks.add(new Block(pos * SQUARE_SIZE, lineNo
 								* SQUARE_SIZE));
 					}
+					// L's are laser sources
 					else if (nextCh == 'L')
 					{
 						sources.add(new LaserSource(pos * SQUARE_SIZE, lineNo
@@ -166,9 +174,15 @@ public class Level
 		{
 			e.printStackTrace();
 		}
+		
+		// Uhh... don't mind this
 		runLaser();
 	}
 
+	/**
+	 * Draws the level and all of it's objects
+	 * @param g the graphics objcet to draw with
+	 */
 	public void draw(Graphics g)
 	{
 		for (int block = 0; block < blocks.size(); block++)

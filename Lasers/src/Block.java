@@ -22,11 +22,19 @@ public class Block
 		this.y = y;
 	}
 	
+	/**
+	 * Gets the x coordinate of this block
+	 * @return the x coordinate of this block
+	 */
 	public int getX()
 	{
 		return x;
 	}
-	
+
+	/**
+	 * Gets the y coordinate of this block
+	 * @return the y coordinate of this block
+	 */
 	public int getY()
 	{
 		return y;
