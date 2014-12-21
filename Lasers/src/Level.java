@@ -12,30 +12,22 @@ import java.util.ArrayList;
 
 public class Level
 {
-	private final int NONE = 0;
-	private final int BLOCK = 1;
-	private final int MIRROR = 2;
-	private final int TARGET = 3;
 	private final int SQUARE_SIZE = 32;
 
-	private ArrayList<Block> blocks;
-	private ArrayList<Target> targets;
-	private ArrayList<Mirror> mirrors;
+	private ArrayList<Collidable> collidable;
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
 	private boolean isSimulating;
 
 	public Level()
 	{
-		blocks = new ArrayList<Block>();
-		mirrors = new ArrayList<Mirror>();
+		collidable = new ArrayList<Collidable>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
-		targets = new ArrayList<Target>();
 
-		mirrors.add(new Mirror(500, 250, 30));
-		mirrors.add(new Mirror(250, 410, 90));
-		mirrors.add(new Mirror(120, 585, 10));
+		collidable.add(new Mirror(500, 250, 30));
+		collidable.add(new Mirror(250, 410, 90));
+		collidable.add(new Mirror(120, 585, 10));
 
 		isSimulating = false;
 	}
@@ -56,7 +48,7 @@ public class Level
 				sources.get(0).getDirection() * 90)));
 		laser.get(0).getDirection().multiply(500);
 
-		int objectHit = NONE;
+		int objectHit;
 
 		// Simulate the laser bouncing while it hits mirrors. Finds the point of
 		// intersection first with all blocks, then all mirrors, then all
@@ -70,13 +62,12 @@ public class Level
 			Vector2 closestDifference = Vector2.subtract(closest,
 					current.getDirection());
 
-			objectHit = NONE;
-			int mirrorHit = -1;
+			objectHit = -1;
 
-			// Check for block collisions
-			for (int block = 0; block < blocks.size(); block++)
+			// Check for collisions
+			for (int object = 0; object < collidable.size(); object++)
 			{
-				Vector2 collision = current.intersects(blocks.get(block));
+				Vector2 collision = collidable.get(object).intersects(current);
 				if (collision.getLength() != Double.POSITIVE_INFINITY)
 				{
 					Vector2 difference = Vector2.subtract(collision,
@@ -87,46 +78,7 @@ public class Level
 					{
 						closest = collision;
 						closestDifference = difference;
-						objectHit = BLOCK;
-					}
-				}
-			}
-			
-			// Check for target collisions
-			for (int target = 0; target < targets.size(); target++)
-			{
-				Vector2 collision = current.intersects(targets.get(target));
-				if (collision.getLength() != Double.POSITIVE_INFINITY)
-				{
-					Vector2 difference = Vector2.subtract(collision,
-							current.getPosition());
-					if (difference.getLength() > 1
-							&& difference.getLength() < closestDifference
-									.getLength())
-					{
-						closest = collision;
-						closestDifference = difference;
-						objectHit = BLOCK;
-					}
-				}
-			}
-
-			// Check for mirror collisions
-			for (int mirror = 0; mirror < mirrors.size(); mirror++)
-			{
-				Vector2 collision = current.intersects(mirrors.get(mirror));
-				if (collision.getLength() != Double.POSITIVE_INFINITY)
-				{
-					Vector2 difference = Vector2.subtract(collision,
-							current.getPosition());
-					if (difference.getLength() > 1
-							&& difference.getLength() < closestDifference
-									.getLength())
-					{
-						closest = collision;
-						closestDifference = difference;
-						objectHit = MIRROR;
-						mirrorHit = mirror;
+						objectHit = object;
 					}
 				}
 			}
@@ -141,10 +93,10 @@ public class Level
 				current.getDirection().multiply(1000);
 			}
 
-			if (objectHit == MIRROR)
+			if (objectHit >= 0 && collidable.get(objectHit).isReflective())
 			{
 				// Calculate reflected ray
-				Vector2 newDir = mirrors.get(mirrorHit).reflect(
+				Vector2 newDir = collidable.get(objectHit).reflect(
 						current.getDirection());
 				Vector2 newPos = Vector2.add(current.getPosition(),
 						current.getDirection());
@@ -155,7 +107,7 @@ public class Level
 				laser.add(newRay);
 			}
 		}
-		while (objectHit == MIRROR);
+		while (objectHit >= 0 && collidable.get(objectHit).isReflective());
 
 		return new boolean[] { true };
 	}
@@ -181,7 +133,7 @@ public class Level
 					// X's are solid blocks
 					if (nextCh == 'X')
 					{
-						blocks.add(new Block(pos * SQUARE_SIZE, lineNo
+						collidable.add(new Block(pos * SQUARE_SIZE, lineNo
 								* SQUARE_SIZE));
 					}
 					// L's are laser sources
@@ -193,13 +145,13 @@ public class Level
 					// T's are non-reflective targets
 					else if (nextCh == 'T')
 					{
-						targets.add(new Target(pos * SQUARE_SIZE, lineNo
+						collidable.add(new Target(pos * SQUARE_SIZE, lineNo
 								* SQUARE_SIZE, false));
 					}
 					// R's are reflective targets
 					else if (nextCh == 'R')
 					{
-						targets.add(new Target(pos * SQUARE_SIZE, lineNo
+						collidable.add(new Target(pos * SQUARE_SIZE, lineNo
 								* SQUARE_SIZE, true));
 					}
 					// Anything else is blank
@@ -224,13 +176,9 @@ public class Level
 	 */
 	public void draw(Graphics g)
 	{
-		for (int block = 0; block < blocks.size(); block++)
+		for (int object = 0; object < collidable.size(); object++)
 		{
-			blocks.get(block).draw(g);
-		}
-		for (int mirror = 0; mirror < mirrors.size(); mirror++)
-		{
-			mirrors.get(mirror).draw(g);
+			collidable.get(object).draw(g);
 		}
 		for (int source = 0; source < sources.size(); source++)
 		{

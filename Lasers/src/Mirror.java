@@ -7,20 +7,25 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Mirror
+public class Mirror extends Collidable
 {
 	private static Image sprite;
-	private int x;
-	private int y;
 	private int angle;
 	private Vector2 normal;
 	
 	public Mirror(int x, int y, int angle)
 	{
-		this.x = x;
-		this.y = y;
+		super(x, y, false, true);
 		this.angle = angle;
 		normal = new Vector2(angle + 135).getNormalized();
+	}
+	
+	public Vector2 intersects(Ray r)
+	{
+		Vector2 p1 = new Vector2(getX(), getY());
+		Vector2 p2 = Vector2.multiply(new Vector2(getAngle() + 45),
+				Math.sqrt(32 * 32 + 32 * 32));
+		return r.intersects(p1, p2);
 	}
 	
 	public Vector2 reflect(Vector2 incident)
@@ -28,21 +33,22 @@ public class Mirror
 		return Vector2.reflect(incident, normal);
 	}
 	
-	public int getX()
-	{
-		return x;
-	}
-	
-	public int getY()
-	{
-		return y;
-	}
-	
 	public int getAngle()
 	{
 		return angle;
 	}
 	
+	public void draw(Graphics g)
+	{
+		AffineTransform af = AffineTransform.getTranslateInstance(getX(), getY());
+		af.rotate(Math.toRadians(angle));
+		((Graphics2D)g).drawImage(sprite, af, null);
+	}
+
+	/**
+	 * Loads an image file for all of this object
+	 * @param file the filename of the image
+	 */
 	public static void loadSprite(String file)
 	{
 		try
@@ -53,12 +59,5 @@ public class Mirror
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	public void draw(Graphics g)
-	{
-		AffineTransform af = AffineTransform.getTranslateInstance(x, y);
-		af.rotate(Math.toRadians(angle));
-		((Graphics2D)g).drawImage(sprite, af, null);
 	}
 }
