@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.JPanel;
 
@@ -16,10 +18,13 @@ public class LaserPanel extends JPanel
 	{
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
+		// Load static resources
 		Block.loadSprite("gfx/block.png");
 		Mirror.loadSprite("gfx/mirror.png");
 		LaserSource.loadSprite("gfx/laser_source.png");
+		Target.loadSprite("gfx/target.png");
 
+		// Start debug level
 		inGame = true;
 		currentLevel = new Level();
 		currentLevel.loadLevel("levels/test1.lvl");

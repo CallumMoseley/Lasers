@@ -19,6 +19,7 @@ public class Level
 	private final int SQUARE_SIZE = 32;
 
 	private ArrayList<Block> blocks;
+	private ArrayList<Target> targets;
 	private ArrayList<Mirror> mirrors;
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
@@ -30,21 +31,22 @@ public class Level
 		mirrors = new ArrayList<Mirror>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
-		
+		targets = new ArrayList<Target>();
+
 		mirrors.add(new Mirror(500, 250, 30));
 		mirrors.add(new Mirror(250, 410, 90));
 		mirrors.add(new Mirror(120, 585, 10));
 
 		isSimulating = false;
 	}
-	
+
 	/**
 	 * Simulates all lasers being emitted and reflecting off mirrors, until the
 	 * laser hits an opaque object. Also finds whether the laser hit all
 	 * targets.
 	 * @return whether all targets were hit or not
 	 */
-	public boolean runLaser()
+	public boolean[] runLaser()
 	{
 		isSimulating = true;
 
@@ -67,7 +69,7 @@ public class Level
 					Double.POSITIVE_INFINITY);
 			Vector2 closestDifference = Vector2.subtract(closest,
 					current.getDirection());
-			
+
 			objectHit = NONE;
 			int mirrorHit = -1;
 
@@ -79,7 +81,28 @@ public class Level
 				{
 					Vector2 difference = Vector2.subtract(collision,
 							current.getPosition());
-					if (difference.getLength() > 1 && difference.getLength() < closestDifference.getLength())
+					if (difference.getLength() > 1
+							&& difference.getLength() < closestDifference
+									.getLength())
+					{
+						closest = collision;
+						closestDifference = difference;
+						objectHit = BLOCK;
+					}
+				}
+			}
+			
+			// Check for target collisions
+			for (int target = 0; target < targets.size(); target++)
+			{
+				Vector2 collision = current.intersects(targets.get(target));
+				if (collision.getLength() != Double.POSITIVE_INFINITY)
+				{
+					Vector2 difference = Vector2.subtract(collision,
+							current.getPosition());
+					if (difference.getLength() > 1
+							&& difference.getLength() < closestDifference
+									.getLength())
 					{
 						closest = collision;
 						closestDifference = difference;
@@ -96,7 +119,9 @@ public class Level
 				{
 					Vector2 difference = Vector2.subtract(collision,
 							current.getPosition());
-					if (difference.getLength() > 1 && difference.getLength() < closestDifference.getLength())
+					if (difference.getLength() > 1
+							&& difference.getLength() < closestDifference
+									.getLength())
 					{
 						closest = collision;
 						closestDifference = difference;
@@ -119,17 +144,20 @@ public class Level
 			if (objectHit == MIRROR)
 			{
 				// Calculate reflected ray
-				Vector2 newDir = mirrors.get(mirrorHit).reflect(current.getDirection());
-				Vector2 newPos = Vector2.add(current.getPosition(), current.getDirection());
-				
+				Vector2 newDir = mirrors.get(mirrorHit).reflect(
+						current.getDirection());
+				Vector2 newPos = Vector2.add(current.getPosition(),
+						current.getDirection());
+
 				Ray newRay = new Ray(newPos, newDir);
 
 				// Append the new ray to the current laser
 				laser.add(newRay);
 			}
-		} while (objectHit == MIRROR);
+		}
+		while (objectHit == MIRROR);
 
-		return true;
+		return new boolean[] { true };
 	}
 
 	/**
@@ -162,6 +190,19 @@ public class Level
 						sources.add(new LaserSource(pos * SQUARE_SIZE, lineNo
 								* SQUARE_SIZE, 0));
 					}
+					// T's are non-reflective targets
+					else if (nextCh == 'T')
+					{
+						targets.add(new Target(pos * SQUARE_SIZE, lineNo
+								* SQUARE_SIZE, false));
+					}
+					// R's are reflective targets
+					else if (nextCh == 'R')
+					{
+						targets.add(new Target(pos * SQUARE_SIZE, lineNo
+								* SQUARE_SIZE, true));
+					}
+					// Anything else is blank
 				}
 				line = br.readLine();
 				lineNo++;
@@ -172,11 +213,11 @@ public class Level
 		{
 			e.printStackTrace();
 		}
-		
+
 		// Uhh... don't mind this
 		runLaser();
 	}
-	
+
 	/**
 	 * Draws the level and all of it's objects
 	 * @param g the graphics object to draw with
