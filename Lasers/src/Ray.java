@@ -7,6 +7,7 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Arrays;
 
 public class Ray
 {
@@ -47,8 +48,26 @@ public class Ray
 	 */
 	public Vector2 intersects(Block b)
 	{
-		Vector2[] edges = new Vector2[4];
-		return new Vector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+		Vector2[] intersections = new Vector2[4];
+		intersections[0] = intersects(new Vector2(b.getX(), b.getY()),
+				new Vector2(0, 32));
+		intersections[1] = intersects(new Vector2(b.getX(), b.getY()),
+				new Vector2(32, 0));
+		intersections[2] = intersects(new Vector2(b.getX() + 32, b.getY()),
+				new Vector2(0, 32));
+		intersections[3] = intersects(new Vector2(b.getX(), b.getY() + 32),
+				new Vector2(32, 0));
+		Vector2 closest = new Vector2(Double.POSITIVE_INFINITY,
+				Double.POSITIVE_INFINITY);
+		for (int point = 0; point < 4; point++)
+		{
+			if (Vector2.subtract(intersections[point], pos).getLength() < Vector2
+					.subtract(closest, pos).getLength())
+			{
+				closest = intersections[point];
+			}
+		}
+		return closest;
 	}
 
 	/**
@@ -63,13 +82,12 @@ public class Ray
 		Vector2 p1 = new Vector2(mirror.getX(), mirror.getY());
 		Vector2 p2 = Vector2.multiply(new Vector2(mirror.getAngle() + 45),
 				Math.sqrt(32 * 32 + 32 * 32));
-
 		return intersects(p1, p2);
 	}
 
 	/**
-	 * Determines whether this ray intersects the line segment from p1 to p2,
-	 * and if it does, the point of intersection
+	 * Determines whether this ray intersects the line segment from p1 to p1 +
+	 * p2, and if it does, the point of intersection
 	 * @param p1 the first point defining the line segment
 	 * @param p2 the second point defining the line segment
 	 * @return the point of intersection, or an infinite length vector if there
@@ -84,13 +102,11 @@ public class Ray
 				Vector2.multiply(p2, 1.0 / Vector2.crossProduct(dir, p2)));
 		double u = Vector2.crossProduct(Vector2.subtract(p1, pos),
 				Vector2.multiply(dir, 1.0 / Vector2.crossProduct(dir, p2)));
-
-		if (Vector2.crossProduct(dir, p2) != 0 && u <= 1 && u >= 0)
+		if (Vector2.crossProduct(dir, p2) != 0 && t >= 0 && u >= 0 && u <= 1)
 		{
 			return new Vector2(pos.getX() + t * dir.getX(), pos.getY() + t
 					* dir.getY());
 		}
-
 		return new Vector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 

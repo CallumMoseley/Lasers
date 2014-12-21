@@ -75,8 +75,7 @@ public class Level
 			for (int block = 0; block < blocks.size(); block++)
 			{
 				Vector2 collision = current.intersects(blocks.get(block));
-				if (!collision.equals(new Vector2(Double.POSITIVE_INFINITY,
-						Double.POSITIVE_INFINITY)))
+				if (collision.getLength() != Double.POSITIVE_INFINITY)
 				{
 					Vector2 difference = Vector2.subtract(collision,
 							current.getPosition());
@@ -93,8 +92,7 @@ public class Level
 			for (int mirror = 0; mirror < mirrors.size(); mirror++)
 			{
 				Vector2 collision = current.intersects(mirrors.get(mirror));
-				if (!collision.equals(new Vector2(Double.POSITIVE_INFINITY,
-						Double.POSITIVE_INFINITY)))
+				if (collision.getLength() != Double.POSITIVE_INFINITY)
 				{
 					Vector2 difference = Vector2.subtract(collision,
 							current.getPosition());
@@ -178,10 +176,10 @@ public class Level
 		// Uhh... don't mind this
 		runLaser();
 	}
-
+	
 	/**
 	 * Draws the level and all of it's objects
-	 * @param g the graphics objcet to draw with
+	 * @param g the graphics object to draw with
 	 */
 	public void draw(Graphics g)
 	{

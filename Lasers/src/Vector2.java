@@ -5,7 +5,7 @@
  * @version December 2014
  */
 
-public class Vector2
+public class Vector2 implements Comparable<Vector2>
 {
 	private double x;
 	private double y;
@@ -129,6 +129,12 @@ public class Vector2
 	public Vector2 clone()
 	{
 		return new Vector2(x, y);
+	}
+
+	@Override
+	public int compareTo(Vector2 o)
+	{
+		return ((Double)getLength()).compareTo(o.getLength());
 	}
 
 	// Static methods
