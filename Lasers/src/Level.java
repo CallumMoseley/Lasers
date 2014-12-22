@@ -96,8 +96,7 @@ public class Level
 			if (objectHit >= 0 && collidable.get(objectHit).isReflective())
 			{
 				// Calculate reflected ray
-				Vector2 newDir = collidable.get(objectHit).reflect(
-						current.getDirection());
+				Vector2 newDir = collidable.get(objectHit).reflect(current);
 				Vector2 newPos = Vector2.add(current.getPosition(),
 						current.getDirection());
 

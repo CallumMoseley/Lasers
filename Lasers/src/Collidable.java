@@ -65,9 +65,9 @@ public abstract class Collidable
 		return new Vector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 	
-	public Vector2 reflect(Vector2 incident)
+	public Vector2 reflect(Ray incident)
 	{
-		return incident;
+		return incident.getDirection();
 	}
 
 	/**

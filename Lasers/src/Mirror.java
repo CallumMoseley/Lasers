@@ -28,9 +28,9 @@ public class Mirror extends Collidable
 		return r.intersects(p1, p2);
 	}
 	
-	public Vector2 reflect(Vector2 incident)
+	public Vector2 reflect(Ray incident)
 	{
-		return Vector2.reflect(incident, normal);
+		return Vector2.reflect(incident.getDirection(), normal);
 	}
 	
 	public int getAngle()
