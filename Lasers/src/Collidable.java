@@ -12,6 +12,7 @@ public abstract class Collidable
 	private int y;
 	private boolean target;
 	private boolean reflective;
+	private boolean wasHit;
 
 	/**
 	 * Initialises the object to an x-y position
@@ -24,6 +25,7 @@ public abstract class Collidable
 		this.y = y;
 		target = t;
 		reflective = r;
+		wasHit = false;
 	}
 
 	/**
@@ -52,6 +54,16 @@ public abstract class Collidable
 	public boolean isReflective()
 	{
 		return reflective;
+	}
+	
+	public void hit()
+	{
+		wasHit = true;
+	}
+	
+	public boolean getHit()
+	{
+		return wasHit;
 	}
 
 	/**

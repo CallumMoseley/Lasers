@@ -1,5 +1,6 @@
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -7,7 +8,11 @@ import javax.imageio.ImageIO;
 
 public class LaserSource
 {
-	private static Image sprite;
+	private static Image sprites[];
+	private static Vector2[] offsets = new Vector2[] {new Vector2(14, 16),
+													  new Vector2(16, 14),
+													  new Vector2(18, 16),
+													  new Vector2(16, 18)};
 	private int x;
 	private int y;
 	private int direction;
@@ -34,6 +39,11 @@ public class LaserSource
 		return direction;
 	}
 	
+	public Vector2 getOffset()
+	{
+		return offsets[direction];
+	}
+	
 	/**
 	 * Loads an image as the sprite for all laser source objects
 	 * @param file the file name of the image to load 
@@ -42,7 +52,12 @@ public class LaserSource
 	{
 		try
 		{
-			sprite = ImageIO.read(new File(file));
+			BufferedImage temp = ImageIO.read(new File(file));
+			sprites = new Image[4];
+			sprites[0] = temp.getSubimage(0, 0, 32, 32);
+			sprites[1] = temp.getSubimage(32, 0, 32, 32);
+			sprites[2] = temp.getSubimage(64, 0, 32, 32);
+			sprites[3] = temp.getSubimage(96, 0, 32, 32);
 		}
 		catch (IOException e)
 		{
@@ -56,7 +71,7 @@ public class LaserSource
 	 */
 	public void draw(Graphics g)
 	{
-		g.drawImage(sprite, x, y, null);
+		g.drawImage(sprites[direction], x, y, null);
 	}
 
 	/**
