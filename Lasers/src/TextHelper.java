@@ -12,6 +12,6 @@ public class TextHelper
 {
 	public static void drawString(int x, int y, String text, Color c, Graphics g)
 	{
-		
+
 	}
 }

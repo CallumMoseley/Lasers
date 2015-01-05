@@ -12,14 +12,14 @@ public class Mirror extends Collidable
 	private static Image sprite;
 	private int angle;
 	private Vector2 normal;
-	
+
 	public Mirror(int x, int y, int angle)
 	{
 		super(x, y, false, true);
 		this.angle = angle;
 		normal = new Vector2(angle + 135).getNormalized();
 	}
-	
+
 	public Vector2 intersects(Ray r)
 	{
 		Vector2 p1 = new Vector2(getX(), getY());
@@ -27,22 +27,23 @@ public class Mirror extends Collidable
 				Math.sqrt(32 * 32 + 32 * 32));
 		return r.intersects(p1, p2);
 	}
-	
+
 	public Vector2 reflect(Ray incident)
 	{
 		return Vector2.reflect(incident.getDirection(), normal);
 	}
-	
+
 	public int getAngle()
 	{
 		return angle;
 	}
-	
+
 	public void draw(Graphics g)
 	{
-		AffineTransform af = AffineTransform.getTranslateInstance(getX(), getY());
+		AffineTransform af = AffineTransform.getTranslateInstance(getX(),
+				getY());
 		af.rotate(Math.toRadians(angle));
-		((Graphics2D)g).drawImage(sprite, af, null);
+		((Graphics2D) g).drawImage(sprite, af, null);
 	}
 
 	/**

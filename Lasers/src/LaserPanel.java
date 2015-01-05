@@ -6,6 +6,7 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -22,14 +23,15 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 	private Level currentLevel;
 	private Menu currentMenu;
 	private boolean inGame;
-	
+
 	private final Menu mainMenu;
 	private final Menu levelSelect;
+	private final Menu optionsMenu;
 
 	public LaserPanel()
 	{
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		
+
 		addMouseListener(this);
 
 		// Load static resources
@@ -37,12 +39,14 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		Mirror.loadSprite("gfx/mirror.png");
 		LaserSource.loadSprite("gfx/laser_source.png");
 		Target.loadSprite("gfx/target.png");
-		
+
 		// Initialize menus
 		mainMenu = new Menu();
 		levelSelect = new Menu();
-		
-		mainMenu.add(new MenuButton(800, 670, 50, 50, "Play") {
+		optionsMenu = new Menu();
+
+		mainMenu.add(new MenuButton(212, 300, 600, 50, "Play", Color.BLACK,
+				new Font("Consolas", 0, 40)) {
 			@Override
 			public void onClick()
 			{
@@ -50,7 +54,17 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 				repaint();
 			}
 		});
-		levelSelect.add(new MenuButton(870, 670, 50, 50, "Back") {
+		mainMenu.add(new MenuButton(212, 360, 600, 50, "Options", Color.BLACK,
+				new Font("Consolas", 0, 40)) {
+			@Override
+			public void onClick()
+			{
+				currentMenu = optionsMenu;
+				repaint();
+			}
+		});
+		levelSelect.add(new MenuButton(870, 670, 50, 50, "Back", Color.BLACK,
+				new Font("Consolas", 0, 20)) {
 			@Override
 			public void onClick()
 			{
@@ -59,12 +73,12 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 			}
 		});
 
-//		// Start debug level
-//		inGame = true;
-//		currentLevel = new Level();
-//		currentLevel.loadLevel("levels/test1.lvl");
-//		repaint();
-		
+		// // Start debug level
+		// inGame = true;
+		// currentLevel = new Level();
+		// currentLevel.loadLevel("levels/test1.lvl");
+		// repaint();
+
 		// Start main menu
 		currentMenu = mainMenu;
 	}
@@ -87,17 +101,37 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 	}
 
 	@Override
-	public void keyPressed(KeyEvent arg0){}
+	public void keyPressed(KeyEvent arg0)
+	{
+	}
+
 	@Override
-	public void keyReleased(KeyEvent arg0){}
+	public void keyReleased(KeyEvent arg0)
+	{
+	}
+
 	@Override
-	public void keyTyped(KeyEvent arg0){}
+	public void keyTyped(KeyEvent arg0)
+	{
+	}
+
 	@Override
-	public void mouseClicked(MouseEvent arg0){}
+	public void mouseClicked(MouseEvent arg0)
+	{
+	}
+
 	@Override
-	public void mouseEntered(MouseEvent arg0){}
+	public void mouseEntered(MouseEvent arg0)
+	{
+	}
+
 	@Override
-	public void mouseExited(MouseEvent arg0){}
+	public void mouseExited(MouseEvent arg0)
+	{
+	}
+
 	@Override
-	public void mouseReleased(MouseEvent arg0){}
+	public void mouseReleased(MouseEvent arg0)
+	{
+	}
 }

@@ -37,6 +37,7 @@ public class Ray
 		pos = new Vector2(x, y);
 		dir = new Vector2(dx, dy);
 	}
+
 	/**
 	 * Determines whether this ray intersects the line segment from p1 to p1 +
 	 * p2, and if it does, the point of intersection

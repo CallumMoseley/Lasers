@@ -1,5 +1,6 @@
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -7,7 +8,7 @@ import javax.imageio.ImageIO;
 
 public class Target extends Block
 {
-	private static Image sprite;
+	private static Image[] sprites;
 
 	public Target(int x, int y, boolean r)
 	{
@@ -27,7 +28,7 @@ public class Target extends Block
 				new Vector2(getX(), getY() + 32), new Vector2(32, 0));
 		Vector2 closest = new Vector2(Double.POSITIVE_INFINITY,
 				Double.POSITIVE_INFINITY);
-		int closestIndex = 0; 
+		int closestIndex = 0;
 		for (int point = 0; point < 4; point++)
 		{
 			if (Vector2.subtract(intersections[point], incident.getPosition())
@@ -38,7 +39,7 @@ public class Target extends Block
 				closestIndex = point;
 			}
 		}
-		
+
 		Vector2 normal;
 		if (closestIndex == 0)
 		{
@@ -56,7 +57,7 @@ public class Target extends Block
 		{
 			normal = new Vector2(0, 1);
 		}
-		
+
 		return Vector2.reflect(incident.getDirection(), normal);
 	}
 
@@ -68,7 +69,12 @@ public class Target extends Block
 	{
 		try
 		{
-			sprite = ImageIO.read(new File(file));
+			BufferedImage spriteSheet = ImageIO.read(new File(file));
+			sprites = new Image[4];
+			sprites[0] = spriteSheet.getSubimage(0, 0, 32, 32);
+			sprites[1] = spriteSheet.getSubimage(32, 0, 32, 32);
+			sprites[2] = spriteSheet.getSubimage(64, 0, 32, 32);
+			sprites[3] = spriteSheet.getSubimage(96, 0, 32, 32);
 		}
 		catch (IOException e)
 		{
@@ -82,6 +88,7 @@ public class Target extends Block
 	 */
 	public void draw(Graphics g)
 	{
-		g.drawImage(sprite, getX(), getY(), null);
+		g.drawImage(sprites[(getHit() ? 1 : 0) + (isReflective() ? 2 : 0)],
+				getX(), getY(), null);
 	}
 }

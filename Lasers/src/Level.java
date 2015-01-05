@@ -48,9 +48,10 @@ public class Level
 			laser.add(new Ray(new Vector2(sources.get(source).getX(), sources
 					.get(source).getY()), new Vector2(sources.get(source)
 					.getDirection() * 90)));
-			
+
 			// Add the offset to the end of the laser source
-			laser.get(laser.size() - 1).getPosition().add(sources.get(source).getOffset());
+			laser.get(laser.size() - 1).getPosition()
+					.add(sources.get(source).getOffset());
 
 			int objectHit;
 

@@ -10,13 +10,13 @@ import javax.swing.JFrame;
 public class LasersMain extends JFrame
 {
 	private LaserPanel game;
-	
+
 	public LasersMain()
 	{
 		super("Laser Puzzle Game");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		game = new LaserPanel();
 		setContentPane(game);
 	}

@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 
 public abstract class Collidable
 {
-	private static Image sprite;
 	private int x;
 	private int y;
 	private boolean target;
@@ -45,22 +44,22 @@ public abstract class Collidable
 	{
 		return y;
 	}
-	
+
 	public boolean isTarget()
 	{
 		return target;
 	}
-	
+
 	public boolean isReflective()
 	{
 		return reflective;
 	}
-	
+
 	public void hit()
 	{
 		wasHit = true;
 	}
-	
+
 	public boolean getHit()
 	{
 		return wasHit;
@@ -76,7 +75,7 @@ public abstract class Collidable
 	{
 		return new Vector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
-	
+
 	public Vector2 reflect(Ray incident)
 	{
 		return incident.getDirection();
@@ -88,22 +87,6 @@ public abstract class Collidable
 	 */
 	public void draw(Graphics g)
 	{
-		g.drawImage(sprite, x, y, null);
-	}
-
-	/**
-	 * Loads an image file for all of this object
-	 * @param file the filename of the image
-	 */
-	public static void loadSprite(String file)
-	{
-		try
-		{
-			sprite = ImageIO.read(new File(file));
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		return;
 	}
 }

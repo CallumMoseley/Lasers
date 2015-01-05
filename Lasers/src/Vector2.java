@@ -134,7 +134,7 @@ public class Vector2 implements Comparable<Vector2>
 	@Override
 	public int compareTo(Vector2 o)
 	{
-		return ((Double)getLength()).compareTo(o.getLength());
+		return ((Double) getLength()).compareTo(o.getLength());
 	}
 
 	// Static methods

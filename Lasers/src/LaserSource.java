@@ -9,14 +9,14 @@ import javax.imageio.ImageIO;
 public class LaserSource
 {
 	private static Image sprites[];
-	private static Vector2[] offsets = new Vector2[] {new Vector2(14, 16),
-													  new Vector2(16, 14),
-													  new Vector2(18, 16),
-													  new Vector2(16, 18)};
+	private static Vector2[] offsets = new Vector2[] { new Vector2(14, 16),
+			new Vector2(16, 14),
+			new Vector2(18, 16),
+			new Vector2(16, 18) };
 	private int x;
 	private int y;
 	private int direction;
-	
+
 	/**
 	 * Initializes the laser source with position and direction
 	 * @param x the x coordinate of the laser source
@@ -29,7 +29,7 @@ public class LaserSource
 		this.y = y;
 		this.direction = direction;
 	}
-	
+
 	/**
 	 * Gets the direction of the laser source object
 	 * @return the direction
@@ -38,15 +38,15 @@ public class LaserSource
 	{
 		return direction;
 	}
-	
+
 	public Vector2 getOffset()
 	{
 		return offsets[direction];
 	}
-	
+
 	/**
 	 * Loads an image as the sprite for all laser source objects
-	 * @param file the file name of the image to load 
+	 * @param file the file name of the image to load
 	 */
 	public static void loadSprite(String file)
 	{
