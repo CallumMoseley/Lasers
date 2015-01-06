@@ -9,10 +9,22 @@ import javax.imageio.ImageIO;
 public class Target extends Block
 {
 	private static Image[] sprites;
+	boolean reflective;
 
 	public Target(int x, int y, boolean r)
 	{
-		super(x, y, true, r);
+		super(x, y);
+		reflective = r;
+	}
+	
+	public boolean isReflective()
+	{
+		return reflective;
+	}
+	
+	public boolean isTarget()
+	{
+		return true;
 	}
 
 	public Vector2 reflect(Ray incident)

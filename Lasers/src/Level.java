@@ -24,10 +24,10 @@ public class Level
 		collidable = new ArrayList<Collidable>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
-
-		collidable.add(new Mirror(500, 250, 30));
-		collidable.add(new Mirror(250, 410, 90));
-		collidable.add(new Mirror(120, 585, 10));
+		
+		collidable.add(new Mirror(100, 65, -7));
+		collidable.add(new Mirror(300, 700, 132));
+		collidable.add(new Mirror(490, 700, 143));
 
 		isSimulating = false;
 	}
@@ -41,6 +41,7 @@ public class Level
 	public boolean runLaser()
 	{
 		isSimulating = true;
+		laser = new ArrayList<Ray>();
 
 		for (int source = 0; source < sources.size(); source++)
 		{
@@ -69,7 +70,7 @@ public class Level
 
 				objectHit = -1;
 
-				// Check for collisions
+				// Check for collisions with each object
 				for (int object = 0; object < collidable.size(); object++)
 				{
 					Vector2 collision = collidable.get(object).intersects(
@@ -128,6 +129,15 @@ public class Level
 		}
 		return true;
 	}
+	
+	public void stopLaser()
+	{
+		isSimulating = false;
+		for (int object = 0; object < collidable.size(); object++)
+		{
+			collidable.get(object).unHit();
+		}
+	}
 
 	/**
 	 * Loads a level from a file
@@ -182,9 +192,6 @@ public class Level
 		{
 			e.printStackTrace();
 		}
-
-		// Uhh... don't mind this
-		System.out.println(runLaser());
 	}
 
 	/**

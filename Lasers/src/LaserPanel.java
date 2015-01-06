@@ -27,6 +27,8 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 	private final Menu mainMenu;
 	private final Menu levelSelect;
 	private final Menu optionsMenu;
+	private final Menu inGameMenu;
+	private final Menu inGameRunningMenu;
 
 	public LaserPanel()
 	{
@@ -40,18 +42,34 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		LaserSource.loadSprite("gfx/laser_source.png");
 		Target.loadSprite("gfx/target.png");
 
-		// Initialize menus
+		// Initialise menus
 		mainMenu = new Menu();
 		levelSelect = new Menu();
 		optionsMenu = new Menu();
+		inGameMenu = new Menu();
+		inGameRunningMenu = new Menu();
 
-		mainMenu.add(new MenuButton(212, 300, 600, 50, "Play", Color.BLACK,
+		mainMenu.add(new MenuButton(212, 300, 600, 50, "Playy lmao",
+				Color.BLACK,
 				new Font("Consolas", 0, 40)) {
 			@Override
 			public void onClick()
 			{
 				currentMenu = levelSelect;
 				repaint();
+			}
+		});
+		levelSelect.add(new MenuButton(212, 300, 600, 50, "Sample Text",
+				Color.BLACK, new Font("Consolas", 0, 40)) {
+			@Override
+			public void onClick()
+			{
+				inGame = true;
+				currentLevel = new Level();
+				currentLevel.loadLevel("levels/test1.lvl");
+				currentMenu = inGameMenu;
+				repaint();
+
 			}
 		});
 		mainMenu.add(new MenuButton(212, 360, 600, 50, "Options", Color.BLACK,
@@ -72,12 +90,26 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 				repaint();
 			}
 		});
-
-		// // Start debug level
-		// inGame = true;
-		// currentLevel = new Level();
-		// currentLevel.loadLevel("levels/test1.lvl");
-		// repaint();
+		inGameMenu.add(new MenuButton(800, 670, 200, 50, "Run!", Color.BLACK,
+				new Font("Consolas", 0, 20)) {
+			@Override
+			public void onClick()
+			{
+				currentLevel.runLaser();
+				currentMenu = inGameRunningMenu;
+				repaint();
+			}
+		});
+		inGameRunningMenu.add(new MenuButton(800, 670, 200, 50, "Stop!",
+				Color.BLACK, new Font("Consolas", 0, 20)) {
+			@Override
+			public void onClick()
+			{
+				currentLevel.stopLaser();
+				currentMenu = inGameMenu;
+				repaint();
+			}
+		});
 
 		// Start main menu
 		currentMenu = mainMenu;
@@ -85,7 +117,7 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 
 	public void paintComponent(Graphics g)
 	{
-		g.setColor(Color.DARK_GRAY);
+		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		if (inGame)
 		{

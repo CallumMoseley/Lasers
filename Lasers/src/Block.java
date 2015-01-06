@@ -11,12 +11,7 @@ public class Block extends Collidable
 
 	public Block(int x, int y)
 	{
-		super(x, y, false, false);
-	}
-
-	public Block(int x, int y, boolean b, boolean r)
-	{
-		super(x, y, b, r);
+		super(x, y);
 	}
 
 	public static void loadSprite(String file)

@@ -15,9 +15,19 @@ public class Mirror extends Collidable
 
 	public Mirror(int x, int y, int angle)
 	{
-		super(x, y, false, true);
+		super(x, y);
 		this.angle = angle;
 		normal = new Vector2(angle + 135).getNormalized();
+	}
+	
+	public boolean isReflective()
+	{
+		return true;
+	}
+	
+	public boolean isTarget()
+	{
+		return false;
 	}
 
 	public Vector2 intersects(Ray r)

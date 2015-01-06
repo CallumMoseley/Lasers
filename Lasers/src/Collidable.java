@@ -1,16 +1,9 @@
 import java.awt.Graphics;
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public abstract class Collidable
 {
 	private int x;
 	private int y;
-	private boolean target;
-	private boolean reflective;
 	private boolean wasHit;
 
 	/**
@@ -18,12 +11,10 @@ public abstract class Collidable
 	 * @param x the x coordinate of the object
 	 * @param y the y coordinate of the object
 	 */
-	public Collidable(int x, int y, boolean t, boolean r)
+	public Collidable(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
-		target = t;
-		reflective = r;
 		wasHit = false;
 	}
 
@@ -47,17 +38,22 @@ public abstract class Collidable
 
 	public boolean isTarget()
 	{
-		return target;
+		return false;
 	}
 
 	public boolean isReflective()
 	{
-		return reflective;
+		return false;
 	}
 
 	public void hit()
 	{
 		wasHit = true;
+	}
+
+	public void unHit()
+	{
+		wasHit = false;
 	}
 
 	public boolean getHit()
