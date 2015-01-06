@@ -7,12 +7,12 @@ import javax.imageio.ImageIO;
 
 public class Block extends Collidable
 {
-	private static Image sprite;
-
 	public Block(int x, int y)
 	{
 		super(x, y);
 	}
+
+	private static Image sprite;
 
 	public static void loadSprite(String file)
 	{
