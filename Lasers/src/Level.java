@@ -18,6 +18,7 @@ public class Level
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
 	private boolean isSimulating;
+	private Mirror selected;
 
 	public Level()
 	{
