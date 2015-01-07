@@ -39,7 +39,7 @@ public class Menu
 			{
 				if (items.get(item).intersects(point))
 				{
-					items.get(item).onClick();
+					items.get(item).onClick(point);
 				}
 			}
 			catch (Exception e)

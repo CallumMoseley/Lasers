@@ -61,9 +61,19 @@ public abstract class MenuButton implements MenuItem
 		g.drawString(text, x + width / 2 - strWidth / 2, y + height / 2
 				+ strHeight / 4);
 	}
+	
+	public void highlight()
+	{
+		background = background.brighter();
+	}
+	
+	public void unHighlight()
+	{
+		background = background.darker();
+	}
 
 	/**
 	 * Executed when the button is clicked on
 	 */
-	public abstract void onClick();
+	public abstract void onClick(Point point);
 }

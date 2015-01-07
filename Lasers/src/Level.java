@@ -19,7 +19,8 @@ public class Level
 {
 	private final int SQUARE_SIZE = 32;
 	private static Image background;
-
+	
+	private String name;
 	private ArrayList<Collidable> collidable;
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
@@ -31,6 +32,21 @@ public class Level
 		collidable = new ArrayList<Collidable>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
+		
+		collidable.add(new Mirror(100, 65, -7));
+		collidable.add(new Mirror(300, 700, 132));
+		collidable.add(new Mirror(490, 700, 143));
+
+		isSimulating = false;
+	}
+	
+	public Level(String file)
+	{
+		collidable = new ArrayList<Collidable>();
+		sources = new ArrayList<LaserSource>();
+		laser = new ArrayList<Ray>();
+		
+		this.loadLevel(file);
 		
 		collidable.add(new Mirror(100, 65, -7));
 		collidable.add(new Mirror(300, 700, 132));
@@ -145,6 +161,11 @@ public class Level
 			collidable.get(object).unHit();
 		}
 	}
+	
+	public String getName()
+	{
+		return name;
+	}
 
 	/**
 	 * Loads a level from a file
@@ -155,6 +176,7 @@ public class Level
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(file));
+			name = br.readLine();
 			String line = br.readLine();
 			int lineNo = 0;
 			// Read every line and process its characters
@@ -207,6 +229,7 @@ public class Level
 	 */
 	public void draw(Graphics g)
 	{
+		// Draw the background
 		for (int row = 0; row < 24; row++)
 		{
 			for (int col = 0; col < 24; col++)
@@ -214,14 +237,20 @@ public class Level
 				g.drawImage(background, row * SQUARE_SIZE, col * SQUARE_SIZE, null);
 			}
 		}
+		
+		// Draw all collidable objects
 		for (int object = 0; object < collidable.size(); object++)
 		{
 			collidable.get(object).draw(g);
 		}
+		
+		// Draw all laser sources
 		for (int source = 0; source < sources.size(); source++)
 		{
 			sources.get(source).draw(g);
 		}
+		
+		// If the level is currently simulating, draw the laser
 		if (isSimulating)
 		{
 			for (int laserSeg = 0; laserSeg < laser.size(); laserSeg++)
@@ -231,7 +260,7 @@ public class Level
 		}
 	}
 
-	public static void loadSprite(String file)
+	public static void loadBackground(String file)
 	{
 		try
 		{

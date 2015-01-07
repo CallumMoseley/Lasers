@@ -15,5 +15,5 @@ public interface MenuItem
 	
 	public boolean intersects(Point point);
 	
-	public void onClick();
+	public void onClick(Point point);
 }

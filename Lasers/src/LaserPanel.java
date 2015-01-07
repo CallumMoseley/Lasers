@@ -8,10 +8,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -23,12 +25,15 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 	private Level currentLevel;
 	private Menu currentMenu;
 	private boolean inGame;
+	private int selectedLevel;
 
 	private final Menu mainMenu;
 	private final Menu levelSelect;
 	private final Menu optionsMenu;
 	private final Menu inGameMenu;
 	private final Menu inGameRunningMenu;
+
+	private ArrayList<Level> levels;
 
 	public LaserPanel()
 	{
@@ -41,7 +46,14 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		Mirror.loadSprite("gfx/mirror.png");
 		LaserSource.loadSprite("gfx/laser_source.png");
 		Target.loadSprite("gfx/target.png");
-		Level.loadSprite("gfx/background.png");
+		Level.loadBackground("gfx/background.png");
+
+		// Load levels
+		selectedLevel = -1;
+
+		levels = new ArrayList<Level>();
+		levels.add(new Level("levels/test1.lvl"));
+		levels.add(new Level("levels/test2.lvl"));
 
 		// Initialise menus
 		mainMenu = new Menu();
@@ -53,7 +65,7 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		mainMenu.add(new MenuButton(212, 300, 600, 50, "Play",
 				Color.DARK_GRAY, new Font("Consolas", 0, 40)) {
 			@Override
-			public void onClick()
+			public void onClick(Point point)
 			{
 				currentMenu = levelSelect;
 				repaint();
@@ -62,7 +74,7 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		mainMenu.add(new MenuButton(212, 360, 600, 50, "Options",
 				Color.DARK_GRAY, new Font("Consolas", 0, 40)) {
 			@Override
-			public void onClick()
+			public void onClick(Point point)
 			{
 				currentMenu = optionsMenu;
 				repaint();
@@ -71,29 +83,30 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		optionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, new Font("Consolas", 0, 20)) {
 			@Override
-			public void onClick()
+			public void onClick(Point point)
 			{
 				currentMenu = mainMenu;
 				repaint();
 			}
 		});
-		levelSelect.add(new MenuButton(30, 30, 500, 50, "Level 1",
-				Color.DARK_GRAY, new Font("Consolas", 0, 40)) {
-			@Override
-			public void onClick()
-			{
-				inGame = true;
-				currentLevel = new Level();
-				currentLevel.loadLevel("levels/test1.lvl");
-				currentMenu = inGameMenu;
-				repaint();
-
-			}
-		});
+		for (int level = 0; level < levels.size(); level++)
+		{
+			final int t = level;
+			levelSelect.add(new MenuButton(30, 30 + 60 * level, 500, 50, levels
+					.get(level).getName(), Color.DARK_GRAY, new Font("Consolas", 0, 40)) {
+				@Override
+				public void onClick(Point point)
+				{
+					this.highlight();
+					selectedLevel = t;
+					repaint();
+				}
+			});
+		}
 		levelSelect.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, new Font("Consolas", 0, 20)) {
 			@Override
-			public void onClick()
+			public void onClick(Point point)
 			{
 				currentMenu = mainMenu;
 				repaint();
@@ -102,15 +115,21 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		levelSelect.add(new MenuButton(50, 670, 160, 70, "Play!",
 				Color.DARK_GRAY, new Font("Consolas", 0, 50)) {
 			@Override
-			public void onClick()
+			public void onClick(Point point)
 			{
-
+				if (selectedLevel >= 0 && selectedLevel < levels.size())
+				{
+					currentMenu = inGameMenu;
+					currentLevel = levels.get(selectedLevel);
+					inGame = true;
+					repaint();
+				}
 			}
 		});
 		inGameMenu.add(new MenuButton(800, 670, 200, 50, "Run!",
 				Color.DARK_GRAY, new Font("Consolas", 0, 20)) {
 			@Override
-			public void onClick()
+			public void onClick(Point point)
 			{
 				currentLevel.runLaser();
 				currentMenu = inGameRunningMenu;
@@ -120,7 +139,7 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		inGameMenu.add(new MenuButton(800, 40, 200, 50, "Level select",
 				Color.DARK_GRAY, new Font("Consolas", 0, 20)) {
 			@Override
-			public void onClick()
+			public void onClick(Point point)
 			{
 				currentMenu = levelSelect;
 				inGame = false;
@@ -130,7 +149,7 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		inGameRunningMenu.add(new MenuButton(800, 670, 200, 50, "Stop!",
 				Color.DARK_GRAY, new Font("Consolas", 0, 20)) {
 			@Override
-			public void onClick()
+			public void onClick(Point point)
 			{
 				currentLevel.stopLaser();
 				currentMenu = inGameMenu;
@@ -140,7 +159,7 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		inGameRunningMenu.add(new MenuButton(800, 40, 200, 50, "Level select",
 				Color.DARK_GRAY, new Font("Consolas", 0, 20)) {
 			@Override
-			public void onClick()
+			public void onClick(Point point)
 			{
 				currentLevel.stopLaser();
 				currentMenu = levelSelect;
