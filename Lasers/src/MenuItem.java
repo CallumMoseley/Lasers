@@ -1,5 +1,6 @@
 /**
  * A interface for any item on a menu
+ * Examples: Buttons, check boxes, pictures, labels
  * @author Callum Moseley
  * @version January 2015
  *

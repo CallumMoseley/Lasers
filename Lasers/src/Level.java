@@ -6,13 +6,19 @@
  */
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 public class Level
 {
 	private final int SQUARE_SIZE = 32;
+	private static Image background;
 
 	private ArrayList<Collidable> collidable;
 	private ArrayList<LaserSource> sources;
@@ -201,6 +207,13 @@ public class Level
 	 */
 	public void draw(Graphics g)
 	{
+		for (int row = 0; row < 24; row++)
+		{
+			for (int col = 0; col < 24; col++)
+			{
+				g.drawImage(background, row * SQUARE_SIZE, col * SQUARE_SIZE, null);
+			}
+		}
 		for (int object = 0; object < collidable.size(); object++)
 		{
 			collidable.get(object).draw(g);
@@ -215,6 +228,18 @@ public class Level
 			{
 				laser.get(laserSeg).draw(g);
 			}
+		}
+	}
+
+	public static void loadSprite(String file)
+	{
+		try
+		{
+			background = ImageIO.read(new File(file));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 }
