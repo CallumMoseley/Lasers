@@ -67,12 +67,12 @@ public abstract class Collidable
 	 * @return the point at which the ray intersects this object, or an infinite
 	 *         length vector if there is no intersection
 	 */
-	public Vector2 intersects(Ray r)
+	public Vector2D intersects(Ray r)
 	{
-		return new Vector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+		return new Vector2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 
-	public Vector2 reflect(Ray incident)
+	public Vector2D reflect(Ray incident)
 	{
 		return incident.getDirection();
 	}

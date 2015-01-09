@@ -5,7 +5,7 @@
  * @version December 2014
  */
 
-public class Vector2 implements Comparable<Vector2>
+public class Vector2D implements Comparable<Vector2D>
 {
 	private double x;
 	private double y;
@@ -13,7 +13,7 @@ public class Vector2 implements Comparable<Vector2>
 	/**
 	 * Initialises a vector to [0,0]
 	 */
-	public Vector2()
+	public Vector2D()
 	{
 		x = 0;
 		y = 0;
@@ -24,7 +24,7 @@ public class Vector2 implements Comparable<Vector2>
 	 * @param x the x part of the vector
 	 * @param y the y part of the vector
 	 */
-	public Vector2(double x, double y)
+	public Vector2D(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
@@ -34,7 +34,7 @@ public class Vector2 implements Comparable<Vector2>
 	 * Initialises a normalized vector along the given angle
 	 * @param angle the angle of the vector
 	 */
-	public Vector2(double angle)
+	public Vector2D(double angle)
 	{
 		y = Math.sin(Math.toRadians(angle));
 		x = Math.cos(Math.toRadians(angle));
@@ -62,7 +62,7 @@ public class Vector2 implements Comparable<Vector2>
 	 * Adds a vector to this vector
 	 * @param v the vector to add to this vector
 	 */
-	public void add(Vector2 v)
+	public void add(Vector2D v)
 	{
 		x += v.x;
 		y += v.y;
@@ -72,7 +72,7 @@ public class Vector2 implements Comparable<Vector2>
 	 * Subtracts a vector from this vector
 	 * @param v the vector to subtract from this vector
 	 */
-	public void subtract(Vector2 v)
+	public void subtract(Vector2D v)
 	{
 		x -= v.x;
 		y -= v.y;
@@ -110,11 +110,11 @@ public class Vector2 implements Comparable<Vector2>
 	 * Gets the normal of this vector
 	 * @return the normal of this vector
 	 */
-	public Vector2 getNormalized()
+	public Vector2D getNormalized()
 	{
 		double length = getLength();
 
-		return Vector2.multiply(this, 1 / length);
+		return Vector2D.multiply(this, 1 / length);
 	}
 
 	/**
@@ -126,13 +126,13 @@ public class Vector2 implements Comparable<Vector2>
 		return Math.toDegrees(Math.atan(y / x));
 	}
 
-	public Vector2 clone()
+	public Vector2D clone()
 	{
-		return new Vector2(x, y);
+		return new Vector2D(x, y);
 	}
 
 	@Override
-	public int compareTo(Vector2 o)
+	public int compareTo(Vector2D o)
 	{
 		return ((Double) getLength()).compareTo(o.getLength());
 	}
@@ -144,7 +144,7 @@ public class Vector2 implements Comparable<Vector2>
 	 * @param v the given vector
 	 * @return the normal of the given vector
 	 */
-	public static Vector2 getNormalized(Vector2 v)
+	public static Vector2D getNormalized(Vector2D v)
 	{
 		return v.getNormalized();
 	}
@@ -155,9 +155,9 @@ public class Vector2 implements Comparable<Vector2>
 	 * @param b the second vector
 	 * @return the sum of the two vectors
 	 */
-	public static Vector2 add(Vector2 a, Vector2 b)
+	public static Vector2D add(Vector2D a, Vector2D b)
 	{
-		return new Vector2(a.x + b.x, a.y + b.y);
+		return new Vector2D(a.x + b.x, a.y + b.y);
 	}
 
 	/**
@@ -166,9 +166,9 @@ public class Vector2 implements Comparable<Vector2>
 	 * @param b the second vector
 	 * @return the difference of the two vectors
 	 */
-	public static Vector2 subtract(Vector2 a, Vector2 b)
+	public static Vector2D subtract(Vector2D a, Vector2D b)
 	{
-		return new Vector2(a.x - b.x, a.y - b.y);
+		return new Vector2D(a.x - b.x, a.y - b.y);
 	}
 
 	/**
@@ -177,9 +177,9 @@ public class Vector2 implements Comparable<Vector2>
 	 * @param scalar the number to multiply the vector by
 	 * @return the given vector multiylied by the scalar
 	 */
-	public static Vector2 multiply(Vector2 v, double scalar)
+	public static Vector2D multiply(Vector2D v, double scalar)
 	{
-		return new Vector2(v.x * scalar, v.y * scalar);
+		return new Vector2D(v.x * scalar, v.y * scalar);
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class Vector2 implements Comparable<Vector2>
 	 * @param b the second vector
 	 * @return the dot product of the two vectors
 	 */
-	public static double dotProduct(Vector2 a, Vector2 b)
+	public static double dotProduct(Vector2D a, Vector2D b)
 	{
 		return a.x * b.x + a.y * b.y;
 	}
@@ -199,7 +199,7 @@ public class Vector2 implements Comparable<Vector2>
 	 * @param b the second vector
 	 * @return the cross product of the two vectors
 	 */
-	public static double crossProduct(Vector2 a, Vector2 b)
+	public static double crossProduct(Vector2D a, Vector2D b)
 	{
 		return a.x * b.y - a.y * b.x;
 	}
@@ -210,7 +210,7 @@ public class Vector2 implements Comparable<Vector2>
 	 * @param normal the normal vector to reflect the incident vector over
 	 * @return the incident vector reflected over the normal
 	 */
-	public static Vector2 reflect(Vector2 incident, Vector2 normal)
+	public static Vector2D reflect(Vector2D incident, Vector2D normal)
 	{
 		return subtract(
 				incident,

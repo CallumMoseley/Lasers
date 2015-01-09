@@ -11,13 +11,13 @@ public class Mirror extends Collidable
 {
 	private static Image sprite;
 	private int angle;
-	private Vector2 normal;
+	private Vector2D normal;
 
 	public Mirror(int x, int y, int angle)
 	{
 		super(x, y);
 		this.angle = angle;
-		normal = new Vector2(angle + 135).getNormalized();
+		normal = new Vector2D(angle + 135).getNormalized();
 	}
 	
 	public boolean isReflective()
@@ -30,17 +30,17 @@ public class Mirror extends Collidable
 		return false;
 	}
 
-	public Vector2 intersects(Ray r)
+	public Vector2D intersects(Ray r)
 	{
-		Vector2 p1 = new Vector2(getX(), getY());
-		Vector2 p2 = Vector2.multiply(new Vector2(getAngle() + 45),
+		Vector2D p1 = new Vector2D(getX(), getY());
+		Vector2D p2 = Vector2D.multiply(new Vector2D(getAngle() + 45),
 				Math.sqrt(32 * 32 + 32 * 32));
 		return r.intersects(p1, p2);
 	}
 
-	public Vector2 reflect(Ray incident)
+	public Vector2D reflect(Ray incident)
 	{
-		return Vector2.reflect(incident.getDirection(), normal);
+		return Vector2D.reflect(incident.getDirection(), normal);
 	}
 
 	public int getAngle()

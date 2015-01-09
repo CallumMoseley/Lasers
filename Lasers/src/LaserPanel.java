@@ -49,13 +49,11 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		Level.loadBackground("gfx/background.png");
 
 		// Load levels
-		selectedLevel = -1;
-
 		levels = new ArrayList<Level>();
 		levels.add(new Level("levels/test1.lvl"));
 		levels.add(new Level("levels/test2.lvl"));
 
-		// Initialise menus
+		// Initialize menus
 		mainMenu = new Menu();
 		levelSelect = new Menu();
 		optionsMenu = new Menu();
@@ -89,20 +87,20 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 				repaint();
 			}
 		});
+		final RadioButtons levelButtons = new RadioButtons();
 		for (int level = 0; level < levels.size(); level++)
 		{
-			final int t = level;
-			levelSelect.add(new MenuButton(30, 30 + 60 * level, 500, 50, levels
-					.get(level).getName(), Color.DARK_GRAY, new Font("Consolas", 0, 40)) {
+			levelButtons.add(new MenuButton(30, 30 + 60 * level, 500, 50,
+					levels.get(level).getName(), Color.DARK_GRAY, new Font(
+							"Consolas", 0, 40)) {
 				@Override
 				public void onClick(Point point)
 				{
-					this.highlight();
-					selectedLevel = t;
 					repaint();
 				}
 			});
 		}
+		levelSelect.add(levelButtons);
 		levelSelect.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, new Font("Consolas", 0, 20)) {
 			@Override
@@ -117,6 +115,7 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 			@Override
 			public void onClick(Point point)
 			{
+				int selectedLevel = levelButtons.getSelected();
 				if (selectedLevel >= 0 && selectedLevel < levels.size())
 				{
 					currentMenu = inGameMenu;

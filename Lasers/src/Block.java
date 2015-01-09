@@ -26,23 +26,23 @@ public class Block extends Collidable
 		}
 	}
 
-	public Vector2 intersects(Ray r)
+	public Vector2D intersects(Ray r)
 	{
-		Vector2[] intersections = new Vector2[4];
-		intersections[0] = r.intersects(new Vector2(getX(), getY()),
-				new Vector2(0, 32));
-		intersections[1] = r.intersects(new Vector2(getX(), getY()),
-				new Vector2(32, 0));
-		intersections[2] = r.intersects(new Vector2(getX() + 32, getY()),
-				new Vector2(0, 32));
-		intersections[3] = r.intersects(new Vector2(getX(), getY() + 32),
-				new Vector2(32, 0));
-		Vector2 closest = new Vector2(Double.POSITIVE_INFINITY,
+		Vector2D[] intersections = new Vector2D[4];
+		intersections[0] = r.intersects(new Vector2D(getX(), getY()),
+				new Vector2D(0, 32));
+		intersections[1] = r.intersects(new Vector2D(getX(), getY()),
+				new Vector2D(32, 0));
+		intersections[2] = r.intersects(new Vector2D(getX() + 32, getY()),
+				new Vector2D(0, 32));
+		intersections[3] = r.intersects(new Vector2D(getX(), getY() + 32),
+				new Vector2D(32, 0));
+		Vector2D closest = new Vector2D(Double.POSITIVE_INFINITY,
 				Double.POSITIVE_INFINITY);
 		for (int point = 0; point < 4; point++)
 		{
-			if (Vector2.subtract(intersections[point], r.getPosition())
-					.getLength() < Vector2
+			if (Vector2D.subtract(intersections[point], r.getPosition())
+					.getLength() < Vector2D
 					.subtract(closest, r.getPosition()).getLength())
 			{
 				closest = intersections[point];

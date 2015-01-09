@@ -22,6 +22,7 @@ public class Level
 	
 	private String name;
 	private ArrayList<Collidable> collidable;
+	private ArrayList<Mirror> mirrors;
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
 	private boolean isSimulating;
@@ -30,6 +31,7 @@ public class Level
 	public Level()
 	{
 		collidable = new ArrayList<Collidable>();
+		mirrors = new ArrayList<Mirror>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
 		
@@ -48,9 +50,9 @@ public class Level
 		
 		this.loadLevel(file);
 		
-		collidable.add(new Mirror(100, 65, -7));
-		collidable.add(new Mirror(300, 700, 132));
-		collidable.add(new Mirror(490, 700, 143));
+		addMirror(100, 65, -7);
+		addMirror(300, 700, 132);
+		addMirror(490, 700, 143);
 
 		isSimulating = false;
 	}
@@ -69,8 +71,8 @@ public class Level
 		for (int source = 0; source < sources.size(); source++)
 		{
 			// Get the first laser segment, from the source
-			laser.add(new Ray(new Vector2(sources.get(source).getX(), sources
-					.get(source).getY()), new Vector2(sources.get(source)
+			laser.add(new Ray(new Vector2D(sources.get(source).getX(), sources
+					.get(source).getY()), new Vector2D(sources.get(source)
 					.getDirection() * 90)));
 
 			// Add the offset to the end of the laser source
@@ -86,9 +88,9 @@ public class Level
 			do
 			{
 				Ray current = laser.get(laser.size() - 1);
-				Vector2 closest = new Vector2(Double.POSITIVE_INFINITY,
+				Vector2D closest = new Vector2D(Double.POSITIVE_INFINITY,
 						Double.POSITIVE_INFINITY);
-				Vector2 closestDifference = Vector2.subtract(closest,
+				Vector2D closestDifference = Vector2D.subtract(closest,
 						current.getDirection());
 
 				objectHit = -1;
@@ -96,11 +98,11 @@ public class Level
 				// Check for collisions with each object
 				for (int object = 0; object < collidable.size(); object++)
 				{
-					Vector2 collision = collidable.get(object).intersects(
+					Vector2D collision = collidable.get(object).intersects(
 							current);
 					if (collision.getLength() != Double.POSITIVE_INFINITY)
 					{
-						Vector2 difference = Vector2.subtract(collision,
+						Vector2D difference = Vector2D.subtract(collision,
 								current.getPosition());
 						if (difference.getLength() > 1
 								&& difference.getLength() < closestDifference
@@ -129,8 +131,8 @@ public class Level
 				if (objectHit >= 0 && collidable.get(objectHit).isReflective())
 				{
 					// Calculate reflected ray
-					Vector2 newDir = collidable.get(objectHit).reflect(current);
-					Vector2 newPos = Vector2.add(current.getPosition(),
+					Vector2D newDir = collidable.get(objectHit).reflect(current);
+					Vector2D newPos = Vector2D.add(current.getPosition(),
 							current.getDirection());
 
 					Ray newRay = new Ray(newPos, newDir);
@@ -160,6 +162,18 @@ public class Level
 		{
 			collidable.get(object).unHit();
 		}
+	}
+	
+	public void addMirror(int x, int y, int angle)
+	{
+		Mirror temp = new Mirror(x, y, angle);
+		collidable.add(temp);
+		mirrors.add(temp);
+	}
+	
+	public void rotateMirrorCCW()
+	{
+		
 	}
 	
 	public String getName()

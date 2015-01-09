@@ -10,15 +10,15 @@ import java.awt.Graphics;
 
 public class Ray
 {
-	private Vector2 pos;
-	private Vector2 dir;
+	private Vector2D pos;
+	private Vector2D dir;
 
 	/**
 	 * Initialises a ray from a position vector and a direction vector
 	 * @param p the position vector of the new ray
 	 * @param d the direction vector of the new ray
 	 */
-	public Ray(Vector2 p, Vector2 d)
+	public Ray(Vector2D p, Vector2D d)
 	{
 		pos = p;
 		dir = d;
@@ -34,8 +34,8 @@ public class Ray
 	 */
 	public Ray(double x, double y, double dx, double dy)
 	{
-		pos = new Vector2(x, y);
-		dir = new Vector2(dx, dy);
+		pos = new Vector2D(x, y);
+		dir = new Vector2D(dx, dy);
 	}
 
 	/**
@@ -46,28 +46,28 @@ public class Ray
 	 * @return the point of intersection, or an infinite length vector if there
 	 *         is no intersection
 	 */
-	public Vector2 intersects(Vector2 p1, Vector2 p2)
+	public Vector2D intersects(Vector2D p1, Vector2D p2)
 	{
 		// For reference:
 		// http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/565282#565282
 
-		double t = Vector2.crossProduct(Vector2.subtract(p1, pos),
-				Vector2.multiply(p2, 1.0 / Vector2.crossProduct(dir, p2)));
-		double u = Vector2.crossProduct(Vector2.subtract(p1, pos),
-				Vector2.multiply(dir, 1.0 / Vector2.crossProduct(dir, p2)));
-		if (Vector2.crossProduct(dir, p2) != 0 && t >= 0 && u >= 0 && u <= 1)
+		double t = Vector2D.crossProduct(Vector2D.subtract(p1, pos),
+				Vector2D.multiply(p2, 1.0 / Vector2D.crossProduct(dir, p2)));
+		double u = Vector2D.crossProduct(Vector2D.subtract(p1, pos),
+				Vector2D.multiply(dir, 1.0 / Vector2D.crossProduct(dir, p2)));
+		if (Vector2D.crossProduct(dir, p2) != 0 && t >= 0 && u >= 0 && u <= 1)
 		{
-			return new Vector2(pos.getX() + t * dir.getX(), pos.getY() + t
+			return new Vector2D(pos.getX() + t * dir.getX(), pos.getY() + t
 					* dir.getY());
 		}
-		return new Vector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+		return new Vector2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 
 	/**
 	 * Gets the position vector
 	 * @return the position vector of this ray
 	 */
-	public Vector2 getPosition()
+	public Vector2D getPosition()
 	{
 		return pos;
 	}
@@ -76,7 +76,7 @@ public class Ray
 	 * Gets the direction vector
 	 * @return the direction vector of this ray
 	 */
-	public Vector2 getDirection()
+	public Vector2D getDirection()
 	{
 		return dir;
 	}

@@ -9,10 +9,10 @@ import javax.imageio.ImageIO;
 public class LaserSource
 {
 	private static Image sprites[];
-	private static Vector2[] offsets = new Vector2[] { new Vector2(14, 16),
-			new Vector2(16, 14),
-			new Vector2(18, 16),
-			new Vector2(16, 18) };
+	private static Vector2D[] offsets = new Vector2D[] { new Vector2D(14, 16),
+			new Vector2D(16, 14),
+			new Vector2D(18, 16),
+			new Vector2D(16, 18) };
 	private int x;
 	private int y;
 	private int direction;
@@ -39,7 +39,7 @@ public class LaserSource
 		return direction;
 	}
 
-	public Vector2 getOffset()
+	public Vector2D getOffset()
 	{
 		return offsets[direction];
 	}

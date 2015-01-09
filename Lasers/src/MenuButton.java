@@ -20,6 +20,8 @@ public abstract class MenuButton implements MenuItem
 	private String text;
 	private Color background;
 	private Font font;
+	
+	private boolean highlighted;
 
 	public MenuButton(int x, int y, int w, int h, String t, Color b, Font f)
 	{
@@ -51,7 +53,7 @@ public abstract class MenuButton implements MenuItem
 	 */
 	public void draw(Graphics g)
 	{
-		g.setColor(background);
+		g.setColor(highlighted ? background.brighter() : background);
 		g.fillRect(x, y, width, height);
 		// TextHelper.drawString(x + 3, y + 3, text, Color.WHITE, g);
 		g.setColor(Color.WHITE);
@@ -64,12 +66,12 @@ public abstract class MenuButton implements MenuItem
 	
 	public void highlight()
 	{
-		background = background.brighter();
+		highlighted = true;
 	}
 	
 	public void unHighlight()
 	{
-		background = background.darker();
+		highlighted = false;
 	}
 
 	/**
