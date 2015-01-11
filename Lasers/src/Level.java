@@ -6,7 +6,10 @@
  */
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -26,7 +29,7 @@ public class Level
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
 	private boolean isSimulating;
-	private Mirror selected;
+//	private Mirror selected;
 
 	public Level()
 	{
@@ -45,6 +48,7 @@ public class Level
 	public Level(String file)
 	{
 		collidable = new ArrayList<Collidable>();
+		mirrors = new ArrayList<Mirror>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
 		
@@ -272,6 +276,35 @@ public class Level
 				laser.get(laserSeg).draw(g);
 			}
 		}
+	}
+	
+	public void drawPreview(Graphics g, int x, int y, double scale)
+	{
+		AffineTransform scaleDown = new AffineTransform();
+		scaleDown.scale(scale, scale);
+		scaleDown.translate(x, y);
+		
+		BufferedImage level = new BufferedImage(24 * 32, 24 * 32, BufferedImage.TYPE_INT_ARGB);
+		
+		Graphics2D imageGraphics = (Graphics2D) level.getGraphics();
+		
+		for (int row = 0; row < 24; row++)
+		{
+			for (int col = 0; col < 24; col++)
+			{
+				imageGraphics.drawImage(background, row * SQUARE_SIZE, col * SQUARE_SIZE, null);
+			}
+		}
+		for (int object = 0; object < collidable.size(); object++)
+		{
+			collidable.get(object).draw(imageGraphics);
+		}
+		for (int source = 0; source < sources.size(); source++)
+		{
+			sources.get(source).draw(imageGraphics);
+		}
+		
+		((Graphics2D)g).drawImage(level, scaleDown, null);
 	}
 
 	public static void loadBackground(String file)

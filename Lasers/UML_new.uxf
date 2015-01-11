@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1240</x>
+      <y>20</y>
+      <w>190</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>::Block
+--
+-sprite: Image
+--
++Block(int x, int y): ctor
++loadSprite(String file): void
++intersects(Ray r): Vector2
++draw(Graphics g): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>960</x>
+      <y>10</y>
+      <w>210</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes>/::Collidable/
+--
+-x: int
+-y: int
+-wasHit: boolean
+--
++Collidable(int x, int y): ctor
++getX(): int
++getY(): int
++isTarget(): boolean
++isReflective(): boolean
++hit(): void
++unHit(): void
++getHit(): boolean
++intersects(Ray r): Vector2
++reflect(Ray incident): Vector2
++draw(Graphics g): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>270</x>
+      <y>10</y>
+      <w>270</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>::LaserPanel
+--
+-WIDTH = 1024: int
+-HEIGHT = 768: int
+-currentLevel: Level
+-currentMenu: Menu
+-inGame: boolean
+-mainMenu: Menu
+-levelSelect: Menu
+-optionsMenu: Menu
+-inGameMenu: Menu
+-inGameRunningMenu: Menu
+--
++LaserPanel(): ctor
++paintComponent(Graphics g): void
++mousePressed(MouseEvent arg0): void
++keyPressed(KeyEvent arg0): void
++keyReleased(KeyEvent arg0): void
++keyTyped(KeyEvent arg0): void
++mouseClicked(MouseEvent arg0): void
++mouseEntered(MouseEvent arg0): void
++mouseExited(MouseEvent arg0): void
++mouseReleased(MouseEvent arg0): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>10</y>
+      <w>170</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>::LasersMain
+--
+-game: LaserPanel
+--
++LasersMain(): ctor
++main(String[] args): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>540</x>
+      <y>390</y>
+      <w>280</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>::LaserSource
+--
+-sprites[]: Image
+-offsets[]: Vector2
+-x: int
+-y: int
+-direction: int
+--
++LaserSource(int x, int y, int direction): ctor
++getDirection(): int
++getOffset(): Vector2
++loadSprite(String file): void
++draw(Graphics g): void
++getX(): int
++getY(): int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>650</x>
+      <y>10</y>
+      <w>220</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>::Level
+--
+-SQUARE_SIZE = 32: int
+-background: Image
+-collidable: ArrayList&lt;Collidable&gt;
+-sources: ArrayList&lt;LaserSource&gt;
+-laser: ArrayList&lt;Ray&gt;
+-isSimulating: boolean
+-selected: Mirror
+--
++Level(): ctor
++runLaser(): boolean
++stopLaser(): void
++loadLevel(String file): void
++draw(Graphics g): void
++loadSprite(String file): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>140</y>
+      <w>220</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>::Menu
+--
+~items: ArrayList&lt;MenuItem&gt;
+--
++Menu(): ctor
++draw(Graphics g): void
++click(Point point): void
++add(MenuItem menuItem): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>440</y>
+      <w>440</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>/::MenuButton/
+--
+-x: int
+-y: int
+-width: int
+-height: int
+-text: String
+-backgroundColour: Color
+-fontColour: Color
+-font: Font
+--
++MenuButton(int x, int y, int w, int h, String t, Color b, Color fc, Font f): ctor
++intersects(Point click): boolean
++draw(Graphics g): void
++onClick(): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>300</y>
+      <w>220</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+::MenuItem
+--
+--
++draw(Graphics g): void
++intersects(Point point): boolean
++onClick(): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>910</x>
+      <y>350</y>
+      <w>220</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>::Mirror
+--
+-sprite: Image
+-angle: int
+-normal: Vector2
+--
++Mirror(int x, int y, int angle): ctor
++isReflective(): boolean
++isTarget(): boolean
++intersects(Ray r): Vector2
++reflect(Ray incident): Vector2
++getAngle(): int
++draw(Graphics g): void
++loadSprite(String file): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>750</x>
+      <y>640</y>
+      <w>340</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>::Ray
+--
+-pos: Vector2
+-dir: Vector2
+--
++Ray(Vector2 p, Vector2 d): ctor
++Ray(double x, double y, double dx, double dy): ctor
++intersects(Vector2 p1, Vector2 p2): Vector2
++getPosition(): Vector2
++getDirection(): Vector2
++draw(Graphics g): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1220</x>
+      <y>190</y>
+      <w>230</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>::Target
+--
+-sprites: Image[]
+~reflective: boolean
+--
++Target(int x, int y, boolean r): ctor
++isReflective(): boolean
++isTarget(): boolean
++reflect(Ray incident): Vector2
++loadSprite(String file): void
++draw(Graphics g): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1190</x>
+      <y>440</y>
+      <w>330</w>
+      <h>400</h>
+    </coordinates>
+    <panel_attributes>::Vector2
+--
+-x: double
+-y: double
+--
++Vector2(): ctor
++Vector2(double x, double y): ctor
++Vector2(double angle): ctor
++getX(): double
++getY(): double
++add(Vector2 v): void
++subtract(Vector2 v): void
++multiply(double scalar): void
++getLength(): double
++normalize(): void
++getNormalized(): Vector2
++getAngle(): double
++clone(): Vector2
++compareTo(Vector2 o): int
++getNormalized(Vector2 v): Vector2
++add(Vector2 a, Vector2 b): Vector2
++subtract(Vector2 a, Vector2 b): Vector2
++multiply(Vector2 v, double scalar): Vector2
++dotProduct(Vector2 a, Vector2 b): double
++crossProduct(Vector2 a, Vector2 b): double
++reflect(Vector2 incident, Vector2 normal): Vector2
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>160</x>
+      <y>40</y>
+      <w>130</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+-game</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>110</y>
+      <w>140</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=-currentLevel</panel_attributes>
+    <additional_attributes>120.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>860</x>
+      <y>130</y>
+      <w>120</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=-collidable</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1160</x>
+      <y>70</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>130</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1010</x>
+      <y>260</y>
+      <w>30</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1080</x>
+      <y>710</y>
+      <w>130</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=-pos, -dir</panel_attributes>
+    <additional_attributes>110.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>660</x>
+      <y>250</y>
+      <w>80</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=-sources</panel_attributes>
+    <additional_attributes>10.0;140.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>810</x>
+      <y>590</y>
+      <w>400</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=-offsets</panel_attributes>
+    <additional_attributes>380.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1120</x>
+      <y>490</y>
+      <w>90</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=    -normal</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>160</x>
+      <y>90</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=-currentMenu</panel_attributes>
+    <additional_attributes>10.0;50.0;30.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>90</x>
+      <y>250</y>
+      <w>70</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=-items</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>130</x>
+      <y>390</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>830</x>
+      <y>250</y>
+      <w>60</w>
+      <h>410</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=-laser</panel_attributes>
+    <additional_attributes>10.0;390.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
