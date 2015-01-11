@@ -18,6 +18,17 @@ public class MenuLabel implements MenuItem
 
 	private boolean highlighted;
 
+	/**
+	 * Initialises this label with position, size, text, colour, and font
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @param w the width of the label
+	 * @param h the height of the label
+	 * @param t the text on the label
+	 * @param b the colour of the label's background
+	 * @param fc the colour of the label's text
+	 * @param f the font of the text on the label
+	 */
 	public MenuLabel(int x, int y, int w, int h, String t, Color b, Color fc,
 			Font f)
 	{
@@ -37,21 +48,31 @@ public class MenuLabel implements MenuItem
 	@Override
 	public void draw(Graphics g)
 	{
+		// Draw background, with colour either brighter or not based on whether
+		// this object is highlighted
 		g.setColor(highlighted ? backgroundColour.brighter() : backgroundColour);
 		g.fillRect(x, y, width, height);
-		g.setColor(fontColour);
-		g.setFont(font);
+		
+		// Calculate the centre of the label, and draw the text there
 		int strWidth = g.getFontMetrics().stringWidth(text);
 		int strHeight = g.getFontMetrics().getHeight();
+		g.setColor(fontColour);
+		g.setFont(font);
 		g.drawString(text, x + width / 2 - strWidth / 2, y + height / 2
 				+ strHeight / 4);
 	}
 
+	/**
+	 * Highlights this label
+	 */
 	public void highlight()
 	{
 		highlighted = true;
 	}
 
+	/**
+	 * Un-highlights this label
+	 */
 	public void unHighlight()
 	{
 		highlighted = false;

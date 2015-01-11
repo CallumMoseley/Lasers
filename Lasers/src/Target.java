@@ -1,3 +1,9 @@
+/**
+ * A block which lights up when hit with a laser, and must be hit to win
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -11,6 +17,12 @@ public class Target extends Block
 	private static Image[] sprites;
 	boolean reflective;
 
+	/**
+	 * Initialises this target to a position, and reflectivity
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @param r whether this target is reflective
+	 */
 	public Target(int x, int y, boolean r)
 	{
 		super(x, y);
@@ -29,6 +41,7 @@ public class Target extends Block
 
 	public Vector2D reflect(Ray incident)
 	{
+		// Finds which side the laser hits, and the point where it hits.  See Block.intersects(Ray r)
 		Vector2D[] intersections = new Vector2D[4];
 		intersections[0] = incident.intersects(new Vector2D(getX(), getY()),
 				new Vector2D(0, 32));
@@ -52,6 +65,7 @@ public class Target extends Block
 			}
 		}
 
+		// Based on which side is hit, find the normal
 		Vector2D normal;
 		if (closestIndex == 0)
 		{
@@ -70,6 +84,7 @@ public class Target extends Block
 			normal = new Vector2D(0, 1);
 		}
 
+		// Reflect the ray
 		return Vector2D.reflect(incident.getDirection(), normal);
 	}
 
@@ -83,6 +98,8 @@ public class Target extends Block
 		{
 			BufferedImage spriteSheet = ImageIO.read(new File(file));
 			sprites = new Image[4];
+			
+			// Get sprites from sprite sheet
 			sprites[0] = spriteSheet.getSubimage(0, 0, 32, 32);
 			sprites[1] = spriteSheet.getSubimage(32, 0, 32, 32);
 			sprites[2] = spriteSheet.getSubimage(64, 0, 32, 32);

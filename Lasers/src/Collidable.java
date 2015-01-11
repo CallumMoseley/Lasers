@@ -1,3 +1,9 @@
+/**
+ * An object which can be placed in a level, and a laser can collide with
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.Graphics;
 
 public abstract class Collidable
@@ -7,7 +13,7 @@ public abstract class Collidable
 	private boolean wasHit;
 
 	/**
-	 * Initialises the object to an x-y position
+	 * Initialises the object to a given position
 	 * @param x the x coordinate of the object
 	 * @param y the y coordinate of the object
 	 */
@@ -36,26 +42,44 @@ public abstract class Collidable
 		return y;
 	}
 
+	/**
+	 * Gets whether this object is a target
+	 * @return whether this object is a target
+	 */
 	public boolean isTarget()
 	{
 		return false;
 	}
 
+	/**
+	 * Gets whether this object reflects lasers
+	 * @return whether this object reflects lasers
+	 */
 	public boolean isReflective()
 	{
 		return false;
 	}
 
+	/**
+	 * Flags this object as hit for the current simulation
+	 */
 	public void hit()
 	{
 		wasHit = true;
 	}
 
+	/**
+	 * Clears the hit flag
+	 */
 	public void unHit()
 	{
 		wasHit = false;
 	}
 
+	/**
+	 * Gets whether this object has been hit in the current simulation
+	 * @return whether this object was hit
+	 */
 	public boolean getHit()
 	{
 		return wasHit;
@@ -72,13 +96,18 @@ public abstract class Collidable
 		return new Vector2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 
+	/**
+	 * Finds the direction of the given ray if it were reflected by this object
+	 * @param incident the ray to reflect over this object
+	 * @return the direction vector of the reflected ray
+	 */
 	public Vector2D reflect(Ray incident)
 	{
 		return incident.getDirection();
 	}
 
 	/**
-	 * Draws the object
+	 * Draws the object in the given graphics context
 	 * @param g the graphics object to draw with
 	 */
 	public void draw(Graphics g)

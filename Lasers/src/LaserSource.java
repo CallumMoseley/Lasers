@@ -1,3 +1,9 @@
+/**
+ * An object in a level that, when simulated, creates a laser
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -39,6 +45,11 @@ public class LaserSource
 		return direction;
 	}
 
+	/**
+	 * Gets the offset between the top left corner of the laser source and
+	 * the point where the laser comes out
+	 * @return the offset for this laser source
+	 */
 	public Vector2D getOffset()
 	{
 		return offsets[direction];
@@ -54,6 +65,8 @@ public class LaserSource
 		{
 			BufferedImage temp = ImageIO.read(new File(file));
 			sprites = new Image[4];
+			
+			// Get each individual sprite
 			sprites[0] = temp.getSubimage(0, 0, 32, 32);
 			sprites[1] = temp.getSubimage(32, 0, 32, 32);
 			sprites[2] = temp.getSubimage(64, 0, 32, 32);

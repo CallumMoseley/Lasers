@@ -2,7 +2,7 @@
  * Contains all the data for a the current level loaded in the game, as well as handling running logic
  * 
  * @author Callum Moseley
- * @version December 2014
+ * @version January 2015
  */
 
 import java.awt.Graphics;
@@ -22,38 +22,46 @@ public class Level
 {
 	private final int SQUARE_SIZE = 32;
 	private static Image background;
-	
+
 	private String name;
 	private ArrayList<Collidable> collidable;
 	private ArrayList<Mirror> mirrors;
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
 	private boolean isSimulating;
-//	private Mirror selected;
 
+	// private Mirror selected;
+
+	/**
+	 * Initialises the level to be blank
+	 */
 	public Level()
 	{
 		collidable = new ArrayList<Collidable>();
 		mirrors = new ArrayList<Mirror>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
-		
+
 		collidable.add(new Mirror(100, 65, -7));
 		collidable.add(new Mirror(300, 700, 132));
 		collidable.add(new Mirror(490, 700, 143));
 
 		isSimulating = false;
 	}
-	
+
+	/**
+	 * Initialises the level, and loads a level from the given file
+	 * @param file the path to the file to load the level from
+	 */
 	public Level(String file)
 	{
 		collidable = new ArrayList<Collidable>();
 		mirrors = new ArrayList<Mirror>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
-		
+
 		this.loadLevel(file);
-		
+
 		addMirror(100, 65, -7);
 		addMirror(300, 700, 132);
 		addMirror(490, 700, 143);
@@ -79,16 +87,17 @@ public class Level
 					.get(source).getY()), new Vector2D(sources.get(source)
 					.getDirection() * 90)));
 
-			// Add the offset to the end of the laser source
+			// Add the offset, so the laser is coming out of the right part of
+			// the laser source
 			laser.get(laser.size() - 1).getPosition()
 					.add(sources.get(source).getOffset());
 
 			int objectHit;
 
-			// Simulate the laser bouncing while it hits mirrors. Finds the
-			// point of intersection with all collidable objects. The
+			// Simulate the laser bouncing while it hits reflective objects.
+			// Finds the point of intersection with all collidable objects. The
 			// interaction that is handled will be the closest one to the
-			// current laser segment's point.
+			// current laser segment's position.
 			do
 			{
 				Ray current = laser.get(laser.size() - 1);
@@ -99,7 +108,8 @@ public class Level
 
 				objectHit = -1;
 
-				// Check for collisions with each object
+				// Check for collisions with each object, updating the closest
+				// so far along the way
 				for (int object = 0; object < collidable.size(); object++)
 				{
 					Vector2D collision = collidable.get(object).intersects(
@@ -121,21 +131,20 @@ public class Level
 
 				collidable.get(objectHit).hit();
 
+				// Set the current laser segment to be the correct length
 				current.getDirection().normalize();
 				if (closestDifference.getLength() != Double.POSITIVE_INFINITY)
 				{
 					current.getDirection().multiply(
 							closestDifference.getLength());
 				}
-				else
-				{
-					current.getDirection().multiply(1000);
-				}
-
+				
+				// Reflect the laser if necessary
 				if (objectHit >= 0 && collidable.get(objectHit).isReflective())
 				{
 					// Calculate reflected ray
-					Vector2D newDir = collidable.get(objectHit).reflect(current);
+					Vector2D newDir = collidable.get(objectHit)
+							.reflect(current);
 					Vector2D newPos = Vector2D.add(current.getPosition(),
 							current.getDirection());
 
@@ -148,6 +157,7 @@ public class Level
 			while (objectHit >= 0 && collidable.get(objectHit).isReflective());
 		}
 
+		// Finds whether all targets were hit
 		for (int object = 0; object < collidable.size(); object++)
 		{
 			if (collidable.get(object).isTarget()
@@ -158,28 +168,45 @@ public class Level
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Stops the laser simulation
+	 */
 	public void stopLaser()
 	{
+		laser.clear();
 		isSimulating = false;
 		for (int object = 0; object < collidable.size(); object++)
 		{
 			collidable.get(object).unHit();
 		}
 	}
-	
+
+	/**
+	 * Adds a mirror to the level at the given position and angle
+	 * @param x the x coordinate of the new mirror
+	 * @param y the y coordinate of the new mirror
+	 * @param angle the angle of the mirror
+	 */
 	public void addMirror(int x, int y, int angle)
 	{
 		Mirror temp = new Mirror(x, y, angle);
 		collidable.add(temp);
 		mirrors.add(temp);
 	}
-	
+
+	/**
+	 * Rotates the currently selected mirror counterclockwise
+	 */
 	public void rotateMirrorCCW()
 	{
-		
+
 	}
-	
+
+	/**
+	 * Gets the name of the level
+	 * @return the name of the level
+	 */
 	public String getName()
 	{
 		return name;
@@ -252,22 +279,23 @@ public class Level
 		{
 			for (int col = 0; col < 24; col++)
 			{
-				g.drawImage(background, row * SQUARE_SIZE, col * SQUARE_SIZE, null);
+				g.drawImage(background, row * SQUARE_SIZE, col * SQUARE_SIZE,
+						null);
 			}
 		}
-		
+
 		// Draw all collidable objects
 		for (int object = 0; object < collidable.size(); object++)
 		{
 			collidable.get(object).draw(g);
 		}
-		
+
 		// Draw all laser sources
 		for (int source = 0; source < sources.size(); source++)
 		{
 			sources.get(source).draw(g);
 		}
-		
+
 		// If the level is currently simulating, draw the laser
 		if (isSimulating)
 		{
@@ -277,22 +305,28 @@ public class Level
 			}
 		}
 	}
-	
+
+	/**
+	 * Draws a smaller version of the level at the given position and scale
+	 * @param g the graphics context to draw with
+	 * @param x the x position of the preview
+	 * @param y the y position of the preview
+	 * @param scale the scale of the preview, 1 is full size
+	 */
 	public void drawPreview(Graphics g, int x, int y, double scale)
 	{
-		AffineTransform scaleDown = new AffineTransform();
-		scaleDown.scale(scale, scale);
-		scaleDown.translate(x, y);
-		
-		BufferedImage level = new BufferedImage(24 * 32, 24 * 32, BufferedImage.TYPE_INT_ARGB);
-		
+		// This image is used to store a picture of the level
+		BufferedImage level = new BufferedImage(24 * 32, 24 * 32,
+				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imageGraphics = (Graphics2D) level.getGraphics();
-		
+
+		// Add objects to the level picture
 		for (int row = 0; row < 24; row++)
 		{
 			for (int col = 0; col < 24; col++)
 			{
-				imageGraphics.drawImage(background, row * SQUARE_SIZE, col * SQUARE_SIZE, null);
+				imageGraphics.drawImage(background, row * SQUARE_SIZE, col
+						* SQUARE_SIZE, null);
 			}
 		}
 		for (int object = 0; object < collidable.size(); object++)
@@ -304,9 +338,18 @@ public class Level
 			sources.get(source).draw(imageGraphics);
 		}
 		
-		((Graphics2D)g).drawImage(level, scaleDown, null);
+		// Scale and position the preview
+		AffineTransform scaleDown = new AffineTransform();
+		scaleDown.scale(scale, scale);
+		scaleDown.translate(x, y);
+
+		((Graphics2D) g).drawImage(level, scaleDown, null);
 	}
 
+	/**
+	 * Loads the static background tile for all levels
+	 * @param file the path to the image file with the background
+	 */
 	public static void loadBackground(String file)
 	{
 		try

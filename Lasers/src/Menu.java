@@ -2,7 +2,6 @@
  * Represents a collection of MenuItems
  * @author Callum Moseley
  * @version January 2015
- *
  */
 
 import java.awt.Graphics;
@@ -13,6 +12,9 @@ public class Menu
 {
 	ArrayList<MenuItem> items;
 
+	/**
+	 * Initialise a blank menu
+	 */
 	public Menu()
 	{
 		items = new ArrayList<MenuItem>();
@@ -31,24 +33,27 @@ public class Menu
 		}
 	}
 
+	/**
+	 * Passes the click to each menu item
+	 * @param point the point that was clicked
+	 */
 	public void click(Point point)
 	{
+		// For every item, see whether the point intersects with it, and if so,
+		// run it's onClick method
 		for (int item = 0; item < items.size(); item++)
 		{
-			try
+			if (items.get(item).intersects(point))
 			{
-				if (items.get(item).intersects(point))
-				{
-					items.get(item).onClick(point);
-				}
-			}
-			catch (Exception e)
-			{
-
+				items.get(item).onClick(point);
 			}
 		}
 	}
 
+	/**
+	 * Adds a new menu item to this menu
+	 * @param menuItem the menu item to add to this menu
+	 */
 	public void add(MenuItem menuItem)
 	{
 		items.add(menuItem);

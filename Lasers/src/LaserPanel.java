@@ -1,5 +1,5 @@
 /**
- * Contains all of the game logic and graphics
+ * Contains all game logic, graphics, and input handling
  * @author Callum Moseley
  * @version January 2015
  */
@@ -36,11 +36,16 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 
 	private ArrayList<Level> levels;
 
+	/**
+	 * Loads all levels, static resources, menus, and starts the main menu
+	 */
 	public LaserPanel()
 	{
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
 		addMouseListener(this);
+		addKeyListener(this);
+		setFocusable(true);
 
 		// Load static resources
 		Block.loadSprite("gfx/block.png");
@@ -61,6 +66,7 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		inGameMenu = new Menu();
 		inGameRunningMenu = new Menu();
 
+		// Add all menu items to all menus
 		mainMenu.add(new MenuLabel(512, 200, 0, 0, "Lasers", new Color(0, 0, 0,
 				0), Color.WHITE, new Font("Consolas", 0, 60)));
 		mainMenu.add(new MenuButton(212, 300, 600, 50, "Play",
@@ -178,25 +184,38 @@ public class LaserPanel extends JPanel implements MouseListener, KeyListener
 		currentMenu = mainMenu;
 	}
 
+	/**
+	 * Draws the game with the given graphics context
+	 * @param g the graphics context to draw with
+	 */
 	public void paintComponent(Graphics g)
 	{
+		// Clear the screen
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
+
+		// Draw the game, if a level is loaded
 		if (inGame)
 		{
 			currentLevel.draw(g);
 		}
+
+		// Draw a level preview if the player is in the level select menu and a
+		// level is selected
 		if (currentMenu == levelSelect && levelButtons.getSelected() != -1)
 		{
 			levels.get(levelButtons.getSelected()).drawPreview(g, 1200, 450,
 					0.5);
 		}
+
+		// Draw the menu if one is loaded
 		currentMenu.draw(g);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0)
 	{
+		// Pass the click to the current menu
 		currentMenu.click(arg0.getPoint());
 	}
 

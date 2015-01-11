@@ -2,7 +2,7 @@
  * Represents a ray, by two vectors, a position and a direction
  * 
  * @author Callum Moseley
- * @version December 2014
+ * @version January 2015
  */
 
 import java.awt.Color;
@@ -51,10 +51,14 @@ public class Ray
 		// For reference:
 		// http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/565282#565282
 
+		// Calculate the scalars required to have the ray and line segment
+		// intersect
 		double t = Vector2D.crossProduct(Vector2D.subtract(p1, pos),
 				Vector2D.multiply(p2, 1.0 / Vector2D.crossProduct(dir, p2)));
 		double u = Vector2D.crossProduct(Vector2D.subtract(p1, pos),
 				Vector2D.multiply(dir, 1.0 / Vector2D.crossProduct(dir, p2)));
+
+		// Check whether the point is in the line segment, and on the infinite side of the ray
 		if (Vector2D.crossProduct(dir, p2) != 0 && t >= 0 && u >= 0 && u <= 1)
 		{
 			return new Vector2D(pos.getX() + t * dir.getX(), pos.getY() + t

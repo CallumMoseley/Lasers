@@ -137,8 +137,6 @@ public class Vector2D implements Comparable<Vector2D>
 		return ((Double) getLength()).compareTo(o.getLength());
 	}
 
-	// Static methods
-
 	/**
 	 * Finds the normal of the given vector
 	 * @param v the given vector

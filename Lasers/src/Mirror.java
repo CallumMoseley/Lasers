@@ -1,3 +1,9 @@
+/**
+ * A rotatable mirror which reflects lasers and can be manipulated by the player
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -13,6 +19,12 @@ public class Mirror extends Collidable
 	private int angle;
 	private Vector2D normal;
 
+	/**
+	 * Initialises as new mirror with the given position and angle
+	 * @param x the x coordinate of the mirror
+	 * @param y the y coordinate of the mirror
+	 * @param angle the angle of the mirror
+	 */
 	public Mirror(int x, int y, int angle)
 	{
 		super(x, y);
@@ -43,6 +55,10 @@ public class Mirror extends Collidable
 		return Vector2D.reflect(incident.getDirection(), normal);
 	}
 
+	/**
+	 * Gets the angle of this mirror
+	 * @return the angle of this mirror
+	 */
 	public int getAngle()
 	{
 		return angle;
@@ -50,6 +66,7 @@ public class Mirror extends Collidable
 
 	public void draw(Graphics g)
 	{
+		// Create a rotation transform by the angle of this mirror
 		AffineTransform af = AffineTransform.getTranslateInstance(getX(),
 				getY());
 		af.rotate(Math.toRadians(angle));
@@ -57,8 +74,8 @@ public class Mirror extends Collidable
 	}
 
 	/**
-	 * Loads an image file for all of this object
-	 * @param file the filename of the image
+	 * Loads a static image for all mirrors from a file
+	 * @param file the file path of the image
 	 */
 	public static void loadSprite(String file)
 	{
