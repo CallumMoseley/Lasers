@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Mirror extends Collidable
+public class Mirror extends Collidable implements Placeable
 {
 	private static Image sprite;
 	private int angle;
@@ -87,5 +87,19 @@ public class Mirror extends Collidable
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void rotateCCW(int degrees)
+	{
+		angle -= degrees;
+		normal = new Vector2D(angle + 135).getNormalized();
+	}
+
+	@Override
+	public void rotateCW(int degrees)
+	{
+		angle += degrees;
+		normal = new Vector2D(angle + 135).getNormalized();
 	}
 }

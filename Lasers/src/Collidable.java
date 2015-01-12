@@ -84,6 +84,12 @@ public abstract class Collidable
 	{
 		return wasHit;
 	}
+	
+	public void moveTo(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+	}
 
 	/**
 	 * Determines the point at which the given ray intersects with this object

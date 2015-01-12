@@ -54,10 +54,10 @@ public class MenuLabel implements MenuItem
 		g.fillRect(x, y, width, height);
 		
 		// Calculate the centre of the label, and draw the text there
-		int strWidth = g.getFontMetrics().stringWidth(text);
-		int strHeight = g.getFontMetrics().getHeight();
 		g.setColor(fontColour);
 		g.setFont(font);
+		int strWidth = g.getFontMetrics().stringWidth(text);
+		int strHeight = g.getFontMetrics().getHeight();
 		g.drawString(text, x + width / 2 - strWidth / 2, y + height / 2
 				+ strHeight / 4);
 	}

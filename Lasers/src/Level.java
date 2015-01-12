@@ -8,6 +8,7 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -25,12 +26,10 @@ public class Level
 
 	private String name;
 	private ArrayList<Collidable> collidable;
-	private ArrayList<Mirror> mirrors;
+	private ArrayList<Placeable> placeable;
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
 	private boolean isSimulating;
-
-	// private Mirror selected;
 
 	/**
 	 * Initialises the level to be blank
@@ -38,7 +37,7 @@ public class Level
 	public Level()
 	{
 		collidable = new ArrayList<Collidable>();
-		mirrors = new ArrayList<Mirror>();
+		placeable = new ArrayList<Placeable>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
 
@@ -56,15 +55,14 @@ public class Level
 	public Level(String file)
 	{
 		collidable = new ArrayList<Collidable>();
-		mirrors = new ArrayList<Mirror>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
 
 		this.loadLevel(file);
 
-		addMirror(100, 65, -7);
-		addMirror(300, 700, 132);
-		addMirror(490, 700, 143);
+		addPlaceable(new Mirror(100, 65, -7));
+		addPlaceable(new Mirror(300, 700, 132));
+		addPlaceable(new Mirror(490, 700, 143));
 
 		isSimulating = false;
 	}
@@ -78,7 +76,6 @@ public class Level
 	public boolean runLaser()
 	{
 		isSimulating = true;
-		laser = new ArrayList<Ray>();
 
 		for (int source = 0; source < sources.size(); source++)
 		{
@@ -181,26 +178,24 @@ public class Level
 			collidable.get(object).unHit();
 		}
 	}
-
+	
 	/**
-	 * Adds a mirror to the level at the given position and angle
-	 * @param x the x coordinate of the new mirror
-	 * @param y the y coordinate of the new mirror
-	 * @param angle the angle of the mirror
+	 * Adds the given mirror to this level
+	 * @param mirror the mirror to add
 	 */
-	public void addMirror(int x, int y, int angle)
+	public void addPlaceable(Placeable object)
 	{
-		Mirror temp = new Mirror(x, y, angle);
-		collidable.add(temp);
-		mirrors.add(temp);
+		collidable.add((Collidable) object);
+	}
+	
+	public void removePlaceable(Placeable object)
+	{
+		collidable.remove(object);
 	}
 
-	/**
-	 * Rotates the currently selected mirror counterclockwise
-	 */
-	public void rotateMirrorCCW()
+	public Placeable getClicked(Point click)
 	{
-
+		return null;
 	}
 
 	/**
