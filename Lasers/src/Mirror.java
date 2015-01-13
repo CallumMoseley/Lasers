@@ -7,6 +7,7 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
@@ -31,12 +32,12 @@ public class Mirror extends Collidable implements Placeable
 		this.angle = angle;
 		normal = new Vector2D(angle + 135).getNormalized();
 	}
-	
+
 	public boolean isReflective()
 	{
 		return true;
 	}
-	
+
 	public boolean isTarget()
 	{
 		return false;
@@ -101,5 +102,12 @@ public class Mirror extends Collidable implements Placeable
 	{
 		angle += degrees;
 		normal = new Vector2D(angle + 135).getNormalized();
+	}
+
+	@Override
+	public boolean intersects(Point click)
+	{
+		return click.getX() >= getX() && click.getY() >= getY()
+				&& click.getX() <= getX() + 32 && click.getY() <= getY() + 32;
 	}
 }

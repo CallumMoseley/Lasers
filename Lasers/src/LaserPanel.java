@@ -246,7 +246,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// Pass the click to the current menu
 		currentMenu.click(arg0.getPoint());
 		
-		if (inGame)
+		if (inGame && arg0.getX() < 32 * 24)
 		{
 			selectedObject = currentLevel.getClicked(arg0.getPoint());
 			if (selectedObject != null)
@@ -303,7 +303,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 				if (selectedObject != null)
 				{
-					selectedObject.rotateCCW(5);
+					selectedObject.rotateCCW(1);
 					repaint();
 				}
 			}
@@ -311,7 +311,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 				if (selectedObject != null)
 				{
-					selectedObject.rotateCW(5);
+					selectedObject.rotateCW(1);
 					repaint();
 				}
 			}

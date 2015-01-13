@@ -41,10 +41,6 @@ public class Level
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
 
-		collidable.add(new Mirror(100, 65, -7));
-		collidable.add(new Mirror(300, 700, 132));
-		collidable.add(new Mirror(490, 700, 143));
-
 		isSimulating = false;
 	}
 
@@ -55,14 +51,11 @@ public class Level
 	public Level(String file)
 	{
 		collidable = new ArrayList<Collidable>();
+		placeable = new ArrayList<Placeable>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
 
 		this.loadLevel(file);
-
-		addPlaceable(new Mirror(100, 65, -7));
-		addPlaceable(new Mirror(300, 700, 132));
-		addPlaceable(new Mirror(490, 700, 143));
 
 		isSimulating = false;
 	}
@@ -135,7 +128,7 @@ public class Level
 					current.getDirection().multiply(
 							closestDifference.getLength());
 				}
-				
+
 				// Reflect the laser if necessary
 				if (objectHit >= 0 && collidable.get(objectHit).isReflective())
 				{
@@ -178,7 +171,7 @@ public class Level
 			collidable.get(object).unHit();
 		}
 	}
-	
+
 	/**
 	 * Adds the given mirror to this level
 	 * @param mirror the mirror to add
@@ -186,15 +179,24 @@ public class Level
 	public void addPlaceable(Placeable object)
 	{
 		collidable.add((Collidable) object);
+		placeable.add(object);
 	}
-	
+
 	public void removePlaceable(Placeable object)
 	{
 		collidable.remove(object);
+		placeable.remove(object);
 	}
 
 	public Placeable getClicked(Point click)
 	{
+		for (int object = 0; object < placeable.size(); object++)
+		{
+			if (placeable.get(object).intersects(click))
+			{
+				return placeable.get(object);
+			}
+		}
 		return null;
 	}
 
@@ -332,7 +334,7 @@ public class Level
 		{
 			sources.get(source).draw(imageGraphics);
 		}
-		
+
 		// Scale and position the preview
 		AffineTransform scaleDown = new AffineTransform();
 		scaleDown.scale(scale, scale);
