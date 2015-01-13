@@ -14,6 +14,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -62,12 +63,16 @@ public class LaserPanel extends JPanel implements MouseListener,
 		Level.loadBackground("gfx/background.png");
 
 		// Load levels
-		// TODO load all levels from the folder "levels"
 		// TODO stand-alone level editor
 		// TODO make more levels
 		levels = new ArrayList<Level>();
-		levels.add(new Level("levels/test1.lvl"));
-		levels.add(new Level("levels/test2.lvl"));
+		File[] levelFiles = new File("levels").listFiles();
+		for (int file = 0; file < levelFiles.length; file++)
+		{
+			Level newLevel = new Level();
+			if (newLevel.loadLevel(levelFiles[file]))
+					levels.add(newLevel);
+		}
 
 		// Initialize menus
 		mainMenu = new Menu();
@@ -112,9 +117,10 @@ public class LaserPanel extends JPanel implements MouseListener,
 		});
 
 		// Add labels and buttons to level select menu
+		// TODO show whether a player has completed a level, and top score
 		levelSelect.add(new MenuLabel(200, 50, 0, 0, "Level Select", new Color(
 				0, 0, 0, 0), Color.WHITE, new Font("Consolas", 0, 50)));
-		// TODO have a scroll bar
+		// TODO scale based on number of levels
 		levelButtons = new RadioButtons();
 		for (int level = 0; level < levels.size(); level++)
 		{
@@ -128,6 +134,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 				}
 			});
 		}
+		
 		levelSelect.add(levelButtons);
 		levelSelect.add(new MenuLabel(800, 180, 0, 0, "Preview", new Color(0,
 				0, 0, 0), Color.WHITE, new Font("Consolas", 0, 40)));
@@ -175,6 +182,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 				currentMenu = levelSelect;
 				inGame = false;
+				selectedObject = null;
 				repaint();
 			}
 		});
@@ -208,6 +216,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 				currentLevel.stopLaser();
 				currentMenu = levelSelect;
 				inGame = false;
+				selectedObject = null;
 				repaint();
 			}
 		});

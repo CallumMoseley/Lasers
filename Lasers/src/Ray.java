@@ -5,8 +5,10 @@
  * @version January 2015
  */
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class Ray
 {
@@ -92,6 +94,7 @@ public class Ray
 	public void draw(Graphics g)
 	{
 		g.setColor(Color.RED);
+		((Graphics2D) g).setStroke(new BasicStroke(2));
 		g.drawLine((int) pos.getX(), (int) pos.getY(),
 				(int) (pos.getX() + dir.getX()),
 				(int) (pos.getY() + dir.getY()));

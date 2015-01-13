@@ -30,6 +30,8 @@ public class Level
 	private ArrayList<Placeable> placeable;
 	private ArrayList<LaserSource> sources;
 	private ArrayList<Ray> laser;
+	private int topScore;
+	private boolean completed;
 	private boolean isSimulating;
 
 	/**
@@ -41,6 +43,9 @@ public class Level
 		placeable = new ArrayList<Placeable>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
+		
+		topScore = -1;
+		completed = false;
 
 		isSimulating = false;
 	}
@@ -49,12 +54,15 @@ public class Level
 	 * Initialises the level, and loads a level from the given file
 	 * @param file the path to the file to load the level from
 	 */
-	public Level(String file)
+	public Level(File file)
 	{
 		collidable = new ArrayList<Collidable>();
 		placeable = new ArrayList<Placeable>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
+		
+		topScore = -1;
+		completed = false;
 
 		this.loadLevel(file);
 
@@ -65,9 +73,8 @@ public class Level
 	 * Simulates all lasers being emitted and reflecting off mirrors, until the
 	 * laser hits an opaque object. Also finds whether the laser hit all
 	 * targets.
-	 * @return whether all targets were hit or not
 	 */
-	public boolean runLaser()
+	public void runLaser()
 	{
 		isSimulating = true;
 
@@ -149,15 +156,23 @@ public class Level
 		}
 
 		// Finds whether all targets were hit
+		boolean allHit = true;
 		for (int object = 0; object < collidable.size(); object++)
 		{
 			if (collidable.get(object).isTarget()
 					&& !collidable.get(object).getHit())
 			{
-				return false;
+				allHit = false;
 			}
 		}
-		return true;
+		if (allHit)
+		{
+			completed = true;
+			if (placeable.size() < topScore || topScore == -1)
+			{
+				topScore = placeable.size();
+			}
+		}
 	}
 
 	/**
@@ -171,6 +186,16 @@ public class Level
 		{
 			collidable.get(object).unHit();
 		}
+	}
+	
+	public boolean isSimulating()
+	{
+		return isSimulating;
+	}
+	
+	public boolean isComplete()
+	{
+		return completed;
 	}
 
 	/**
@@ -187,6 +212,11 @@ public class Level
 	{
 		collidable.remove(object);
 		placeable.remove(object);
+	}
+	
+	public int getTopScore()
+	{
+		return topScore;
 	}
 
 	public Placeable getClicked(Point click)
@@ -209,12 +239,8 @@ public class Level
 	{
 		return name;
 	}
-
-	/**
-	 * Loads a level from a file
-	 * @param file the filename of the file containing the level
-	 */
-	public void loadLevel(String file)
+	
+	public boolean loadLevel(File file)
 	{
 		try
 		{
@@ -259,11 +285,22 @@ public class Level
 				lineNo++;
 			}
 			br.close();
+			return true;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			return false;
 		}
+	}
+
+	/**
+	 * Loads a level from a file
+	 * @param file the filename of the file containing the level
+	 */
+	public boolean loadLevel(String file)
+	{
+		return loadLevel(new File(file));
 	}
 
 	/**
@@ -282,6 +319,15 @@ public class Level
 			}
 		}
 
+		// If the level is currently simulating, draw the laser
+		if (isSimulating)
+		{
+			for (int laserSeg = 0; laserSeg < laser.size(); laserSeg++)
+			{
+				laser.get(laserSeg).draw(g);
+			}
+		}
+
 		// Draw all collidable objects
 		for (int object = 0; object < collidable.size(); object++)
 		{
@@ -292,15 +338,6 @@ public class Level
 		for (int source = 0; source < sources.size(); source++)
 		{
 			sources.get(source).draw(g);
-		}
-
-		// If the level is currently simulating, draw the laser
-		if (isSimulating)
-		{
-			for (int laserSeg = 0; laserSeg < laser.size(); laserSeg++)
-			{
-				laser.get(laserSeg).draw(g);
-			}
 		}
 	}
 

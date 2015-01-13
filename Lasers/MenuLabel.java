@@ -52,12 +52,12 @@ public class MenuLabel implements MenuItem
 		// this object is highlighted
 		g.setColor(highlighted ? backgroundColour.brighter() : backgroundColour);
 		g.fillRect(x, y, width, height);
-
+		
 		// Calculate the centre of the label, and draw the text there
-		g.setColor(fontColour);
-		g.setFont(font);
 		int strWidth = g.getFontMetrics().stringWidth(text);
 		int strHeight = g.getFontMetrics().getHeight();
+		g.setColor(fontColour);
+		g.setFont(font);
 		g.drawString(text, x + width / 2 - strWidth / 2, y + height / 2
 				+ strHeight / 4);
 	}
