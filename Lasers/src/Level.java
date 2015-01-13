@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 
 public class Level
 {
+	// TODO save the players top score, to be shown on the level select screen
 	private final int SQUARE_SIZE = 32;
 	private static Image background;
 

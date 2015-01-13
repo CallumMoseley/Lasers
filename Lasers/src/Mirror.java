@@ -14,6 +14,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+// TODO rotate from the middle
+
 public class Mirror extends Collidable implements Placeable
 {
 	private static Image sprite;

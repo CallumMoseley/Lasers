@@ -62,6 +62,9 @@ public class LaserPanel extends JPanel implements MouseListener,
 		Level.loadBackground("gfx/background.png");
 
 		// Load levels
+		// TODO load all levels from the folder "levels"
+		// TODO stand-alone level editor
+		// TODO make more levels
 		levels = new ArrayList<Level>();
 		levels.add(new Level("levels/test1.lvl"));
 		levels.add(new Level("levels/test2.lvl"));
@@ -74,6 +77,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		inGameRunningMenu = new Menu();
 
 		// Add labels and buttons to main menu
+		// TODO add other menu items (instructions, about, exit)
 		mainMenu.add(new MenuLabel(512, 200, 0, 0, "Lasers", new Color(0, 0, 0,
 				0), Color.WHITE, new Font("Consolas", 0, 60)));
 		mainMenu.add(new MenuButton(212, 300, 600, 50, "Play",
@@ -96,6 +100,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		});
 
 		// Add labels and buttons to options menu
+		// TODO actually add some options
 		optionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -109,6 +114,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// Add labels and buttons to level select menu
 		levelSelect.add(new MenuLabel(200, 50, 0, 0, "Level Select", new Color(
 				0, 0, 0, 0), Color.WHITE, new Font("Consolas", 0, 50)));
+		// TODO have a scroll bar
 		levelButtons = new RadioButtons();
 		for (int level = 0; level < levels.size(); level++)
 		{
@@ -150,6 +156,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 		});
 
+		// Add buttons and labels to in game menus
+		// TODO clear button
 		inGameMenu.add(new MenuButton(800, 670, 200, 50, "Run!",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -170,6 +178,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 				repaint();
 			}
 		});
+		// TODO add beam splitters too
 		inGameMenu.add(new ImageButton(800, 300, "gfx/mirror.png") {
 			@Override
 			public void onClick(Point point)
@@ -299,6 +308,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 	{
 		if (inGame)
 		{
+			// TODO show degrees while rotating
+			// TODO make only work while not simulating
 			if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
 			{
 				if (selectedObject != null)
