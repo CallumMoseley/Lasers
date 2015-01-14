@@ -38,6 +38,11 @@ public abstract class ImageButton implements MenuItem
 	{
 		g.drawImage(img, x, y, null);
 	}
+	
+	public void drawOffset(Graphics g, int x, int y)
+	{
+		g.drawImage(img, this.x + x, this.y + y, null);
+	}
 
 	@Override
 	public boolean intersects(Point click)
@@ -48,4 +53,40 @@ public abstract class ImageButton implements MenuItem
 
 	@Override
 	public abstract void onClick(Point point);
+	
+	@Override
+	public int getWidth()
+	{
+		return width;
+	}
+
+	@Override
+	public int getHeight()
+	{
+		return height;
+	}
+	
+	@Override
+	public int minX()
+	{
+		return x;
+	}
+	
+	@Override
+	public int minY()
+	{
+		return y;
+	}
+	
+	@Override
+	public int maxX()
+	{
+		return x + width;
+	}
+	
+	@Override
+	public int maxY()
+	{
+		return y + height;
+	}
 }

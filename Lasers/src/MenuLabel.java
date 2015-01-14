@@ -61,6 +61,16 @@ public class MenuLabel implements MenuItem
 		g.drawString(text, x + width / 2 - strWidth / 2, y + height / 2
 				+ strHeight / 4);
 	}
+	
+	@Override
+	public void drawOffset(Graphics g, int x, int y)
+	{
+		this.x += x;
+		this.y += y;
+		draw(g);
+		this.x -= x;
+		this.y -= y;
+	}
 
 	/**
 	 * Highlights this label
@@ -88,5 +98,41 @@ public class MenuLabel implements MenuItem
 	@Override
 	public void onClick(Point point)
 	{
+	}
+
+	@Override
+	public int getWidth()
+	{
+		return width;
+	}
+
+	@Override
+	public int getHeight()
+	{
+		return height;
+	}
+
+	@Override
+	public int minX()
+	{
+		return x;
+	}
+
+	@Override
+	public int minY()
+	{
+		return y;
+	}
+
+	@Override
+	public int maxX()
+	{
+		return x + width;
+	}
+
+	@Override
+	public int maxY()
+	{
+		return y + height;
 	}
 }

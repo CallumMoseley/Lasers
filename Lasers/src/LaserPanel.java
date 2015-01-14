@@ -106,6 +106,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 
 		// Add labels and buttons to options menu
 		// TODO actually add some options
+		
 		optionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -135,7 +136,10 @@ public class LaserPanel extends JPanel implements MouseListener,
 			});
 		}
 		
-		levelSelect.add(levelButtons);
+		ScrollContainer scroll = new ScrollContainer(20, 90, 550, 550, Color.DARK_GRAY, Color.GRAY.brighter());
+		scroll.setItem(levelButtons);
+		
+		levelSelect.add(scroll);
 		levelSelect.add(new MenuLabel(800, 180, 0, 0, "Preview", new Color(0,
 				0, 0, 0), Color.WHITE, new Font("Consolas", 0, 40)));
 		levelSelect.add(new MenuButton(50, 670, 160, 70, "Play!",
