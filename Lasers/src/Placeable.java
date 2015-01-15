@@ -9,4 +9,6 @@ public interface Placeable
 	public boolean intersects(Point click);
 	public int getAngle();
 	public void draw(Graphics g);
+	public void draw(Graphics g, boolean angle);
+	public void drawAngle(Graphics g);
 }

@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -32,6 +33,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 	private final Menu mainMenu;
 	private final Menu levelSelect;
 	private final Menu optionsMenu;
+	private final Menu instructionsMenu;
+	private final Menu aboutMenu;
 	private final Menu inGameMenu;
 	private final Menu inGameRunningMenu;
 
@@ -41,6 +44,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 	private Placeable selectedObject;
 	private boolean isHeld;
 	private boolean isHeldNew;
+	private boolean controlHeld;
 
 	private ArrayList<Level> levels;
 
@@ -55,6 +59,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 		addMouseMotionListener(this);
 		addKeyListener(this);
 		setFocusable(true);
+		
+		controlHeld = false;
 
 		// Load static resources
 		Block.loadSprite("gfx/block.png");
@@ -72,18 +78,19 @@ public class LaserPanel extends JPanel implements MouseListener,
 		{
 			Level newLevel = new Level();
 			if (newLevel.loadLevel(levelFiles[file]))
-					levels.add(newLevel);
+				levels.add(newLevel);
 		}
 
 		// Initialize menus
 		mainMenu = new Menu();
 		levelSelect = new Menu();
 		optionsMenu = new Menu();
+		instructionsMenu = new Menu();
+		aboutMenu = new Menu();
 		inGameMenu = new Menu();
 		inGameRunningMenu = new Menu();
 
 		// Add labels and buttons to main menu
-		// TODO add other menu items (instructions, about, exit)
 		mainMenu.add(new MenuLabel(512, 200, 0, 0, "Lasers", new Color(0, 0, 0,
 				0), Color.WHITE, new Font("Consolas", 0, 60)));
 		mainMenu.add(new MenuButton(212, 300, 600, 50, "Play",
@@ -94,6 +101,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 				currentMenu = levelSelect;
 				repaint();
 			}
+
 			@Override
 			public void onRelease()
 			{
@@ -113,11 +121,82 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
+		mainMenu.add(new MenuButton(212, 420, 600, 50, "Instructions",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
+					@Override
+					public void onClick(Point point)
+					{
+						currentMenu = instructionsMenu;
+						repaint();
+					}
+
+					@Override
+					public void onRelease()
+					{
+					}
+		});
+		mainMenu.add(new MenuButton(212, 480, 600, 50, "About",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
+					@Override
+					public void onClick(Point point)
+					{
+						currentMenu = aboutMenu;
+						repaint();
+					}
+
+					@Override
+					public void onRelease()
+					{
+					}
+		});
+		mainMenu.add(new MenuButton(212, 540, 600, 50, "Exit",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
+					@Override
+					public void onClick(Point point)
+					{
+						System.exit(0);
+					}
+
+					@Override
+					public void onRelease()
+					{
+					}
+		});
 
 		// Add labels and buttons to options menu
 		// TODO actually add some options
-		
+
 		optionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
+			@Override
+			public void onClick(Point point)
+			{
+				currentMenu = mainMenu;
+				repaint();
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
+		
+		instructionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
+			@Override
+			public void onClick(Point point)
+			{
+				currentMenu = mainMenu;
+				repaint();
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
+		
+		aboutMenu.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
 			public void onClick(Point point)
@@ -155,10 +234,11 @@ public class LaserPanel extends JPanel implements MouseListener,
 				}
 			});
 		}
-		
-		levelScroll = new ScrollContainer(20, 90, 550, 550, Color.DARK_GRAY, Color.GRAY.brighter());
+
+		levelScroll = new ScrollContainer(20, 90, 550, 550, Color.DARK_GRAY,
+				Color.GRAY.brighter());
 		levelScroll.setItem(levelButtons);
-		
+
 		levelSelect.add(levelScroll);
 		levelSelect.add(new MenuLabel(800, 180, 0, 0, "Preview", new Color(0,
 				0, 0, 0), Color.WHITE, new Font("Consolas", 0, 40)));
@@ -198,7 +278,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 		});
 
 		// Add buttons and labels to in game menus
-		// TODO clear button
 		inGameMenu.add(new MenuButton(800, 670, 200, 50, "Run!",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -230,7 +309,21 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
-		// TODO add beam splitters too
+		inGameMenu.add(new MenuButton(800, 100, 200, 50, "Clear", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20))
+		{
+			@Override
+			public void onClick(Point point)
+			{
+				currentLevel.clearPlaced();
+				selectedObject = null;
+				repaint();
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
 		inGameMenu.add(new ImageButton(800, 300, "gfx/mirror.png") {
 			@Override
 			public void onClick(Point point)
@@ -307,10 +400,10 @@ public class LaserPanel extends JPanel implements MouseListener,
 			levels.get(levelButtons.getSelected()).drawPreview(g, 1200, 450,
 					0.5);
 		}
-		
+
 		if (selectedObject != null)
 		{
-			selectedObject.draw(g);
+			selectedObject.draw(g, true);
 		}
 
 		// Draw the menu if one is loaded
@@ -322,7 +415,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 	{
 		// Pass the click to the current menu
 		currentMenu.click(arg0.getPoint());
-		
+
 		if (inGame && arg0.getX() < 32 * 24)
 		{
 			selectedObject = currentLevel.getClicked(arg0.getPoint());
@@ -379,15 +472,19 @@ public class LaserPanel extends JPanel implements MouseListener,
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{
-		if (inGame)
+		if (inGame && !currentLevel.isSimulating())
 		{
 			// TODO show degrees while rotating
-			// TODO make only work while not simulating
 			if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
 			{
 				if (selectedObject != null)
 				{
-					selectedObject.rotateCCW(1);
+					int amountToRotate = 5;
+					if (controlHeld)
+					{
+						amountToRotate = 1;
+					}
+					selectedObject.rotateCCW(amountToRotate);
 					repaint();
 				}
 			}
@@ -395,16 +492,29 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 				if (selectedObject != null)
 				{
-					selectedObject.rotateCW(1);
+					int amountToRotate = 5;
+					if (controlHeld)
+					{
+						amountToRotate = 1;
+					}
+					selectedObject.rotateCW(amountToRotate);
 					repaint();
 				}
 			}
+		}
+		if (arg0.getKeyCode() == KeyEvent.VK_CONTROL)
+		{
+			controlHeld = true;
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0)
 	{
+		if (arg0.getKeyCode() == KeyEvent.VK_CONTROL)
+		{
+			controlHeld = false;
+		}
 	}
 
 	@Override

@@ -231,6 +231,15 @@ public class Level
 		return null;
 	}
 
+	public void clearPlaced()
+	{
+		for (Placeable p : placeable)
+		{
+			collidable.remove(p);
+		}
+		placeable.clear();
+	}
+
 	/**
 	 * Gets the name of the level
 	 * @return the name of the level

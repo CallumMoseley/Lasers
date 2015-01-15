@@ -4,6 +4,8 @@
  * @version January 2015
  */
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -67,15 +69,36 @@ public class Mirror extends Collidable implements Placeable
 		return angle;
 	}
 
+	@Override
 	public void draw(Graphics g)
 	{
 		// Create a rotation transform by the angle of this mirror
-		AffineTransform af = AffineTransform.getTranslateInstance(getX(),
-				getY());
-		af.rotate(Math.toRadians(angle));
-		((Graphics2D) g).drawImage(sprite, af, null);
+//		AffineTransform af = AffineTransform.getTranslateInstance(getX(),
+//				getY());
+//		af.rotate(Math.toRadians(angle));
+//		((Graphics2D) g).drawImage(sprite, af, null);
+		int end1X = new Vector2
+	}
+	
+	@Override
+	public void draw(Graphics g, boolean drawAngle)
+	{
+		draw(g);
+		if (drawAngle)
+		{
+			drawAngle(g);
+		}
 	}
 
+	@Override
+	public void drawAngle(Graphics g)
+	{
+		int stringWidth = g.getFontMetrics().stringWidth("" + angle);
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Consolas", 0, 15));
+		g.drawString("" + angle, getX() + 16 - stringWidth / 2, getY() - 10);
+	}
+	
 	/**
 	 * Loads a static image for all mirrors from a file
 	 * @param file the file path of the image
@@ -97,6 +120,7 @@ public class Mirror extends Collidable implements Placeable
 	{
 		angle -= degrees;
 		normal = new Vector2D(angle + 135).getNormalized();
+		angle = (angle + 360) % 360;
 	}
 
 	@Override
@@ -104,6 +128,7 @@ public class Mirror extends Collidable implements Placeable
 	{
 		angle += degrees;
 		normal = new Vector2D(angle + 135).getNormalized();
+		angle = (angle + 360) % 360;
 	}
 
 	@Override
