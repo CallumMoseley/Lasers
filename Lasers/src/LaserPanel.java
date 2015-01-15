@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -416,7 +415,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// Pass the click to the current menu
 		currentMenu.click(arg0.getPoint());
 
-		if (inGame && arg0.getX() < 32 * 24)
+		if (inGame && arg0.getX() < 32 * 24 && !currentLevel.isSimulating())
 		{
 			selectedObject = currentLevel.getClicked(arg0.getPoint());
 			if (selectedObject != null)

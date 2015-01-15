@@ -73,11 +73,11 @@ public class Mirror extends Collidable implements Placeable
 	public void draw(Graphics g)
 	{
 		// Create a rotation transform by the angle of this mirror
-//		AffineTransform af = AffineTransform.getTranslateInstance(getX(),
-//				getY());
-//		af.rotate(Math.toRadians(angle));
-//		((Graphics2D) g).drawImage(sprite, af, null);
-		int end1X = new Vector2
+		AffineTransform af = AffineTransform.getTranslateInstance(getX(),
+				getY());
+		af.rotate(Math.toRadians(angle));
+		((Graphics2D) g).drawImage(sprite, af, null);
+//		int end1X = new Vector2
 	}
 	
 	@Override
