@@ -19,5 +19,9 @@ public abstract class MenuButton extends MenuLabel
 	/**
 	 * Executed when the button is clicked on
 	 */
+	@Override
 	public abstract void onClick(Point point);
+	
+	@Override
+	public abstract void onRelease();
 }

@@ -10,6 +10,8 @@ public abstract class ImageButton implements MenuItem
 {
 	private int x;
 	private int y;
+	private int xOffset;
+	private int yOffset;
 	private int width;
 	private int height;
 	
@@ -19,7 +21,8 @@ public abstract class ImageButton implements MenuItem
 	{
 		this.x = x;
 		this.y = y;
-		
+		xOffset = 0;
+		yOffset = 0;
 		try
 		{
 			img = ImageIO.read(new File(filename));
@@ -36,23 +39,28 @@ public abstract class ImageButton implements MenuItem
 	@Override
 	public void draw(Graphics g)
 	{
-		g.drawImage(img, x, y, null);
-	}
-	
-	public void drawOffset(Graphics g, int x, int y)
-	{
-		g.drawImage(img, this.x + x, this.y + y, null);
+		g.drawImage(img, x + xOffset, y + yOffset, null);
 	}
 
 	@Override
 	public boolean intersects(Point click)
 	{
-		return click.getX() >= x && click.getX() < x + width
-				&& click.getY() >= y && click.getY() < y + height;
+		return click.getX() >= x + xOffset && click.getX() < x + width + xOffset
+				&& click.getY() >= y + yOffset && click.getY() < y + height + yOffset;
 	}
 
 	@Override
 	public abstract void onClick(Point point);
+
+	@Override
+	public abstract void onRelease();
+	
+	@Override
+	public void setOffset(int x, int y)
+	{
+		xOffset = x;
+		yOffset = y;
+	}
 	
 	@Override
 	public int getWidth()
@@ -69,24 +77,24 @@ public abstract class ImageButton implements MenuItem
 	@Override
 	public int minX()
 	{
-		return x;
+		return x + xOffset;
 	}
 	
 	@Override
 	public int minY()
 	{
-		return y;
+		return y + yOffset;
 	}
 	
 	@Override
 	public int maxX()
 	{
-		return x + width;
+		return x + width + xOffset;
 	}
 	
 	@Override
 	public int maxY()
 	{
-		return y + height;
+		return y + height + yOffset;
 	}
 }

@@ -50,6 +50,14 @@ public class Menu
 		}
 	}
 
+	public void release()
+	{
+		for (int item = 0; item < items.size(); item++)
+		{
+			items.get(item).onRelease();
+		}
+	}
+
 	/**
 	 * Adds a new menu item to this menu
 	 * @param menuItem the menu item to add to this menu

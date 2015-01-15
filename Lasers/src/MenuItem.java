@@ -17,8 +17,6 @@ public interface MenuItem
 	 */
 	public void draw(Graphics g);
 	
-	public void drawOffset(Graphics g, int x, int y);
-	
 	/**
 	 * Finds whether the given point intersects with this menu item
 	 * @param point the point to check intersection with
@@ -31,6 +29,10 @@ public interface MenuItem
 	 * @param point the point at which this item was clicked on
 	 */
 	public void onClick(Point point);
+	
+	public void onRelease();
+	
+	public void setOffset(int x, int y);
 
 	public int getWidth();
 

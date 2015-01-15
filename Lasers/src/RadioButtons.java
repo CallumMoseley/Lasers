@@ -42,15 +42,6 @@ public class RadioButtons implements MenuItem
 	}
 
 	@Override
-	public void drawOffset(Graphics g, int x, int y)
-	{
-		for (int button = 0; button < buttons.size(); button++)
-		{
-			buttons.get(button).drawOffset(g, x, y);
-		}
-	}
-
-	@Override
 	public boolean intersects(Point point)
 	{
 		for (int button = 0; button < buttons.size(); button++)
@@ -81,6 +72,20 @@ public class RadioButtons implements MenuItem
 				selected = button;
 				buttons.get(button).highlight();
 			}
+		}
+	}
+
+	@Override
+	public void onRelease()
+	{
+	}
+	
+	@Override
+	public void setOffset(int x, int y)
+	{
+		for (MenuButton button : buttons)
+		{
+			button.setOffset(x, y);
 		}
 	}
 

@@ -14,17 +14,18 @@ public class ScrollContainer implements MenuItem
 {
 	private final int SCROLL_BAR_HEIGHT = 70;
 	private final int SCROLL_BAR_WIDTH = 30;
-	
+
 	private int x;
 	private int y;
-
+	private int xOffset;
+	private int yOffset;
 	private int width;
 	private int height;
-
 	private Color backgroundColor;
 	private Color scrollBarColor;
-	
+
 	private int scrollBarPos;
+	private boolean scrolling;
 
 	private MenuItem contained;
 
@@ -32,12 +33,15 @@ public class ScrollContainer implements MenuItem
 	{
 		this.x = x;
 		this.y = y;
+		xOffset = 0;
+		yOffset = 0;
 		width = w;
 		height = h;
 		backgroundColor = bg;
 		scrollBarColor = sb;
+		scrolling = false;
 	}
-	
+
 	public void setItem(MenuItem i)
 	{
 		contained = i;
@@ -49,49 +53,23 @@ public class ScrollContainer implements MenuItem
 		// Draw solid background
 		g.setColor(backgroundColor);
 		g.fillRect(x, y, width, height);
-		
+
 		// Draw the contained item, clipped to fit within this object
-		BufferedImage clippedItem = new BufferedImage(1024, 768, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage clippedItem = new BufferedImage(1024, 768,
+				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = clippedItem.createGraphics();
 		g2.setClip(x, y, width, height);
-		contained.drawOffset(g2, 0, (int)Math.max(0, (height - contained.getHeight()) * ((double)scrollBarPos / (height - SCROLL_BAR_HEIGHT))));
-		
+		contained.draw(g2);
+
 		g.drawImage(clippedItem, 0, 0, null);
-		
+
 		// Draw scroll bar
 		if (contained.getHeight() > height)
 		{
 			g.setColor(scrollBarColor);
-			g.fillRect(x + width - SCROLL_BAR_WIDTH, y + scrollBarPos, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
+			g.fillRect(x + width - SCROLL_BAR_WIDTH, y + scrollBarPos,
+					SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
 		}
-	}
-	
-	@Override
-	public void drawOffset(Graphics g, int offx, int offy)
-	{
-		x += offx;
-		y += offy;
-		// Draw solid background
-		g.setColor(backgroundColor);
-		g.fillRect(x, y, width, height);
-		
-		// Draw the contained item, clipped to fit within this object
-		BufferedImage clippedItem = new BufferedImage(1024, 768, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = clippedItem.createGraphics();
-		g2.setClip(x, y, width, height);
-		contained.drawOffset(g2, offx, offy + 0);
-		
-		g.drawImage(clippedItem, 0, 0, null);
-		
-		// Draw scroll bar
-		if (contained.getHeight() > height)
-		{
-			g.setColor(scrollBarColor);
-			g.fillRect(x + width - SCROLL_BAR_WIDTH, y + scrollBarPos, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
-		}
-		
-		this.x += x;
-		this.y += y;
 	}
 
 	@Override
@@ -105,6 +83,45 @@ public class ScrollContainer implements MenuItem
 	public void onClick(Point point)
 	{
 		contained.onClick(point);
+		if (point.getX() >= x + width - SCROLL_BAR_WIDTH
+				&& point.getX() < x + width && point.getY() >= y + scrollBarPos
+				&& point.getY() < y + scrollBarPos + SCROLL_BAR_HEIGHT
+				&& contained.getHeight() > height)
+		{
+			scrolling = true;
+		}
+	}
+
+	@Override
+	public void onRelease()
+	{
+		scrolling = false;
+	}
+
+	@Override
+	public void setOffset(int x, int y)
+	{
+		xOffset = x;
+		yOffset = y;
+		contained.setOffset(x, y);
+	}
+
+	public void scrollTo(int sy)
+	{
+		if (sy > y + height)
+		{
+			sy += 1;
+			sy -= 1;
+		}
+		if (scrolling)
+		{
+			scrollBarPos = Math.min(Math.max(0, sy - y), height
+					- SCROLL_BAR_HEIGHT);
+			contained
+					.setOffset(
+							0,
+							(int) -((contained.getHeight() - height + 10) * ((double)scrollBarPos / (height - SCROLL_BAR_HEIGHT))));
+		}
 	}
 
 	@Override

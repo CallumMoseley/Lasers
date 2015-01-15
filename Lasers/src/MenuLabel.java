@@ -7,7 +7,8 @@ public class MenuLabel implements MenuItem
 {
 	private int x;
 	private int y;
-
+	private int xOffset;
+	private int yOffset;
 	private int width;
 	private int height;
 
@@ -34,7 +35,8 @@ public class MenuLabel implements MenuItem
 	{
 		this.x = x;
 		this.y = y;
-
+		xOffset = 0;
+		yOffset = 0;
 		width = w;
 		height = h;
 
@@ -51,25 +53,15 @@ public class MenuLabel implements MenuItem
 		// Draw background, with colour either brighter or not based on whether
 		// this object is highlighted
 		g.setColor(highlighted ? backgroundColour.brighter() : backgroundColour);
-		g.fillRect(x, y, width, height);
+		g.fillRect(x + xOffset, y + yOffset, width, height);
 
 		// Calculate the centre of the label, and draw the text there
 		g.setColor(fontColour);
 		g.setFont(font);
 		int strWidth = g.getFontMetrics().stringWidth(text);
 		int strHeight = g.getFontMetrics().getHeight();
-		g.drawString(text, x + width / 2 - strWidth / 2, y + height / 2
-				+ strHeight / 4);
-	}
-	
-	@Override
-	public void drawOffset(Graphics g, int x, int y)
-	{
-		this.x += x;
-		this.y += y;
-		draw(g);
-		this.x -= x;
-		this.y -= y;
+		g.drawString(text, xOffset + x + width / 2 - strWidth / 2, yOffset + y
+				+ height / 2 + strHeight / 4);
 	}
 
 	/**
@@ -91,13 +83,25 @@ public class MenuLabel implements MenuItem
 	@Override
 	public boolean intersects(Point click)
 	{
-		return click.getX() >= x && click.getX() < x + width
-				&& click.getY() >= y && click.getY() < y + height;
+		return click.getX() >= x + xOffset && click.getX() < x + width + xOffset
+				&& click.getY() >= y + yOffset && click.getY() < y + height + yOffset;
 	}
 
 	@Override
 	public void onClick(Point point)
 	{
+	}
+
+	@Override
+	public void onRelease()
+	{
+	}
+
+	@Override
+	public void setOffset(int x, int y)
+	{
+		xOffset = x;
+		yOffset = y;
 	}
 
 	@Override
@@ -115,24 +119,24 @@ public class MenuLabel implements MenuItem
 	@Override
 	public int minX()
 	{
-		return x;
+		return x + xOffset;
 	}
 
 	@Override
 	public int minY()
 	{
-		return y;
+		return y + yOffset;
 	}
 
 	@Override
 	public int maxX()
 	{
-		return x + width;
+		return x + width + xOffset;
 	}
 
 	@Override
 	public int maxY()
 	{
-		return y + height;
+		return y + height + yOffset;
 	}
 }
