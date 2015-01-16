@@ -37,8 +37,10 @@ public class LaserPanel extends JPanel implements MouseListener,
 	private final Menu inGameMenu;
 	private final Menu inGameRunningMenu;
 
+	// MenuItems that need to be modified by the main program
 	private final ScrollContainer levelScroll;
 	private final RadioButtons levelButtons;
+	private final MenuLabel scoreLabel;
 
 	private Placeable selectedObject;
 	private boolean isHeld;
@@ -63,7 +65,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 
 		// Load static resources
 		Block.loadSprite("gfx/block.png");
-		Mirror.loadSprite("gfx/mirror.png");
 		LaserSource.loadSprite("gfx/laser_source.png");
 		Target.loadSprite("gfx/target.png");
 		Level.loadBackground("gfx/background.png");
@@ -106,21 +107,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
-		mainMenu.add(new MenuButton(212, 360, 600, 50, "Options",
-				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
-			@Override
-			public void onClick(Point point)
-			{
-				currentMenu = optionsMenu;
-				repaint();
-			}
-
-			@Override
-			public void onRelease()
-			{
-			}
-		});
-		mainMenu.add(new MenuButton(212, 420, 600, 50, "Instructions",
+		mainMenu.add(new MenuButton(212, 360, 600, 50, "Instructions",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
 					@Override
 					public void onClick(Point point)
@@ -134,7 +121,21 @@ public class LaserPanel extends JPanel implements MouseListener,
 					{
 					}
 		});
-		mainMenu.add(new MenuButton(212, 480, 600, 50, "About",
+		mainMenu.add(new MenuButton(212, 420, 295, 50, "Options",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
+			@Override
+			public void onClick(Point point)
+			{
+				currentMenu = optionsMenu;
+				repaint();
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
+		mainMenu.add(new MenuButton(517, 420, 295, 50, "About",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
 					@Override
 					public void onClick(Point point)
@@ -148,7 +149,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 					{
 					}
 		});
-		mainMenu.add(new MenuButton(212, 540, 600, 50, "Exit",
+		mainMenu.add(new MenuButton(212, 480, 600, 50, "Exit",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
 					@Override
 					public void onClick(Point point)
@@ -214,12 +215,11 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// TODO show whether a player has completed a level, and top score
 		levelSelect.add(new MenuLabel(200, 50, 0, 0, "Level Select", new Color(
 				0, 0, 0, 0), Color.WHITE, new Font("Consolas", 0, 50)));
-		// TODO scale based on number of levels
 		levelButtons = new RadioButtons();
 		for (int level = 0; level < levels.size(); level++)
 		{
 			levelButtons.add(new MenuButton(30, 100 + 60 * level, 500, 50,
-					levels.get(level).getName(), Color.DARK_GRAY, Color.WHITE,
+					levels.get(level).getName(), new Color(30, 30, 30), Color.WHITE,
 					new Font("Consolas", 0, 40)) {
 				@Override
 				public void onClick(Point point)
@@ -234,12 +234,16 @@ public class LaserPanel extends JPanel implements MouseListener,
 			});
 		}
 
+		levelSelect.add(new MenuLabel(800, 530, 0, 0, "Best score:", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30)));
+		scoreLabel = new MenuLabel(800, 570, 0, 0, "", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30));
+		levelSelect.add(scoreLabel);
+
 		levelScroll = new ScrollContainer(20, 90, 550, 550, Color.DARK_GRAY,
 				Color.GRAY.brighter());
 		levelScroll.setItem(levelButtons);
 
 		levelSelect.add(levelScroll);
-		levelSelect.add(new MenuLabel(800, 180, 0, 0, "Preview", new Color(0,
+		levelSelect.add(new MenuLabel(800, 80, 0, 0, "Preview", new Color(0,
 				0, 0, 0), Color.WHITE, new Font("Consolas", 0, 40)));
 		levelSelect.add(new MenuButton(50, 670, 160, 70, "Play!",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 50)) {
@@ -261,6 +265,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
+		
 		levelSelect.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -396,7 +401,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// level is selected
 		if (currentMenu == levelSelect && levelButtons.getSelected() != -1)
 		{
-			levels.get(levelButtons.getSelected()).drawPreview(g, 1200, 450,
+			levels.get(levelButtons.getSelected()).drawPreview(g, 1200, 220,
 					0.5);
 		}
 
@@ -405,6 +410,24 @@ public class LaserPanel extends JPanel implements MouseListener,
 			selectedObject.draw(g, true);
 		}
 
+		// Update score label for the currently selected level
+		if (levelButtons.getSelected() != -1)
+		{
+			if (levels.get(levelButtons.getSelected()).isComplete())
+			{
+				scoreLabel.setText(""
+						+ levels.get(levelButtons.getSelected()).getTopScore());
+			}
+			else
+			{
+				scoreLabel.setText("Incomplete");
+			}
+		}
+		else
+		{
+			scoreLabel.setText("");
+		}
+		
 		// Draw the menu if one is loaded
 		currentMenu.draw(g);
 	}

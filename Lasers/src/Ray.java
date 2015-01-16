@@ -55,12 +55,13 @@ public class Ray
 
 		// Calculate the scalars required to have the ray and line segment
 		// intersect
-		double t = Vector2D.crossProduct(Vector2D.subtract(p1, pos),
-				Vector2D.multiply(p2, 1.0 / Vector2D.crossProduct(dir, p2)));
-		double u = Vector2D.crossProduct(Vector2D.subtract(p1, pos),
-				Vector2D.multiply(dir, 1.0 / Vector2D.crossProduct(dir, p2)));
+		double t = Vector2D.crossProduct(p1.subtract(pos),
+				p2.multiply(1.0 / Vector2D.crossProduct(dir, p2)));
+		double u = Vector2D.crossProduct(p1.subtract(pos),
+				dir.multiply(1.0 / Vector2D.crossProduct(dir, p2)));
 
-		// Check whether the point is in the line segment, and on the infinite side of the ray
+		// Check whether the point is in the line segment, and on the infinite
+		// side of the ray
 		if (Vector2D.crossProduct(dir, p2) != 0 && t >= 0 && u >= 0 && u <= 1)
 		{
 			return new Vector2D(pos.getX() + t * dir.getX(), pos.getY() + t

@@ -17,8 +17,8 @@ public class ScrollContainer implements MenuItem
 
 	private int x;
 	private int y;
-	private int xOffset;
-	private int yOffset;
+//	private int xOffset;
+//	private int yOffset;
 	private int width;
 	private int height;
 	private Color backgroundColor;
@@ -33,8 +33,8 @@ public class ScrollContainer implements MenuItem
 	{
 		this.x = x;
 		this.y = y;
-		xOffset = 0;
-		yOffset = 0;
+//		xOffset = 0;
+//		yOffset = 0;
 		width = w;
 		height = h;
 		backgroundColor = bg;
@@ -101,8 +101,8 @@ public class ScrollContainer implements MenuItem
 	@Override
 	public void setOffset(int x, int y)
 	{
-		xOffset = x;
-		yOffset = y;
+//		xOffset = x;
+//		yOffset = y;
 		contained.setOffset(x, y);
 	}
 
@@ -120,7 +120,7 @@ public class ScrollContainer implements MenuItem
 			contained
 					.setOffset(
 							0,
-							(int) -((contained.getHeight() - height + 10) * ((double)scrollBarPos / (height - SCROLL_BAR_HEIGHT))));
+							(int) -((contained.getHeight() - height + 20) * ((double)scrollBarPos / (height - SCROLL_BAR_HEIGHT))));
 		}
 	}
 

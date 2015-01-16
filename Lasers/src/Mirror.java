@@ -4,23 +4,17 @@
  * @version January 2015
  */
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-// TODO rotate from the middle
 
 public class Mirror extends Collidable implements Placeable
 {
-	private static Image sprite;
+	private final int WIDTH = 6;
+	private final int LENGTH = 48;
 	private int angle;
 	private Vector2D normal;
 
@@ -34,7 +28,7 @@ public class Mirror extends Collidable implements Placeable
 	{
 		super(x, y);
 		this.angle = angle;
-		normal = new Vector2D(angle + 135).getNormalized();
+		normal = new Vector2D(angle).getNormalized();
 	}
 
 	public boolean isReflective()
@@ -49,10 +43,12 @@ public class Mirror extends Collidable implements Placeable
 
 	public Vector2D intersects(Ray r)
 	{
-		Vector2D p1 = new Vector2D(getX(), getY());
-		Vector2D p2 = Vector2D.multiply(new Vector2D(getAngle() + 45),
-				Math.sqrt(32 * 32 + 32 * 32));
-		return r.intersects(p1, p2);
+		Vector2D end1 = new Vector2D(angle + 90);
+		end1 = end1.multiply(LENGTH / 2);
+		Vector2D end2 = end1.multiply(-2);
+		end1.addToThis(new Vector2D(getX(), getY()));
+
+		return r.intersects(end1, end2);
 	}
 
 	public Vector2D reflect(Ray incident)
@@ -72,14 +68,20 @@ public class Mirror extends Collidable implements Placeable
 	@Override
 	public void draw(Graphics g)
 	{
-		// Create a rotation transform by the angle of this mirror
-		AffineTransform af = AffineTransform.getTranslateInstance(getX(),
-				getY());
-		af.rotate(Math.toRadians(angle));
-		((Graphics2D) g).drawImage(sprite, af, null);
-//		int end1X = new Vector2
+		// Calculates the two end points of this mirror
+		Vector2D end1 = new Vector2D(angle + 90);
+		end1 = end1.multiply(LENGTH / 2);
+		Vector2D end2 = end1.multiply(-1);
+		end1 = end1.add(new Vector2D(getX(), getY()));
+		end2 = end2.add(new Vector2D(getX(), getY()));
+
+		// Draws a thick line for the mirror
+		((Graphics2D) g).setStroke(new BasicStroke(WIDTH));
+		g.setColor(Color.WHITE);
+		g.drawLine((int) end1.getX(), (int) end1.getY(), (int) end2.getX(),
+				(int) end2.getY());
 	}
-	
+
 	@Override
 	public void draw(Graphics g, boolean drawAngle)
 	{
@@ -96,30 +98,15 @@ public class Mirror extends Collidable implements Placeable
 		int stringWidth = g.getFontMetrics().stringWidth("" + angle);
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Consolas", 0, 15));
-		g.drawString("" + angle, getX() + 16 - stringWidth / 2, getY() - 10);
-	}
-	
-	/**
-	 * Loads a static image for all mirrors from a file
-	 * @param file the file path of the image
-	 */
-	public static void loadSprite(String file)
-	{
-		try
-		{
-			sprite = ImageIO.read(new File(file));
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		g.drawString("" + angle, getX() - stringWidth / 2, getY()
+				- (LENGTH / 2 + 10));
 	}
 
 	@Override
 	public void rotateCCW(int degrees)
 	{
 		angle -= degrees;
-		normal = new Vector2D(angle + 135).getNormalized();
+		normal = new Vector2D(angle).getNormalized();
 		angle = (angle + 360) % 360;
 	}
 
@@ -127,7 +114,7 @@ public class Mirror extends Collidable implements Placeable
 	public void rotateCW(int degrees)
 	{
 		angle += degrees;
-		normal = new Vector2D(angle + 135).getNormalized();
+		normal = new Vector2D(angle).getNormalized();
 		angle = (angle + 360) % 360;
 	}
 

@@ -44,9 +44,8 @@ public class Block extends Collidable
 				Double.POSITIVE_INFINITY);
 		for (int point = 0; point < 4; point++)
 		{
-			if (Vector2D.subtract(intersections[point], r.getPosition())
-					.getLength() < Vector2D.subtract(closest, r.getPosition())
-					.getLength())
+			if (intersections[point].subtract(r.getPosition()).getLength() < closest
+					.subtract(r.getPosition()).getLength())
 			{
 				closest = intersections[point];
 			}

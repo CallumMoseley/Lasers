@@ -62,27 +62,35 @@ public class Vector2D implements Comparable<Vector2D>
 	 * Adds a vector to this vector
 	 * @param v the vector to add to this vector
 	 */
-	public void add(Vector2D v)
+	public Vector2D add(Vector2D v)
+	{
+		return new Vector2D(x + v.x, y + v.y);
+	}
+	
+	public void addToThis(Vector2D v)
 	{
 		x += v.x;
 		y += v.y;
 	}
 
 	/**
-	 * Subtracts a vector from this vector
 	 * @param v the vector to subtract from this vector
 	 */
-	public void subtract(Vector2D v)
+	public Vector2D subtract(Vector2D v)
 	{
-		x -= v.x;
-		y -= v.y;
+		return new Vector2D(x - v.x, y - v.y);
 	}
 
 	/**
 	 * Multiplies this vector by a scalar value
 	 * @param scalar the scalar to multiply this vector by
 	 */
-	public void multiply(double scalar)
+	public Vector2D multiply(double scalar)
+	{
+		return new Vector2D(x * scalar, y * scalar);
+	}
+
+	public void multiplyBy(double scalar)
 	{
 		x *= scalar;
 		y *= scalar;
@@ -114,7 +122,7 @@ public class Vector2D implements Comparable<Vector2D>
 	{
 		double length = getLength();
 
-		return Vector2D.multiply(this, 1 / length);
+		return multiply(1 / length);
 	}
 
 	/**
@@ -135,49 +143,6 @@ public class Vector2D implements Comparable<Vector2D>
 	public int compareTo(Vector2D o)
 	{
 		return ((Double) getLength()).compareTo(o.getLength());
-	}
-
-	/**
-	 * Finds the normal of the given vector
-	 * @param v the given vector
-	 * @return the normal of the given vector
-	 */
-	public static Vector2D getNormalized(Vector2D v)
-	{
-		return v.getNormalized();
-	}
-
-	/**
-	 * Finds the sum of two given vectors
-	 * @param a the first vector
-	 * @param b the second vector
-	 * @return the sum of the two vectors
-	 */
-	public static Vector2D add(Vector2D a, Vector2D b)
-	{
-		return new Vector2D(a.x + b.x, a.y + b.y);
-	}
-
-	/**
-	 * Finds the difference of two given vectors
-	 * @param a the first vector
-	 * @param b the second vector
-	 * @return the difference of the two vectors
-	 */
-	public static Vector2D subtract(Vector2D a, Vector2D b)
-	{
-		return new Vector2D(a.x - b.x, a.y - b.y);
-	}
-
-	/**
-	 * Finds the vector which is the given vector multiplied by a scalar
-	 * @param v the given vector
-	 * @param scalar the number to multiply the vector by
-	 * @return the given vector multiylied by the scalar
-	 */
-	public static Vector2D multiply(Vector2D v, double scalar)
-	{
-		return new Vector2D(v.x * scalar, v.y * scalar);
 	}
 
 	/**
@@ -210,9 +175,7 @@ public class Vector2D implements Comparable<Vector2D>
 	 */
 	public static Vector2D reflect(Vector2D incident, Vector2D normal)
 	{
-		return subtract(
-				incident,
-				multiply(normal.getNormalized(),
-						2 * dotProduct(incident, normal.getNormalized())));
+		return incident.subtract(normal.getNormalized().multiply(
+				2 * dotProduct(incident, normal.getNormalized())));
 	}
 }

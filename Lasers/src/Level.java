@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
@@ -43,7 +45,7 @@ public class Level
 		placeable = new ArrayList<Placeable>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
-		
+
 		topScore = -1;
 		completed = false;
 
@@ -60,7 +62,7 @@ public class Level
 		placeable = new ArrayList<Placeable>();
 		sources = new ArrayList<LaserSource>();
 		laser = new ArrayList<Ray>();
-		
+
 		topScore = -1;
 		completed = false;
 
@@ -78,81 +80,85 @@ public class Level
 	{
 		isSimulating = true;
 
+		Queue<Ray> unprocessedLasers = new LinkedList<Ray>();
+
+		// Put all of the initial lasers in the queue to be processed
 		for (int source = 0; source < sources.size(); source++)
 		{
 			// Get the first laser segment, from the source
-			laser.add(new Ray(new Vector2D(sources.get(source).getX(), sources
-					.get(source).getY()), new Vector2D(sources.get(source)
-					.getDirection() * 90)));
+			Ray newLaser = new Ray(new Vector2D(sources.get(source).getX(),
+					sources.get(source).getY()), new Vector2D(sources.get(
+					source).getDirection() * 90));
 
 			// Add the offset, so the laser is coming out of the right part of
 			// the laser source
-			laser.get(laser.size() - 1).getPosition()
-					.add(sources.get(source).getOffset());
-
+			newLaser.getPosition().addToThis(sources.get(source).getOffset());
+			
+			unprocessedLasers.add(newLaser);
+		}
+		// Simulate the laser bouncing while it hits reflective objects.
+		// Finds the point of intersection with all collidable objects. The
+		// interaction that is handled will be the closest one to the
+		// current laser segment's position.
+		while (!unprocessedLasers.isEmpty())
+		{
 			int objectHit;
 
-			// Simulate the laser bouncing while it hits reflective objects.
-			// Finds the point of intersection with all collidable objects. The
-			// interaction that is handled will be the closest one to the
-			// current laser segment's position.
-			do
+			Ray current = unprocessedLasers.poll();
+			Vector2D closest = new Vector2D(Double.POSITIVE_INFINITY,
+					Double.POSITIVE_INFINITY);
+			Vector2D closestDifference = closest.subtract(current
+					.getDirection());
+
+			objectHit = -1;
+
+			// Check for collisions with each object, updating the closest
+			// so far along the way
+			for (int object = 0; object < collidable.size(); object++)
 			{
-				Ray current = laser.get(laser.size() - 1);
-				Vector2D closest = new Vector2D(Double.POSITIVE_INFINITY,
-						Double.POSITIVE_INFINITY);
-				Vector2D closestDifference = Vector2D.subtract(closest,
-						current.getDirection());
-
-				objectHit = -1;
-
-				// Check for collisions with each object, updating the closest
-				// so far along the way
-				for (int object = 0; object < collidable.size(); object++)
+				Vector2D collision = collidable.get(object).intersects(
+						current);
+				if (collision.getLength() != Double.POSITIVE_INFINITY)
 				{
-					Vector2D collision = collidable.get(object).intersects(
-							current);
-					if (collision.getLength() != Double.POSITIVE_INFINITY)
+					Vector2D difference = collision.subtract(current
+							.getPosition());
+					if (difference.getLength() > 1
+							&& difference.getLength() < closestDifference
+									.getLength())
 					{
-						Vector2D difference = Vector2D.subtract(collision,
-								current.getPosition());
-						if (difference.getLength() > 1
-								&& difference.getLength() < closestDifference
-										.getLength())
-						{
-							closest = collision;
-							closestDifference = difference;
-							objectHit = object;
-						}
+						closest = collision;
+						closestDifference = difference;
+						objectHit = object;
 					}
 				}
-
-				collidable.get(objectHit).hit();
-
-				// Set the current laser segment to be the correct length
-				current.getDirection().normalize();
-				if (closestDifference.getLength() != Double.POSITIVE_INFINITY)
-				{
-					current.getDirection().multiply(
-							closestDifference.getLength());
-				}
-
-				// Reflect the laser if necessary
-				if (objectHit >= 0 && collidable.get(objectHit).isReflective())
-				{
-					// Calculate reflected ray
-					Vector2D newDir = collidable.get(objectHit)
-							.reflect(current);
-					Vector2D newPos = Vector2D.add(current.getPosition(),
-							current.getDirection());
-
-					Ray newRay = new Ray(newPos, newDir);
-
-					// Append the new ray to the current laser
-					laser.add(newRay);
-				}
 			}
-			while (objectHit >= 0 && collidable.get(objectHit).isReflective());
+
+			collidable.get(objectHit).hit();
+
+			// Set the current laser segment to be the correct length
+			current.getDirection().normalize();
+			if (closestDifference.getLength() != Double.POSITIVE_INFINITY)
+			{
+				current.getDirection().multiplyBy(
+						closestDifference.getLength());
+			}
+			
+			// Add the processed laser to the current laser
+			laser.add(current);
+
+			// Reflect the laser if necessary
+			if (objectHit >= 0 && collidable.get(objectHit).isReflective())
+			{
+				// Calculate reflected ray
+				Vector2D newDir = collidable.get(objectHit)
+						.reflect(current).getNormalized();
+				Vector2D newPos = closest;
+
+				Ray newRay = new Ray(newPos, newDir);
+
+				// Queue the new laser to be processed
+				unprocessedLasers.add(newRay);
+			}
 		}
 
 		// Finds whether all targets were hit
@@ -187,12 +193,12 @@ public class Level
 			collidable.get(object).unHit();
 		}
 	}
-	
+
 	public boolean isSimulating()
 	{
 		return isSimulating;
 	}
-	
+
 	public boolean isComplete()
 	{
 		return completed;
@@ -213,7 +219,7 @@ public class Level
 		collidable.remove(object);
 		placeable.remove(object);
 	}
-	
+
 	public int getTopScore()
 	{
 		return topScore;
@@ -248,7 +254,7 @@ public class Level
 	{
 		return name;
 	}
-	
+
 	public boolean loadLevel(File file)
 	{
 		try

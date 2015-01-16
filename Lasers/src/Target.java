@@ -28,12 +28,12 @@ public class Target extends Block
 		super(x, y);
 		reflective = r;
 	}
-	
+
 	public boolean isReflective()
 	{
 		return reflective;
 	}
-	
+
 	public boolean isTarget()
 	{
 		return true;
@@ -41,7 +41,8 @@ public class Target extends Block
 
 	public Vector2D reflect(Ray incident)
 	{
-		// Finds which side the laser hits, and the point where it hits.  See Block.intersects(Ray r)
+		// Finds which side the laser hits, and the point where it hits. See
+		// Block.intersects(Ray r)
 		Vector2D[] intersections = new Vector2D[4];
 		intersections[0] = incident.intersects(new Vector2D(getX(), getY()),
 				new Vector2D(0, 32));
@@ -56,9 +57,9 @@ public class Target extends Block
 		int closestIndex = 0;
 		for (int point = 0; point < 4; point++)
 		{
-			if (Vector2D.subtract(intersections[point], incident.getPosition())
-					.getLength() < Vector2D
-					.subtract(closest, incident.getPosition()).getLength())
+			if (intersections[point].subtract(incident.getPosition())
+					.getLength() < closest.subtract(incident.getPosition())
+					.getLength())
 			{
 				closest = intersections[point];
 				closestIndex = point;
@@ -98,7 +99,7 @@ public class Target extends Block
 		{
 			BufferedImage spriteSheet = ImageIO.read(new File(file));
 			sprites = new Image[4];
-			
+
 			// Get sprites from sprite sheet
 			sprites[0] = spriteSheet.getSubimage(0, 0, 32, 32);
 			sprites[1] = spriteSheet.getSubimage(32, 0, 32, 32);

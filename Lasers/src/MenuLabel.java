@@ -63,6 +63,11 @@ public class MenuLabel implements MenuItem
 		g.drawString(text, xOffset + x + width / 2 - strWidth / 2, yOffset + y
 				+ height / 2 + strHeight / 4);
 	}
+	
+	public void setText(String t)
+	{
+		text = t;
+	}
 
 	/**
 	 * Highlights this label
