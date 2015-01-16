@@ -59,6 +59,11 @@ public abstract class Collidable
 	{
 		return false;
 	}
+	
+	public boolean isTransparent()
+	{
+		return false;
+	}
 
 	/**
 	 * Flags this object as hit for the current simulation

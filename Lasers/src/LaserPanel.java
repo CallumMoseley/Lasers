@@ -93,7 +93,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// Add labels and buttons to main menu
 		mainMenu.add(new MenuLabel(512, 200, 0, 0, "Lasers", new Color(0, 0, 0,
 				0), Color.WHITE, new Font("Consolas", 0, 60)));
-		mainMenu.add(new MenuButton(212, 300, 600, 50, "Play",
+		mainMenu.add(new MenuButton(212, 300, 600, 50, "Playy lmao",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
 			@Override
 			public void onClick(Point point)
@@ -333,6 +333,21 @@ public class LaserPanel extends JPanel implements MouseListener,
 			public void onClick(Point point)
 			{
 				selectedObject = new Mirror(800, 300, 0);
+				isHeldNew = true;
+				isHeld = true;
+				repaint();
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
+		inGameMenu.add(new ImageButton(850, 300, "gfx/mirror.png") {
+			@Override
+			public void onClick(Point point)
+			{
+				selectedObject = new BeamSplitter(850, 300, 0);
 				isHeldNew = true;
 				isHeld = true;
 				repaint();

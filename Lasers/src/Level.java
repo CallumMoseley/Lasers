@@ -133,31 +133,50 @@ public class Level
 				}
 			}
 
-			collidable.get(objectHit).hit();
-
-			// Set the current laser segment to be the correct length
-			current.getDirection().normalize();
-			if (closestDifference.getLength() != Double.POSITIVE_INFINITY)
+			if (objectHit >= 0)
 			{
-				current.getDirection().multiplyBy(
-						closestDifference.getLength());
+				collidable.get(objectHit).hit();
+	
+				// Set the current laser segment to be the correct length
+				current.getDirection().normalize();
+				if (closestDifference.getLength() != Double.POSITIVE_INFINITY)
+				{
+					current.getDirection().multiplyBy(
+							closestDifference.getLength());
+				}
+				
+				// Add the processed laser to the current laser
+				laser.add(current);
+	
+				// Reflect the laser if necessary
+				if (collidable.get(objectHit).isReflective())
+				{
+					// Calculate reflected ray
+					Vector2D newDir = collidable.get(objectHit)
+							.reflect(current).getNormalized();
+					Vector2D newPos = closest;
+	
+					Ray newRay = new Ray(newPos, newDir);
+	
+					// Queue the new laser to be processed
+					unprocessedLasers.add(newRay);
+				}
+				if (collidable.get(objectHit).isTransparent())
+				{
+					// Calculate new ray
+					Vector2D newDir = current.getDirection().getNormalized();
+					Vector2D newPos = closest;
+	
+					Ray newRay = new Ray(newPos, newDir);
+	
+					// Queue the new laser to be processed
+					unprocessedLasers.add(newRay);
+				}
 			}
-			
-			// Add the processed laser to the current laser
-			laser.add(current);
-
-			// Reflect the laser if necessary
-			if (objectHit >= 0 && collidable.get(objectHit).isReflective())
+			else
 			{
-				// Calculate reflected ray
-				Vector2D newDir = collidable.get(objectHit)
-						.reflect(current).getNormalized();
-				Vector2D newPos = closest;
-
-				Ray newRay = new Ray(newPos, newDir);
-
-				// Queue the new laser to be processed
-				unprocessedLasers.add(newRay);
+				current.getDirection().multiplyBy(10000);
+				laser.add(current);
 			}
 		}
 
