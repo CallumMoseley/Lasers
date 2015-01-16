@@ -13,8 +13,8 @@ import java.awt.Point;
 
 public class Mirror extends Collidable implements Placeable
 {
-	private final int WIDTH = 6;
-	private final int LENGTH = 48;
+	private final int WIDTH = 3;
+	private final int LENGTH = 32;
 	private int angle;
 	private Vector2D normal;
 
@@ -29,6 +29,11 @@ public class Mirror extends Collidable implements Placeable
 		super(x, y);
 		this.angle = angle;
 		normal = new Vector2D(angle).getNormalized();
+	}
+
+	@Override
+	public void offset(int x, int y)
+	{
 	}
 
 	public boolean isReflective()

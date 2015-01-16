@@ -13,8 +13,8 @@ import java.awt.Point;
 
 public class BeamSplitter extends Collidable implements Placeable
 {
-	private final int WIDTH = 6;
-	private final int LENGTH = 48;
+	private final int WIDTH = 3;
+	private final int LENGTH = 32;
 	private int angle;
 	private Vector2D normal;
 
@@ -128,5 +128,12 @@ public class BeamSplitter extends Collidable implements Placeable
 	{
 		return click.getX() >= getX() && click.getY() >= getY()
 				&& click.getX() <= getX() + 32 && click.getY() <= getY() + 32;
+	}
+
+	@Override
+	public void offset(int x, int y)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -23,8 +23,8 @@ import javax.imageio.ImageIO;
 
 public class Level
 {
-	// TODO save the players top score, to be shown on the level select screen
 	private final int SQUARE_SIZE = 32;
+	private final int ITERATION_LIMIT = 10000;
 	private static Image background;
 
 	private String name;
@@ -76,7 +76,7 @@ public class Level
 	 * laser hits an opaque object. Also finds whether the laser hit all
 	 * targets.
 	 */
-	public void runLaser()
+	public boolean runLaser()
 	{
 		isSimulating = true;
 
@@ -96,11 +96,15 @@ public class Level
 			
 			unprocessedLasers.add(newLaser);
 		}
+		
+		// Used to avoid crashes from beam splitter loops
+		int iterationCount = 0;
+		
 		// Simulate the laser bouncing while it hits reflective objects.
 		// Finds the point of intersection with all collidable objects. The
 		// interaction that is handled will be the closest one to the
 		// current laser segment's position.
-		while (!unprocessedLasers.isEmpty())
+		while (!unprocessedLasers.isEmpty() && iterationCount < ITERATION_LIMIT)
 		{
 			int objectHit;
 
@@ -178,6 +182,7 @@ public class Level
 				current.getDirection().multiplyBy(10000);
 				laser.add(current);
 			}
+			iterationCount++;
 		}
 
 		// Finds whether all targets were hit
@@ -198,6 +203,8 @@ public class Level
 				topScore = placeable.size();
 			}
 		}
+		
+		return completed;
 	}
 
 	/**

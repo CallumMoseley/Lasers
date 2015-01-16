@@ -46,6 +46,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 	private boolean isHeld;
 	private boolean isHeldNew;
 	private boolean controlHeld;
+	
+	private Point clickedPoint;
 
 	private ArrayList<Level> levels;
 
@@ -93,7 +95,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// Add labels and buttons to main menu
 		mainMenu.add(new MenuLabel(512, 200, 0, 0, "Lasers", new Color(0, 0, 0,
 				0), Color.WHITE, new Font("Consolas", 0, 60)));
-		mainMenu.add(new MenuButton(212, 300, 600, 50, "Playy lmao",
+		mainMenu.add(new MenuButton(212, 300, 600, 50, "Play",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
 			@Override
 			public void onClick(Point point)
@@ -212,7 +214,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		});
 
 		// Add labels and buttons to level select menu
-		// TODO show whether a player has completed a level, and top score
+		// TODO show whether a player has completed a level
 		levelSelect.add(new MenuLabel(200, 50, 0, 0, "Level Select", new Color(
 				0, 0, 0, 0), Color.WHITE, new Font("Consolas", 0, 50)));
 		levelButtons = new RadioButtons();
@@ -287,7 +289,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			@Override
 			public void onClick(Point point)
 			{
-				currentLevel.runLaser();
+				boolean completed = currentLevel.runLaser();
 				currentMenu = inGameRunningMenu;
 				repaint();
 			}
@@ -462,6 +464,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 				isHeldNew = false;
 			}
 		}
+		
+		clickedPoint = arg0.getPoint();
 	}
 
 	@Override
@@ -511,7 +515,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 	{
 		if (inGame && !currentLevel.isSimulating())
 		{
-			// TODO show degrees while rotating
 			if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
 			{
 				if (selectedObject != null)
@@ -522,7 +525,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 						amountToRotate = 1;
 					}
 					selectedObject.rotateCCW(amountToRotate);
-					repaint();
 				}
 			}
 			else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT)
@@ -535,7 +537,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 						amountToRotate = 1;
 					}
 					selectedObject.rotateCW(amountToRotate);
-					repaint();
 				}
 			}
 		}
@@ -543,6 +544,13 @@ public class LaserPanel extends JPanel implements MouseListener,
 		{
 			controlHeld = true;
 		}
+		if (arg0.getKeyCode() == KeyEvent.VK_DELETE)
+		{
+			currentLevel.removePlaceable(selectedObject);
+			selectedObject = null;
+		}
+
+		repaint();
 	}
 
 	@Override
