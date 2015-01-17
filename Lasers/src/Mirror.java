@@ -31,11 +31,6 @@ public class Mirror extends Collidable implements Placeable
 		normal = new Vector2D(angle).getNormalized();
 	}
 
-	@Override
-	public void offset(int x, int y)
-	{
-	}
-
 	public boolean isReflective()
 	{
 		return true;

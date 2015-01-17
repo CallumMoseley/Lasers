@@ -12,6 +12,8 @@ import java.awt.Graphics2D;
 
 public class Ray
 {
+	private static Color laserColour;
+	private static int laserThickness;
 	private Vector2D pos;
 	private Vector2D dir;
 
@@ -94,10 +96,20 @@ public class Ray
 	 */
 	public void draw(Graphics g)
 	{
-		g.setColor(Color.RED);
-		((Graphics2D) g).setStroke(new BasicStroke(2));
+		g.setColor(laserColour);
+		((Graphics2D) g).setStroke(new BasicStroke(laserThickness));
 		g.drawLine((int) pos.getX(), (int) pos.getY(),
 				(int) (pos.getX() + dir.getX()),
 				(int) (pos.getY() + dir.getY()));
+	}
+	
+	public static void setLaserColour(Color colour)
+	{
+		laserColour = colour;
+	}
+	
+	public static void setLaserThickness(int t)
+	{
+		laserThickness = t;
 	}
 }

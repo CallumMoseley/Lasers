@@ -41,12 +41,13 @@ public class LaserPanel extends JPanel implements MouseListener,
 	private final ScrollContainer levelScroll;
 	private final RadioButtons levelButtons;
 	private final MenuLabel scoreLabel;
+	private final MenuSlider thicknessSlider;
 
 	private Placeable selectedObject;
 	private boolean isHeld;
 	private boolean isHeldNew;
 	private boolean controlHeld;
-	
+
 	private Point clickedPoint;
 
 	private ArrayList<Level> levels;
@@ -62,7 +63,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		addMouseMotionListener(this);
 		addKeyListener(this);
 		setFocusable(true);
-		
+
 		controlHeld = false;
 
 		// Load static resources
@@ -111,17 +112,17 @@ public class LaserPanel extends JPanel implements MouseListener,
 		});
 		mainMenu.add(new MenuButton(212, 360, 600, 50, "Instructions",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
-					@Override
-					public void onClick(Point point)
-					{
-						currentMenu = instructionsMenu;
-						repaint();
-					}
+			@Override
+			public void onClick(Point point)
+			{
+				currentMenu = instructionsMenu;
+				repaint();
+			}
 
-					@Override
-					public void onRelease()
-					{
-					}
+			@Override
+			public void onRelease()
+			{
+			}
 		});
 		mainMenu.add(new MenuButton(212, 420, 295, 50, "Options",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
@@ -139,35 +140,101 @@ public class LaserPanel extends JPanel implements MouseListener,
 		});
 		mainMenu.add(new MenuButton(517, 420, 295, 50, "About",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
-					@Override
-					public void onClick(Point point)
-					{
-						currentMenu = aboutMenu;
-						repaint();
-					}
+			@Override
+			public void onClick(Point point)
+			{
+				currentMenu = aboutMenu;
+				repaint();
+			}
 
-					@Override
-					public void onRelease()
-					{
-					}
+			@Override
+			public void onRelease()
+			{
+			}
 		});
 		mainMenu.add(new MenuButton(212, 480, 600, 50, "Exit",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
-					@Override
-					public void onClick(Point point)
-					{
-						System.exit(0);
-					}
+			@Override
+			public void onClick(Point point)
+			{
+				System.exit(0);
+			}
 
-					@Override
-					public void onRelease()
-					{
-					}
+			@Override
+			public void onRelease()
+			{
+			}
 		});
 
 		// Add labels and buttons to options menu
-		// TODO actually add some options
+		optionsMenu.add(new MenuLabel(200, 50, 0, 0, "Options", new Color(
+				0, 0, 0, 0), Color.WHITE, new Font("Consolas", 0, 50)));
+		RadioButtons colourButtons = new RadioButtons();
+		colourButtons.add(new MenuButton(87, 150, 200, 50, "Red",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
+			@Override
+			public void onClick(Point point)
+			{
+				Ray.setLaserColour(Color.RED);
+				repaint();
+			}
 
+			@Override
+			public void onRelease()
+			{
+			}
+		});
+		colourButtons.add(new MenuButton(337, 150, 200, 50, "Blue",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
+			@Override
+			public void onClick(Point point)
+			{
+				Ray.setLaserColour(Color.BLUE);
+				repaint();
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
+		colourButtons.add(new MenuButton(87, 220, 200, 50, "Green",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
+			@Override
+			public void onClick(Point point)
+			{
+				Ray.setLaserColour(Color.GREEN);
+				repaint();
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
+		colourButtons.add(new MenuButton(337, 220, 200, 50, "Yellow",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
+			@Override
+			public void onClick(Point point)
+			{
+				Ray.setLaserColour(Color.YELLOW);
+				repaint();
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
+		optionsMenu.add(colourButtons);
+		
+		// Select red by default
+		colourButtons.onClick(new Point(87, 150));
+		optionsMenu.add(new MenuLabel(200, 400, 0, 0, "Laser Thickness", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 35)));
+		thicknessSlider = new MenuSlider(100, 500, 600, 4, Color.LIGHT_GRAY, Color.BLACK);
+		
+		optionsMenu.add(thicknessSlider);
+		optionsMenu.add(new MenuLabel(650, 190, 0, 0, "Preview:", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 35)));
 		optionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -182,7 +249,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
-		
+
 		instructionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -197,7 +264,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
-		
+
 		aboutMenu.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -221,7 +288,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 		for (int level = 0; level < levels.size(); level++)
 		{
 			levelButtons.add(new MenuButton(30, 100 + 60 * level, 500, 50,
-					levels.get(level).getName(), new Color(30, 30, 30), Color.WHITE,
+					levels.get(level).getName(), new Color(30, 30, 30),
+					Color.WHITE,
 					new Font("Consolas", 0, 40)) {
 				@Override
 				public void onClick(Point point)
@@ -236,8 +304,10 @@ public class LaserPanel extends JPanel implements MouseListener,
 			});
 		}
 
-		levelSelect.add(new MenuLabel(800, 530, 0, 0, "Best score:", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30)));
-		scoreLabel = new MenuLabel(800, 570, 0, 0, "", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30));
+		levelSelect.add(new MenuLabel(800, 530, 0, 0, "Best score:",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30)));
+		scoreLabel = new MenuLabel(800, 570, 0, 0, "", Color.DARK_GRAY,
+				Color.WHITE, new Font("Consolas", 0, 30));
 		levelSelect.add(scoreLabel);
 
 		levelScroll = new ScrollContainer(20, 90, 550, 550, Color.DARK_GRAY,
@@ -267,7 +337,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
-		
+
 		levelSelect.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -315,7 +385,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
-		inGameMenu.add(new MenuButton(800, 100, 200, 50, "Clear", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20))
+		inGameMenu.add(new MenuButton(800, 100, 200, 50, "Clear",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20))
 		{
 			@Override
 			public void onClick(Point point)
@@ -422,6 +493,15 @@ public class LaserPanel extends JPanel implements MouseListener,
 					0.5);
 		}
 
+		// If the player is in the options screen, show a preview for laser
+		// colour and laser width
+		if (currentMenu == optionsMenu)
+		{
+			Ray preview = new Ray(900, 50, 0, 500);
+			preview.draw(g);
+		}
+
+		// Draw the held object
 		if (selectedObject != null)
 		{
 			selectedObject.draw(g, true);
@@ -444,7 +524,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		{
 			scoreLabel.setText("");
 		}
-		
+
 		// Draw the menu if one is loaded
 		currentMenu.draw(g);
 	}
@@ -464,7 +544,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 				isHeldNew = false;
 			}
 		}
-		
+
 		clickedPoint = arg0.getPoint();
 	}
 
@@ -478,6 +558,11 @@ public class LaserPanel extends JPanel implements MouseListener,
 		if (currentMenu == levelSelect)
 		{
 			levelScroll.scrollTo(arg0.getY());
+		}
+		if (currentMenu == optionsMenu)
+		{
+			thicknessSlider.slideTo(arg0.getX());
+			Ray.setLaserThickness(thicknessSlider.getPosition() + 1);
 		}
 		repaint();
 	}

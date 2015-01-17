@@ -4,7 +4,6 @@ import java.awt.Point;
 public interface Placeable
 {
 	public void	moveTo(int x, int y);
-	public void offset(int x, int y);
 	public void rotateCCW(int degrees);
 	public void rotateCW(int degrees);
 	public boolean intersects(Point click);

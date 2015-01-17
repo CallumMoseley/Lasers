@@ -129,11 +129,4 @@ public class BeamSplitter extends Collidable implements Placeable
 		return click.getX() >= getX() && click.getY() >= getY()
 				&& click.getX() <= getX() + 32 && click.getY() <= getY() + 32;
 	}
-
-	@Override
-	public void offset(int x, int y)
-	{
-		// TODO Auto-generated method stub
-		
-	}
 }
