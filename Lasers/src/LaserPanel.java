@@ -90,8 +90,17 @@ public class LaserPanel extends JPanel implements MouseListener,
 		inGameRunningMenu = new Menu();
 
 		// Add labels and buttons to main menu
-		mainMenu.add(new MenuLabel(512, 200, 0, 0, "Lasers", new Color(0, 0, 0,
-				0), Color.WHITE, new Font("Consolas", 0, 60)));
+		mainMenu.add(new ImageButton(0, 0, "gfx/title.png") {
+			@Override
+			public void onClick(Point point)
+			{
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
 		mainMenu.add(new MenuButton(212, 300, 600, 50, "Play",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
 			@Override
@@ -289,7 +298,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		levelButtons = new RadioButtons();
 		for (int level = 0; level < levels.size(); level++)
 		{
-			levelButtons.add(new MenuButton(30, 100 + 60 * level, 500, 50,
+			levelButtons.add(new MenuButton(30, 100 + 100 * level, 500, 80,
 					levels.get(level).getName(), new Color(30, 30, 30),
 					Color.WHITE,
 					new Font("Consolas", 0, 40)) {
@@ -304,7 +313,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 				{
 				}
 			});
-			buttonsAndIndicators.add(new LevelCompletionIndicator(450, 110 + 60 * level, 30, 30, levels.get(level)));
+			buttonsAndIndicators.add(new LevelCompletionIndicator(450, 130 + 100 * level, 30, 30, levels.get(level)));
 		}
 		buttonsAndIndicators.add(levelButtons, 0);
 		levelScroll = new ScrollContainer(20, 90, 550, 550, Color.DARK_GRAY,

@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 public class Mirror extends Collidable implements Placeable
 {
@@ -121,7 +122,9 @@ public class Mirror extends Collidable implements Placeable
 	@Override
 	public boolean intersects(Point click)
 	{
-		return click.getX() >= getX() && click.getY() >= getY()
-				&& click.getX() <= getX() + 32 && click.getY() <= getY() + 32;
+		return click.getX() >= getX() - LENGTH / 2
+				&& click.getX() < getX() + LENGTH / 2
+				&& click.getY() >= getY() - LENGTH / 2
+				&& click.getY() < getY() + LENGTH / 2;
 	}
 }
