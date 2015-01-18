@@ -35,6 +35,7 @@ public class Level
 	private int topScore;
 	private boolean completed;
 	private boolean isSimulating;
+	private int optimal;
 
 	/**
 	 * Initialises the level to be blank
@@ -280,6 +281,11 @@ public class Level
 	{
 		return name;
 	}
+	
+	public int getOptimal()
+	{
+		return optimal;
+	}
 
 	public boolean loadLevel(File file)
 	{
@@ -287,6 +293,7 @@ public class Level
 		{
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			name = br.readLine();
+			optimal = Integer.parseInt(br.readLine());
 			String line = br.readLine();
 			int lineNo = 0;
 			// Read every line and process its characters
