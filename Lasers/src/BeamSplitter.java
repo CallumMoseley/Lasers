@@ -10,7 +10,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 
 public class BeamSplitter extends Collidable implements Placeable
 {
@@ -18,6 +17,7 @@ public class BeamSplitter extends Collidable implements Placeable
 	private final int LENGTH = 32;
 	private int angle;
 	private Vector2D normal;
+	private boolean valid;
 
 	/**
 	 * Initialises as new mirror with the given position and angle
@@ -30,6 +30,7 @@ public class BeamSplitter extends Collidable implements Placeable
 		super(x, y);
 		this.angle = angle;
 		normal = new Vector2D(angle).getNormalized();
+		valid = true;
 	}
 
 	public boolean isReflective()
@@ -41,7 +42,7 @@ public class BeamSplitter extends Collidable implements Placeable
 	{
 		return false;
 	}
-	
+
 	public boolean isTransparent()
 	{
 		return true;
@@ -74,16 +75,23 @@ public class BeamSplitter extends Collidable implements Placeable
 	@Override
 	public void draw(Graphics g)
 	{
-		// Calculates the two end points of this mirror
+		// Calculates the two end points of this splitter
 		Vector2D end1 = new Vector2D(angle + 90);
 		end1 = end1.multiply(LENGTH / 2);
 		Vector2D end2 = end1.multiply(-1);
 		end1 = end1.add(new Vector2D(getX(), getY()));
 		end2 = end2.add(new Vector2D(getX(), getY()));
 
-		// Draws a thick line for the mirror
+		// Draws a thick line for the splitter
 		((Graphics2D) g).setStroke(new BasicStroke(WIDTH));
-		g.setColor(Color.WHITE);
+		if (valid)
+		{
+			g.setColor(Color.BLUE);
+		}
+		else
+		{
+			g.setColor(Color.RED);
+		}
 		g.drawLine((int) end1.getX(), (int) end1.getY(), (int) end2.getX(),
 				(int) end2.getY());
 	}
@@ -131,5 +139,44 @@ public class BeamSplitter extends Collidable implements Placeable
 				&& click.getX() < getX() + LENGTH / 2
 				&& click.getY() >= getY() - LENGTH / 2
 				&& click.getY() < getY() + LENGTH / 2;
+	}
+
+	@Override
+	public Vector2D intersects(Vector2D a, Vector2D b)
+	{
+		Vector2D end1 = new Vector2D(angle + 90);
+		end1 = end1.multiply(LENGTH / 2);
+		Vector2D end2 = end1.multiply(-2);
+		end1.addToThis(new Vector2D(getX(), getY()));
+		return Vector2D.intersects(end1, end2, a, b);
+	}
+
+	@Override
+	public boolean intersects(Collidable c)
+	{
+		Vector2D end1 = new Vector2D(angle + 90);
+		end1 = end1.multiply(LENGTH / 2);
+		Vector2D end2 = end1.multiply(-2);
+		end1.addToThis(new Vector2D(getX(), getY()));
+
+		Vector2D intersection = c.intersects(end1, end2);
+		if (!(intersection.getX() == Double.POSITIVE_INFINITY)
+				&& !(intersection.getY() == Double.POSITIVE_INFINITY))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void setValid(boolean b)
+	{
+		valid = b;
+	}
+
+	@Override
+	public boolean isValid()
+	{
+		return valid;
 	}
 }

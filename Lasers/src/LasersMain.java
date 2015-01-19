@@ -5,6 +5,9 @@
  * @version January 2015
  */
 
+import java.io.File;
+
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class LasersMain extends JFrame
@@ -16,6 +19,14 @@ public class LasersMain extends JFrame
 		super("Laser Puzzle Game");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		try
+		{
+			this.setIconImage(ImageIO.read(new File("gfx/icon.png")));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 		// Load the game, and put it in this frame
 		game = new LaserPanel();

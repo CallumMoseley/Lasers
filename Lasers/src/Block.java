@@ -53,6 +53,34 @@ public class Block extends Collidable
 		return closest;
 	}
 
+	public Vector2D intersects(Vector2D a, Vector2D b)
+	{
+		// Find the point of intersection of the ray for each side
+		Vector2D[] intersections = new Vector2D[4];
+		intersections[0] = Vector2D.intersects(new Vector2D(getX(), getY()),
+				new Vector2D(0, 32), a, b);
+		intersections[1] = Vector2D.intersects(new Vector2D(getX(), getY()),
+				new Vector2D(32, 0), a, b);
+		intersections[2] = Vector2D.intersects(
+				new Vector2D(getX() + 32, getY()), new Vector2D(0, 32), a, b);
+		intersections[3] = Vector2D.intersects(
+				new Vector2D(getX(), getY() + 32), new Vector2D(32, 0), a, b);
+
+		// Find the point which is closest to the rays position, as it would be
+		// hit first, and return it
+		Vector2D closest = new Vector2D(Double.POSITIVE_INFINITY,
+				Double.POSITIVE_INFINITY);
+		for (int point = 0; point < 4; point++)
+		{
+			if (intersections[point].subtract(a).getLength() < closest
+					.subtract(a).getLength())
+			{
+				closest = intersections[point];
+			}
+		}
+		return closest;
+	}
+
 	public void draw(Graphics g)
 	{
 		g.drawImage(sprite, getX(), getY(), null);

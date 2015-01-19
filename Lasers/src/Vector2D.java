@@ -66,7 +66,7 @@ public class Vector2D implements Comparable<Vector2D>
 	{
 		return new Vector2D(x + v.x, y + v.y);
 	}
-	
+
 	public void addToThis(Vector2D v)
 	{
 		x += v.x;
@@ -177,5 +177,27 @@ public class Vector2D implements Comparable<Vector2D>
 	{
 		return incident.subtract(normal.getNormalized().multiply(
 				2 * dotProduct(incident, normal.getNormalized())));
+	}
+
+	public static Vector2D intersects(Vector2D a, Vector2D b, Vector2D c,
+			Vector2D d)
+	{
+		// For reference:
+		// http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/565282#565282
+
+		// Calculate the scalars required to have the line segments intersect
+		double t = Vector2D.crossProduct(a.subtract(c),
+				b.multiply(1.0 / Vector2D.crossProduct(d, b)));
+		double u = Vector2D.crossProduct(a.subtract(c),
+				d.multiply(1.0 / Vector2D.crossProduct(d, b)));
+
+		// Check whether the points are on the line segments
+		if (Vector2D.crossProduct(d, b) != 0 && t >= 0 && t <= 1 && u >= 0
+				&& u <= 1)
+		{
+			return new Vector2D(c.getX() + t * d.getX(), c.getY() + t
+					* d.getY());
+		}
+		return new Vector2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 }

@@ -106,6 +106,11 @@ public abstract class Collidable
 	{
 		return new Vector2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
+	
+	public Vector2D intersects(Vector2D a, Vector2D b)
+	{
+		return new Vector2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+	}
 
 	/**
 	 * Finds the direction of the given ray if it were reflected by this object

@@ -79,6 +79,7 @@ public class Level
 	 */
 	public boolean runLaser()
 	{
+		AudioHandler.startLaser();
 		isSimulating = true;
 
 		Queue<Ray> unprocessedLasers = new LinkedList<Ray>();
@@ -213,6 +214,7 @@ public class Level
 	 */
 	public void stopLaser()
 	{
+		AudioHandler.stopLaser();
 		laser.clear();
 		isSimulating = false;
 		for (int object = 0; object < collidable.size(); object++)
@@ -285,6 +287,11 @@ public class Level
 	public int getOptimal()
 	{
 		return optimal;
+	}
+
+	public int getObjectsUsed()
+	{
+		return placeable.size();
 	}
 
 	public boolean loadLevel(File file)
@@ -427,6 +434,33 @@ public class Level
 		scaleDown.translate(x, y);
 
 		((Graphics2D) g).drawImage(level, scaleDown, null);
+	}
+	
+	public void updatePlacementValid()
+	{
+		for (Placeable p : placeable)
+		{
+			p.setValid(true);
+			for (Collidable c : collidable)
+			{
+				if (p != c && p.intersects(c))
+				{
+					p.setValid(false);
+				}
+			}
+		}
+	}
+	
+	public boolean allPlacementsValid()
+	{
+		for (Placeable p : placeable)
+		{
+			if (!p.isValid())
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

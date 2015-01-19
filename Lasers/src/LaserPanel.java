@@ -17,6 +17,7 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class LaserPanel extends JPanel implements MouseListener,
@@ -42,6 +43,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 	private final RadioButtons levelButtons;
 	private final MenuLabel scoreLabel;
 	private final MenuSlider thicknessSlider;
+	private final ToggleImageButton muteButton;
+	private final MenuLabel currentMoves;
 
 	private Placeable selectedObject;
 	private boolean isHeld;
@@ -69,6 +72,10 @@ public class LaserPanel extends JPanel implements MouseListener,
 		LaserSource.loadSprite("gfx/laser_source.png");
 		Target.loadSprite("gfx/target.png");
 		Level.loadBackground("gfx/background.png");
+		AudioHandler.loadAudio();
+
+		// Start music
+		AudioHandler.startMusic();
 
 		// Load levels
 		levels = new ArrayList<Level>();
@@ -232,14 +239,17 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 		});
 		optionsMenu.add(colourButtons);
-		
+
 		// Select red by default
 		colourButtons.onClick(new Point(87, 150));
-		optionsMenu.add(new MenuLabel(200, 400, 0, 0, "Laser Thickness", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 35)));
-		thicknessSlider = new MenuSlider(100, 500, 600, 4, Color.LIGHT_GRAY, Color.BLACK);
-		
+		optionsMenu.add(new MenuLabel(200, 400, 0, 0, "Laser Thickness",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 35)));
+		thicknessSlider = new MenuSlider(100, 500, 600, 4, Color.LIGHT_GRAY,
+				Color.BLACK);
+
 		optionsMenu.add(thicknessSlider);
-		optionsMenu.add(new MenuLabel(750, 190, 0, 0, "Preview:", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 35)));
+		optionsMenu.add(new MenuLabel(750, 190, 0, 0, "Preview:",
+				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 35)));
 		optionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -255,10 +265,18 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 		});
 
-		// TODO instructions
-		instructionsMenu.add(new MenuLabel(200, 50, 0, 0, "Instructions", new Color(
-				0, 0, 0, 0), Color.WHITE, new Font("Consolas", 0, 50)));
-		instructionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
+		instructionsMenu.add(new ImageButton(0, 0, "gfx/instructions.png") {
+			@Override
+			public void onClick(Point point)
+			{
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
+		instructionsMenu.add(new MenuButton(890, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
 			public void onClick(Point point)
@@ -273,9 +291,17 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 		});
 
-		// TODO about
-		aboutMenu.add(new MenuLabel(200, 50, 0, 0, "About", new Color(
-				0, 0, 0, 0), Color.WHITE, new Font("Consolas", 0, 50)));
+		aboutMenu.add(new ImageButton(0, 0, "gfx/about.png") {
+			@Override
+			public void onClick(Point point)
+			{
+			}
+
+			@Override
+			public void onRelease()
+			{
+			}
+		});
 		aboutMenu.add(new MenuButton(870, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -313,7 +339,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 				{
 				}
 			});
-			buttonsAndIndicators.add(new LevelCompletionIndicator(450, 130 + 100 * level, 30, 30, levels.get(level)));
+			buttonsAndIndicators.add(new LevelCompletionIndicator(450,
+					130 + 100 * level, 30, 30, levels.get(level)));
 		}
 		buttonsAndIndicators.add(levelButtons, 0);
 		levelScroll = new ScrollContainer(20, 90, 550, 550, Color.DARK_GRAY,
@@ -340,6 +367,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 					currentMenu = inGameMenu;
 					currentLevel = levels.get(selectedLevel);
 					inGame = true;
+					currentMoves.setText("" + currentLevel.getObjectsUsed());
 					repaint();
 				}
 			}
@@ -371,12 +399,22 @@ public class LaserPanel extends JPanel implements MouseListener,
 			@Override
 			public void onClick(Point point)
 			{
-				boolean completed = currentLevel.runLaser();
-				if (completed)
+				if (currentLevel.allPlacementsValid())
 				{
-					// TODO show victory
+					boolean completed = currentLevel.runLaser();
+					repaint();
+					if (completed)
+					{
+						JOptionPane.showMessageDialog(null,
+								"You beat the level!");
+					}
+					currentMenu = inGameRunningMenu;
 				}
-				currentMenu = inGameRunningMenu;
+				else
+				{
+					JOptionPane.showMessageDialog(null,
+							"Some object positions are not valid!");
+				}
 				repaint();
 			}
 
@@ -409,6 +447,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 				currentLevel.clearPlaced();
 				selectedObject = null;
+				currentMoves.setText("" + currentLevel.getObjectsUsed());
 				repaint();
 			}
 
@@ -432,7 +471,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
-		inGameMenu.add(new ImageButton(850, 300, "gfx/mirror.png") {
+		inGameMenu.add(new ImageButton(850, 300, "gfx/splitter.png") {
 			@Override
 			public void onClick(Point point)
 			{
@@ -447,6 +486,19 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
+		muteButton = new ToggleImageButton("gfx/sound.png", "gfx/mute.png",
+				950, 600) {
+			@Override
+			public void onClick(Point click)
+			{
+				super.onClick(click);
+				AudioHandler.toggleMute();
+			}
+		};
+		inGameMenu.add(muteButton);
+		inGameMenu.add(new MenuLabel(890, 200, 0, 0, "Objects used", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30)));
+		currentMoves = new MenuLabel(890, 250, 0, 0, "0", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30));
+		inGameMenu.add(currentMoves);
 
 		inGameRunningMenu.add(new MenuButton(800, 670, 200, 50, "Stop!",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
@@ -480,6 +532,9 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
+		inGameRunningMenu.add(muteButton);
+		inGameRunningMenu.add(new MenuLabel(890, 200, 0, 0, "Objects used", Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30)));
+		inGameMenu.add(currentMoves);
 
 		// Start main menu
 		currentMenu = mainMenu;
@@ -605,6 +660,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 
 			isHeldNew = false;
 			isHeld = false;
+			currentLevel.updatePlacementValid();
+			currentMoves.setText("" + currentLevel.getObjectsUsed());
 		}
 		repaint();
 	}
@@ -638,6 +695,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 					selectedObject.rotateCW(amountToRotate);
 				}
 			}
+			currentLevel.updatePlacementValid();
 		}
 		if (arg0.getKeyCode() == KeyEvent.VK_CONTROL)
 		{

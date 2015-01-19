@@ -65,7 +65,7 @@ public class RadioButtons implements MenuItem
 				// Click the button, un-highlight the previous selected button,
 				// and highlight the new one
 				buttons.get(button).onClick(point);
-				if (selected != -1)
+				if (selected != -1 && selected != button)
 				{
 					buttons.get(selected).unHighlight();
 				}
