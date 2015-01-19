@@ -197,6 +197,7 @@ public class Level
 				allHit = false;
 			}
 		}
+		completed = false;
 		if (allHit)
 		{
 			completed = true;
