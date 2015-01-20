@@ -40,6 +40,7 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		tiles = new Tile[8];
 		try
 		{
+			// Load all tiles that can be placed in a level
 			tiles[0] = new Tile(ImageIO.read(new File("gfx/background.png")),
 					new Rectangle(840, 200, 32, 32), '.');
 			tiles[1] = new Tile(ImageIO.read(new File("gfx/block.png")),

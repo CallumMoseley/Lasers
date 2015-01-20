@@ -1,5 +1,5 @@
 /**
- * A button, which can be put on a menu, and can be extended to change behaviour on click
+ * A button with text, which can be put on a menu, and can be extended to change behaviour on click
  * @author Callum Moseley
  * @version January 2015
  */
@@ -21,7 +21,7 @@ public abstract class MenuButton extends MenuLabel
 	 */
 	@Override
 	public abstract void onClick(Point point);
-	
+
 	@Override
 	public abstract void onRelease();
 }

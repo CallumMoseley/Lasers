@@ -1,3 +1,9 @@
+/**
+ * An image button, that when clicked, changes to another image
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -14,6 +20,13 @@ public class ToggleImageButton implements MenuItem
 	private int yOffset;
 	private int currentState;
 
+	/**
+	 * Initialise this button with its two images and position
+	 * @param image1
+	 * @param image2
+	 * @param x
+	 * @param y
+	 */
 	public ToggleImageButton(String image1, String image2, int x, int y)
 	{
 		images = new Image[2];
@@ -47,6 +60,7 @@ public class ToggleImageButton implements MenuItem
 	@Override
 	public boolean intersects(Point point)
 	{
+		// Check intersection with the current image
 		return point.getX() >= x + xOffset
 				&& point.getX() < x + xOffset
 						+ images[currentState].getWidth(null)
@@ -58,6 +72,7 @@ public class ToggleImageButton implements MenuItem
 	@Override
 	public void onClick(Point point)
 	{
+		// Toggle state
 		currentState = 1 - currentState;
 	}
 

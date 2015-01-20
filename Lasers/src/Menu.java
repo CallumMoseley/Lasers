@@ -1,5 +1,5 @@
 /**
- * Represents a collection of MenuItems
+ * Represents a collection of MenuItems which are displayed at the same time
  * @author Callum Moseley
  * @version January 2015
  */
@@ -50,8 +50,12 @@ public class Menu
 		}
 	}
 
+	/**
+	 * Passes the mouse release to each item on this menu
+	 */
 	public void release()
 	{
+		// For every item, call onRelease()
 		for (int item = 0; item < items.size(); item++)
 		{
 			items.get(item).onRelease();

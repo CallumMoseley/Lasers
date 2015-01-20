@@ -17,6 +17,9 @@ public class Container implements MenuItem
 	private int maxX;
 	private int maxY;
 	
+	/**
+	 * Initialises an empty container
+	 */
 	public Container()
 	{
 		items = new ArrayList<MenuItem>();
@@ -27,6 +30,10 @@ public class Container implements MenuItem
 		maxY = -1;
 	}
 	
+	/**
+	 * Adds the given MenuItem to this container
+	 * @param item the item to add to this container
+	 */
 	public void add(MenuItem item)
 	{
 		items.add(item);
@@ -51,6 +58,11 @@ public class Container implements MenuItem
 		}
 	}
 
+	/**
+	 * Adds the given MenuItem to this container at the given index
+	 * @param item the item to add to this container
+	 * @param index the index to insert this item at
+	 */
 	public void add(MenuItem item, int index)
 	{
 		items.add(0, item);

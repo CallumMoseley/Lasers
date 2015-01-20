@@ -1,5 +1,5 @@
 /**
- * A rotatable mirror which reflects lasers and can be manipulated by the player
+ * A rotatable object which both reflects and allows the laser through
  * @author Callum Moseley
  * @version January 2015
  */
@@ -63,10 +63,6 @@ public class BeamSplitter extends Collidable implements Placeable
 		return Vector2D.reflect(incident.getDirection(), normal);
 	}
 
-	/**
-	 * Gets the angle of this mirror
-	 * @return the angle of this mirror
-	 */
 	public int getAngle()
 	{
 		return angle;

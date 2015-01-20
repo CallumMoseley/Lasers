@@ -1,3 +1,9 @@
+/**
+ * A slider which can be used to adjust a value
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -15,12 +21,24 @@ public class MenuSlider implements MenuItem
 	private int distinctPositions;
 	private int sliderPos;
 
-	private Color sliderColour;
+	private Color handleColour;
 	private Color lineColour;
 
 	private boolean clicked;
 
-	public MenuSlider(int x, int y, int length, int noPositions, Color slider, Color line)
+	/**
+	 * Initialises this slider to a given position, colour, and number of
+	 * distinct values
+	 * @param x the x coordinate of this slider
+	 * @param y the y coordinate of this slider
+	 * @param length the length of this slider
+	 * @param noPositions the number of values which this slider can return,
+	 *            based on it's position
+	 * @param handle the colour of the slider handle
+	 * @param line the colour of the background line
+	 */
+	public MenuSlider(int x, int y, int length, int noPositions, Color handle,
+			Color line)
 	{
 		this.x = x;
 		this.y = y;
@@ -28,10 +46,14 @@ public class MenuSlider implements MenuItem
 		distinctPositions = noPositions;
 		sliderPos = 0;
 		clicked = false;
-		sliderColour = slider;
+		handleColour = handle;
 		lineColour = line;
 	}
 
+	/**
+	 * Gets the value of the slider at its current position
+	 * @return the value of the slider at its current position
+	 */
 	public int getPosition()
 	{
 		return (int) (distinctPositions * ((double) sliderPos / (length - SLIDER_WIDTH)));
@@ -44,9 +66,9 @@ public class MenuSlider implements MenuItem
 		g.setColor(lineColour);
 		((Graphics2D) g).setStroke(new BasicStroke(2));
 		g.drawLine(x, y, x + length, y);
-		
+
 		// Draw slider
-		g.setColor(sliderColour);
+		g.setColor(handleColour);
 		g.fillRect(x + sliderPos - SLIDER_WIDTH / 2, y - SLIDER_HEIGHT / 2,
 				SLIDER_WIDTH, SLIDER_HEIGHT);
 	}
@@ -54,6 +76,7 @@ public class MenuSlider implements MenuItem
 	@Override
 	public boolean intersects(Point point)
 	{
+		// Checks whether the point is in the handle
 		return point.getX() >= x + sliderPos - SLIDER_WIDTH / 2
 				&& point.getX() < x + sliderPos + SLIDER_WIDTH / 2
 				&& point.getY() >= y - SLIDER_HEIGHT / 2
@@ -72,18 +95,23 @@ public class MenuSlider implements MenuItem
 		clicked = false;
 	}
 
+	/**
+	 * Slides the handle to the given x position, limited by the ends of the
+	 * slider
+	 * @param clickX the position to slide the handle to
+	 */
 	public void slideTo(int clickX)
 	{
 		if (clicked)
 		{
-			sliderPos = Math.max(0, Math.min(clickX - SLIDER_WIDTH / 2 - x, length));
+			sliderPos = Math.max(0,
+					Math.min(clickX - SLIDER_WIDTH / 2 - x, length));
 		}
 	}
 
 	@Override
 	public void setOffset(int x, int y)
 	{
-		
 	}
 
 	@Override

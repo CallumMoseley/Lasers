@@ -16,6 +16,7 @@ public class LasersMain extends JFrame
 
 	public LasersMain()
 	{
+		// Initialise this frame
 		super("Laser Puzzle Game");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

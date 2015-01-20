@@ -67,6 +67,10 @@ public class Vector2D implements Comparable<Vector2D>
 		return new Vector2D(x + v.x, y + v.y);
 	}
 
+	/**
+	 * Sets this vector to be this vector plus the given vector
+	 * @param v the vector to add to this
+	 */
 	public void addToThis(Vector2D v)
 	{
 		x += v.x;
@@ -74,11 +78,23 @@ public class Vector2D implements Comparable<Vector2D>
 	}
 
 	/**
+	 * Subtracts a vector from this vector
 	 * @param v the vector to subtract from this vector
+	 * @return this vector minus the given vector
 	 */
 	public Vector2D subtract(Vector2D v)
 	{
 		return new Vector2D(x - v.x, y - v.y);
+	}
+
+	/**
+	 * Sets this vector to be this vector minus the given vector
+	 * @param v the vector to subtract from this
+	 */
+	public void subtractFromThis(Vector2D v)
+	{
+		x -= v.x;
+		y -= v.y;
 	}
 
 	/**
@@ -90,6 +106,10 @@ public class Vector2D implements Comparable<Vector2D>
 		return new Vector2D(x * scalar, y * scalar);
 	}
 
+	/**
+	 * Sets this vector to be this vector times a given scalar
+	 * @param scalar the scalar to multiply this vector by
+	 */
 	public void multiplyBy(double scalar)
 	{
 		x *= scalar;
@@ -179,6 +199,15 @@ public class Vector2D implements Comparable<Vector2D>
 				2 * dotProduct(incident, normal.getNormalized())));
 	}
 
+	/**
+	 * Finds the point at which the two given line segments intersect
+	 * @param a the first line segment's first point
+	 * @param b the first line segment's second point, relative to the first
+	 * @param c the second line segment's first point
+	 * @param d the second line segment's second point, relative to the first
+	 * @return the point of intersection between these line segments, or an
+	 *         infinite length vector if they do not intersect
+	 */
 	public static Vector2D intersects(Vector2D a, Vector2D b, Vector2D c,
 			Vector2D d)
 	{
@@ -198,6 +227,8 @@ public class Vector2D implements Comparable<Vector2D>
 			return new Vector2D(c.getX() + t * d.getX(), c.getY() + t
 					* d.getY());
 		}
+		
+		// The lines do not intersect
 		return new Vector2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 }

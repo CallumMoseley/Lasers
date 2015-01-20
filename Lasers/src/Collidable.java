@@ -60,6 +60,10 @@ public abstract class Collidable
 		return false;
 	}
 	
+	/**
+	 * Gets whether this object allows lasers to pass through
+	 * @return whether this object allows lasers to pass through
+	 */
 	public boolean isTransparent()
 	{
 		return false;
@@ -90,6 +94,11 @@ public abstract class Collidable
 		return wasHit;
 	}
 	
+	/**
+	 * Moves this object to the given position
+	 * @param x the new x coordinate
+	 * @param y the new y coordinate
+	 */
 	public void moveTo(int x, int y)
 	{
 		this.x = x;
@@ -107,6 +116,13 @@ public abstract class Collidable
 		return new Vector2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 	
+	/**
+	 * Determines the point at which the given line segment intersects with this object
+	 * @param a the starting point of the line segment
+	 * @param b the relative position of the other point
+	 * @return the point at which the line segment intersects this object, or an infinite
+	 *         length vector if there is no intersection
+	 */
 	public Vector2D intersects(Vector2D a, Vector2D b)
 	{
 		return new Vector2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);

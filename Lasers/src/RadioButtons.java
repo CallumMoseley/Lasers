@@ -19,7 +19,7 @@ public class RadioButtons implements MenuItem
 	private int maxY;
 
 	/**
-	 * Initialises the radio buttons
+	 * Initialises the radio buttons to be empty
 	 */
 	public RadioButtons()
 	{

@@ -23,7 +23,6 @@ import javax.imageio.ImageIO;
 
 public class Level
 {
-	private final int SQUARE_SIZE = 32;
 	private final int ITERATION_LIMIT = 10000;
 	private static Image background;
 
@@ -95,13 +94,13 @@ public class Level
 			// Add the offset, so the laser is coming out of the right part of
 			// the laser source
 			newLaser.getPosition().addToThis(sources.get(source).getOffset());
-			
+
 			unprocessedLasers.add(newLaser);
 		}
-		
+
 		// Used to avoid crashes from beam splitter loops
 		int iterationCount = 0;
-		
+
 		// Simulate the laser bouncing while it hits reflective objects.
 		// Finds the point of intersection with all collidable objects. The
 		// interaction that is handled will be the closest one to the
@@ -142,7 +141,7 @@ public class Level
 			if (objectHit >= 0)
 			{
 				collidable.get(objectHit).hit();
-	
+
 				// Set the current laser segment to be the correct length
 				current.getDirection().normalize();
 				if (closestDifference.getLength() != Double.POSITIVE_INFINITY)
@@ -150,10 +149,10 @@ public class Level
 					current.getDirection().multiplyBy(
 							closestDifference.getLength());
 				}
-				
+
 				// Add the processed laser to the current laser
 				laser.add(current);
-	
+
 				// Reflect the laser if necessary
 				if (collidable.get(objectHit).isReflective())
 				{
@@ -161,9 +160,9 @@ public class Level
 					Vector2D newDir = collidable.get(objectHit)
 							.reflect(current).getNormalized();
 					Vector2D newPos = closest;
-	
+
 					Ray newRay = new Ray(newPos, newDir);
-	
+
 					// Queue the new laser to be processed
 					unprocessedLasers.add(newRay);
 				}
@@ -172,9 +171,9 @@ public class Level
 					// Calculate new ray
 					Vector2D newDir = current.getDirection().getNormalized();
 					Vector2D newPos = closest;
-	
+
 					Ray newRay = new Ray(newPos, newDir);
-	
+
 					// Queue the new laser to be processed
 					unprocessedLasers.add(newRay);
 				}
@@ -206,7 +205,7 @@ public class Level
 				topScore = placeable.size();
 			}
 		}
-		
+
 		return completed;
 	}
 
@@ -284,7 +283,7 @@ public class Level
 	{
 		return name;
 	}
-	
+
 	public int getOptimal()
 	{
 		return optimal;
@@ -314,26 +313,26 @@ public class Level
 					// X's are solid blocks
 					if (nextCh == 'X')
 					{
-						collidable.add(new Block(pos * SQUARE_SIZE, lineNo
-								* SQUARE_SIZE));
+						collidable.add(new Block(pos * 32, lineNo
+								* 32));
 					}
 					// >, V, <, and ^ are laser sources in different directions
 					else if (">V<^".indexOf(nextCh) >= 0)
 					{
-						sources.add(new LaserSource(pos * SQUARE_SIZE, lineNo
-								* SQUARE_SIZE, ">V<^".indexOf(nextCh)));
+						sources.add(new LaserSource(pos * 32, lineNo
+								* 32, ">V<^".indexOf(nextCh)));
 					}
 					// T's are non-reflective targets
 					else if (nextCh == 'T')
 					{
-						collidable.add(new Target(pos * SQUARE_SIZE, lineNo
-								* SQUARE_SIZE, false));
+						collidable.add(new Target(pos * 32, lineNo
+								* 32, false));
 					}
 					// R's are reflective targets
 					else if (nextCh == 'R')
 					{
-						collidable.add(new Target(pos * SQUARE_SIZE, lineNo
-								* SQUARE_SIZE, true));
+						collidable.add(new Target(pos * 32, lineNo
+								* 32, true));
 					}
 					// Anything else is blank
 				}
@@ -370,7 +369,7 @@ public class Level
 		{
 			for (int col = 0; col < 24; col++)
 			{
-				g.drawImage(background, row * SQUARE_SIZE, col * SQUARE_SIZE,
+				g.drawImage(background, row * 32, col * 32,
 						null);
 			}
 		}
@@ -416,8 +415,8 @@ public class Level
 		{
 			for (int col = 0; col < 24; col++)
 			{
-				imageGraphics.drawImage(background, row * SQUARE_SIZE, col
-						* SQUARE_SIZE, null);
+				imageGraphics.drawImage(background, row * 32, col
+						* 32, null);
 			}
 		}
 		for (int object = 0; object < collidable.size(); object++)
@@ -436,7 +435,7 @@ public class Level
 
 		((Graphics2D) g).drawImage(level, scaleDown, null);
 	}
-	
+
 	public void updatePlacementValid()
 	{
 		for (Placeable p : placeable)
@@ -451,7 +450,7 @@ public class Level
 			}
 		}
 	}
-	
+
 	public boolean allPlacementsValid()
 	{
 		for (Placeable p : placeable)

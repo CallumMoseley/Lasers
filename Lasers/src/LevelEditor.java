@@ -25,6 +25,7 @@ public class LevelEditor extends JFrame implements ActionListener
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		// Set up all menus
 		JMenuBar menuBar = new JMenuBar();
 		JMenu file = new JMenu("File");
 
@@ -50,10 +51,12 @@ public class LevelEditor extends JFrame implements ActionListener
 		menuBar.add(edit);
 		setJMenuBar(menuBar);
 
+		// Prepare file chooser
 		fc = new JFileChooser();
 		fc.setCurrentDirectory(new File(System.getProperty("java.class.path")
 				+ "\\.."));
 
+		// Start the editor
 		editor = new LevelEditorPanel();
 		setContentPane(editor);
 	}
@@ -69,6 +72,7 @@ public class LevelEditor extends JFrame implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
+		// Handle creating a new level
 		if (e.getActionCommand().equals("New"))
 		{
 			if (JOptionPane.showOptionDialog(this,
@@ -79,6 +83,7 @@ public class LevelEditor extends JFrame implements ActionListener
 				editor.newLevel();
 			}
 		}
+		// Handle saving the current level
 		if (e.getActionCommand().equals("Save"))
 		{
 			if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
@@ -87,6 +92,7 @@ public class LevelEditor extends JFrame implements ActionListener
 				editor.saveLevel(saveTo);
 			}
 		}
+		// Handle opening a level
 		if (e.getActionCommand().equals("Open"))
 		{
 			if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
@@ -95,6 +101,7 @@ public class LevelEditor extends JFrame implements ActionListener
 				editor.loadLevel(file);
 			}
 		}
+		// Handle undoing the last edit
 		if (e.getActionCommand().equals("Undo"))
 		{
 			editor.undo();

@@ -52,6 +52,8 @@ public class Target extends Block
 				new Vector2D(getX() + 32, getY()), new Vector2D(0, 32));
 		intersections[3] = incident.intersects(
 				new Vector2D(getX(), getY() + 32), new Vector2D(32, 0));
+		
+		// Check each point and find the closest
 		Vector2D closest = new Vector2D(Double.POSITIVE_INFINITY,
 				Double.POSITIVE_INFINITY);
 		int closestIndex = 0;

@@ -17,8 +17,8 @@ public class ScrollContainer implements MenuItem
 
 	private int x;
 	private int y;
-//	private int xOffset;
-//	private int yOffset;
+	private int xOffset;
+	private int yOffset;
 	private int width;
 	private int height;
 	private Color backgroundColor;
@@ -33,8 +33,8 @@ public class ScrollContainer implements MenuItem
 	{
 		this.x = x;
 		this.y = y;
-//		xOffset = 0;
-//		yOffset = 0;
+		xOffset = 0;
+		yOffset = 0;
 		width = w;
 		height = h;
 		backgroundColor = bg;
@@ -52,13 +52,13 @@ public class ScrollContainer implements MenuItem
 	{
 		// Draw solid background
 		g.setColor(backgroundColor);
-		g.fillRect(x, y, width, height);
+		g.fillRect(x + xOffset, y + yOffset, width, height);
 
 		// Draw the contained item, clipped to fit within this object
 		BufferedImage clippedItem = new BufferedImage(1024, 768,
 				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = clippedItem.createGraphics();
-		g2.setClip(x, y, width, height);
+		g2.setClip(x + xOffset, y + yOffset, width, height);
 		contained.draw(g2);
 
 		g.drawImage(clippedItem, 0, 0, null);
@@ -67,7 +67,7 @@ public class ScrollContainer implements MenuItem
 		if (contained.getHeight() > height)
 		{
 			g.setColor(scrollBarColor);
-			g.fillRect(x + width - SCROLL_BAR_WIDTH, y + scrollBarPos,
+			g.fillRect(x + xOffset + width - SCROLL_BAR_WIDTH, y + yOffset + scrollBarPos,
 					SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
 		}
 	}
@@ -75,17 +75,17 @@ public class ScrollContainer implements MenuItem
 	@Override
 	public boolean intersects(Point point)
 	{
-		return point.getX() >= x && point.getX() < x + width
-				&& point.getY() >= y && point.getY() < y + height;
+		return point.getX() >= x + xOffset && point.getX() < x + xOffset + width
+				&& point.getY() >= y + yOffset && point.getY() < y + yOffset + height;
 	}
 
 	@Override
 	public void onClick(Point point)
 	{
 		contained.onClick(point);
-		if (point.getX() >= x + width - SCROLL_BAR_WIDTH
-				&& point.getX() < x + width && point.getY() >= y + scrollBarPos
-				&& point.getY() < y + scrollBarPos + SCROLL_BAR_HEIGHT
+		if (point.getX() >= x + xOffset + width - SCROLL_BAR_WIDTH
+				&& point.getX() < x + xOffset + width && point.getY() >= y + yOffset + scrollBarPos
+				&& point.getY() < y + yOffset + scrollBarPos + SCROLL_BAR_HEIGHT
 				&& contained.getHeight() > height)
 		{
 			scrolling = true;
@@ -101,21 +101,16 @@ public class ScrollContainer implements MenuItem
 	@Override
 	public void setOffset(int x, int y)
 	{
-//		xOffset = x;
-//		yOffset = y;
+		xOffset = x;
+		yOffset = y;
 		contained.setOffset(x, y);
 	}
 
 	public void scrollTo(int sy)
 	{
-		if (sy > y + height)
-		{
-			sy += 1;
-			sy -= 1;
-		}
 		if (scrolling)
 		{
-			scrollBarPos = Math.min(Math.max(0, sy - y), height
+			scrollBarPos = Math.min(Math.max(0, sy - (y + yOffset)), height
 					- SCROLL_BAR_HEIGHT);
 			contained
 					.setOffset(
@@ -139,24 +134,24 @@ public class ScrollContainer implements MenuItem
 	@Override
 	public int minX()
 	{
-		return x;
+		return x + xOffset;
 	}
 
 	@Override
 	public int minY()
 	{
-		return y;
+		return y + yOffset;
 	}
 
 	@Override
 	public int maxX()
 	{
-		return x + width;
+		return x + xOffset + width;
 	}
 
 	@Override
 	public int maxY()
 	{
-		return y + height;
+		return y + yOffset + height;
 	}
 }

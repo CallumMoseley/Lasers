@@ -45,11 +45,13 @@ public class Mirror extends Collidable implements Placeable
 
 	public Vector2D intersects(Ray r)
 	{
+		// Calculates the end points of this vector
 		Vector2D end1 = new Vector2D(angle + 90);
 		end1 = end1.multiply(LENGTH / 2);
 		Vector2D end2 = end1.multiply(-2);
 		end1.addToThis(new Vector2D(getX(), getY()));
 
+		// Find intersection
 		return r.intersects(end1, end2);
 	}
 
@@ -104,6 +106,7 @@ public class Mirror extends Collidable implements Placeable
 	@Override
 	public void drawAngle(Graphics g)
 	{
+		// Find the middle of this mirror, and draw the angle there
 		int stringWidth = g.getFontMetrics().stringWidth("" + angle);
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Consolas", 0, 15));
@@ -130,6 +133,8 @@ public class Mirror extends Collidable implements Placeable
 	@Override
 	public boolean intersects(Point click)
 	{
+		// Checks whether the click is within a LENGTH by LENGTH box centred on
+		// the mirror
 		return click.getX() >= getX() - LENGTH / 2
 				&& click.getX() < getX() + LENGTH / 2
 				&& click.getY() >= getY() - LENGTH / 2
@@ -139,21 +144,27 @@ public class Mirror extends Collidable implements Placeable
 	@Override
 	public Vector2D intersects(Vector2D a, Vector2D b)
 	{
+		// Calculate the end points of this mirror
 		Vector2D end1 = new Vector2D(angle + 90);
 		end1 = end1.multiply(LENGTH / 2);
 		Vector2D end2 = end1.multiply(-2);
 		end1.addToThis(new Vector2D(getX(), getY()));
+
+		// Check collision
 		return Vector2D.intersects(end1, end2, a, b);
 	}
 
 	@Override
 	public boolean intersects(Collidable c)
 	{
+		// Calculate the end points of this mirror
 		Vector2D end1 = new Vector2D(angle + 90);
 		end1 = end1.multiply(LENGTH / 2);
 		Vector2D end2 = end1.multiply(-2);
 		end1.addToThis(new Vector2D(getX(), getY()));
 
+		// Check whether the collision point was finite, thus the objects
+		// intersect
 		Vector2D intersection = c.intersects(end1, end2);
 		if (!(intersection.getX() == Double.POSITIVE_INFINITY)
 				&& !(intersection.getY() == Double.POSITIVE_INFINITY))

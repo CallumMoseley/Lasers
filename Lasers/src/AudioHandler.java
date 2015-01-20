@@ -1,3 +1,7 @@
+/**
+ * Used for statically controlling all game sounds from anywhere
+ */
+
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.net.URL;
@@ -10,6 +14,9 @@ public class AudioHandler
 	private static boolean mute;
 	private static boolean laserRunning;
 	
+	/**
+	 * Load all static sound resources
+	 */
 	public static void loadAudio()
 	{
 		try
@@ -24,16 +31,25 @@ public class AudioHandler
 		}
 	}
 	
+	/**
+	 * Starts the music looping
+	 */
 	public static void startMusic()
 	{
 		music.loop();
 	}
 	
+	/**
+	 * Stops the music
+	 */
 	public static void stopMusic()
 	{
 		music.stop();
 	}
 	
+	/**
+	 * Plays the laser sound, and starts the continuous sound looping
+	 */
 	public static void startLaser()
 	{
 		if (!mute)
@@ -44,23 +60,31 @@ public class AudioHandler
 		}
 	}
 	
+	/**
+	 * Stops the continuous laser sound
+	 */
 	public static void stopLaser()
 	{
 		laserContinuous.stop();
 		laserRunning = false;
 	}
 	
+	/**
+	 * Toggles whether the game is muted or not right now
+	 */
 	public static void toggleMute()
 	{
 		mute = !mute;
 		if (mute)
 		{
+			// Stop all sounds
 			music.stop();
 			laserContinuous.stop();
 			laser.stop();
 		}
 		else
 		{
+			// Start sounds
 			startMusic();
 			if (laserRunning)
 			{

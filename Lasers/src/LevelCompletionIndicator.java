@@ -1,3 +1,10 @@
+/**
+ * A small square tied to a level which shows whether or not the level has
+ * been completed, and whether it was completed with the target number of moves.
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -12,6 +19,14 @@ public class LevelCompletionIndicator implements MenuItem
 	private int height;
 	private Level level;
 
+	/**
+	 * Initialise this indicator to a position, size, and level
+	 * @param x the new x coordinate
+	 * @param y the new y coordinate
+	 * @param width the new width
+	 * @param height the new height
+	 * @param level the level to get completion data from
+	 */
 	public LevelCompletionIndicator(int x, int y, int width, int height,
 			Level level)
 	{
@@ -25,8 +40,8 @@ public class LevelCompletionIndicator implements MenuItem
 	@Override
 	public void draw(Graphics g)
 	{
+		// Find colour based on level completion
 		Color drawColor = Color.RED;
-
 		if (level.isComplete())
 		{
 			drawColor = Color.YELLOW;
@@ -36,6 +51,7 @@ public class LevelCompletionIndicator implements MenuItem
 			}
 		}
 
+		// Draw the box
 		g.setColor(drawColor);
 		g.fillRect(x + xOffset, y + yOffset, width, height);
 	}
@@ -43,8 +59,10 @@ public class LevelCompletionIndicator implements MenuItem
 	@Override
 	public boolean intersects(Point point)
 	{
-		return point.getX() >= x + xOffset && point.getX() < x + xOffset + width
-				&& point.getY() >= y + yOffset && point.getY() < y + yOffset + height;
+		return point.getX() >= x + xOffset
+				&& point.getX() < x + xOffset + width
+				&& point.getY() >= y + yOffset
+				&& point.getY() < y + yOffset + height;
 	}
 
 	@Override

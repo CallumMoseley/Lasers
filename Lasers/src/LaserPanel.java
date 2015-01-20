@@ -30,6 +30,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 	private Menu currentMenu;
 	private boolean inGame;
 
+	// Menus
 	private final Menu mainMenu;
 	private final Menu levelSelect;
 	private final Menu optionsMenu;
@@ -62,6 +63,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 	{
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
+		// Set listeners
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addKeyListener(this);
@@ -183,6 +185,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// Add labels and buttons to options menu
 		optionsMenu.add(new MenuLabel(200, 50, 0, 0, "Options", new Color(
 				0, 0, 0, 0), Color.WHITE, new Font("Consolas", 0, 50)));
+
+		// Colour radio buttons
 		RadioButtons colourButtons = new RadioButtons();
 		colourButtons.add(new MenuButton(87, 150, 200, 50, "Red",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 40)) {
@@ -244,12 +248,15 @@ public class LaserPanel extends JPanel implements MouseListener,
 
 		// Select red by default
 		colourButtons.onClick(new Point(87, 150));
+
+		// Laser thickness slider
 		optionsMenu.add(new MenuLabel(200, 400, 0, 0, "Laser Thickness",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 35)));
 		thicknessSlider = new MenuSlider(100, 500, 600, 4, Color.LIGHT_GRAY,
 				Color.BLACK);
-
 		optionsMenu.add(thicknessSlider);
+
+		// Laser preview
 		optionsMenu.add(new MenuLabel(750, 190, 0, 0, "Preview:",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 35)));
 		optionsMenu.add(new MenuButton(870, 670, 50, 50, "Back",
@@ -267,6 +274,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 		});
 
+		// Add items to instructions menu
 		instructionsMenu.add(new ImageButton(0, 0, "gfx/instructions.png") {
 			@Override
 			public void onClick(Point point)
@@ -293,6 +301,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 		});
 
+		// Add items to the about menu
 		aboutMenu.add(new ImageButton(0, 0, "gfx/about.png") {
 			@Override
 			public void onClick(Point point)
@@ -324,6 +333,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 				0, 0, 0, 0), Color.WHITE, new Font("Consolas", 0, 50)));
 		Container buttonsAndIndicators = new Container();
 		levelButtons = new RadioButtons();
+
+		// For every level, create a radio button and completion indicator
 		for (int level = 0; level < levels.size(); level++)
 		{
 			levelButtons.add(new MenuButton(30, 100 + 100 * level, 500, 80,
@@ -350,18 +361,19 @@ public class LaserPanel extends JPanel implements MouseListener,
 		levelScroll.setItem(buttonsAndIndicators);
 		levelSelect.add(levelScroll);
 
+		// Best score and top score labels
 		levelSelect.add(new MenuLabel(800, 530, 0, 0, "Best score:",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30)));
 		scoreLabel = new MenuLabel(800, 570, 0, 0, "", Color.DARK_GRAY,
 				Color.WHITE, new Font("Consolas", 0, 30));
 		levelSelect.add(scoreLabel);
-
 		levelSelect.add(new MenuLabel(800, 620, 0, 0, "Target score:",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 30)));
 		targetScore = new MenuLabel(800, 660, 0, 0, "", Color.DARK_GRAY,
 				Color.WHITE, new Font("Consolas", 0, 30));
 		levelSelect.add(targetScore);
 
+		// Level preview
 		levelSelect.add(new MenuLabel(800, 80, 0, 0, "Preview", new Color(0,
 				0, 0, 0), Color.WHITE, new Font("Consolas", 0, 40)));
 		levelSelect.add(new MenuButton(50, 670, 160, 70, "Play!",
@@ -386,7 +398,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 			{
 			}
 		});
-
 		levelSelect.add(new MenuButton(950, 670, 50, 50, "Back",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -481,6 +492,9 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 		});
 		// Beam splitters disabled due to not being fun
+		// There is no reason to use regular mirrors as opposed to beam
+		// splitters when trying to use as little objects as possible
+
 		// inGameMenu.add(new ImageButton(850, 400, "gfx/splitter.png") {
 		// @Override
 		// public void onClick(Point point)
@@ -521,6 +535,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 				Color.WHITE, new Font("Consolas", 0, 30));
 		inGameMenu.add(inGameTargetScore);
 
+		// There is a separate menu for while the game is running
 		inGameRunningMenu.add(new MenuButton(800, 670, 200, 50, "Stop!",
 				Color.DARK_GRAY, Color.WHITE, new Font("Consolas", 0, 20)) {
 			@Override
@@ -635,6 +650,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// Pass the click to the current menu
 		currentMenu.click(arg0.getPoint());
 
+		// Select a mirror if the player is in game
 		if (inGame && arg0.getX() < 32 * 24 && !currentLevel.isSimulating())
 		{
 			selectedObject = currentLevel.getClicked(arg0.getPoint());
@@ -649,14 +665,19 @@ public class LaserPanel extends JPanel implements MouseListener,
 	@Override
 	public void mouseDragged(MouseEvent arg0)
 	{
+		// Moving mirrors in game
 		if (inGame && selectedObject != null && isHeld)
 		{
 			selectedObject.moveTo(arg0.getX(), arg0.getY());
 		}
+		
+		// Scrolling on the level select screen
 		if (currentMenu == levelSelect)
 		{
 			levelScroll.scrollTo(arg0.getY());
 		}
+		
+		// Using the slider on the options menu
 		if (currentMenu == optionsMenu)
 		{
 			thicknessSlider.slideTo(arg0.getX());
@@ -668,7 +689,10 @@ public class LaserPanel extends JPanel implements MouseListener,
 	@Override
 	public void mouseReleased(MouseEvent arg0)
 	{
+		// Pass this event to the current menu;
 		currentMenu.release();
+		
+		// Drop the currently held mirror
 		if (selectedObject != null)
 		{
 			if (isHeld)
@@ -677,11 +701,13 @@ public class LaserPanel extends JPanel implements MouseListener,
 				{
 					if (isHeldNew)
 					{
+						// Place a new item
 						currentLevel.addPlaceable(selectedObject);
 					}
 				}
 				else
 				{
+					// Remove this item
 					currentLevel.removePlaceable(selectedObject);
 					selectedObject = null;
 				}
@@ -689,6 +715,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 
 			isHeldNew = false;
 			isHeld = false;
+			
+			// Update placement validity and objects used label
 			currentLevel.updatePlacementValid();
 			currentMoves.setText("" + currentLevel.getObjectsUsed());
 		}
@@ -700,6 +728,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 	{
 		if (inGame && !currentLevel.isSimulating())
 		{
+			// Rotate the current mirror
 			if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
 			{
 				if (selectedObject != null)
@@ -726,10 +755,14 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 			currentLevel.updatePlacementValid();
 		}
+		
+		// Used for fine control
 		if (arg0.getKeyCode() == KeyEvent.VK_CONTROL)
 		{
 			controlHeld = true;
 		}
+		
+		// Removes the current mirror
 		if (arg0.getKeyCode() == KeyEvent.VK_DELETE)
 		{
 			currentLevel.removePlaceable(selectedObject);

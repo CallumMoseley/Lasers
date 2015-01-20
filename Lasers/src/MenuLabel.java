@@ -1,3 +1,9 @@
+/**
+ * A rectangle with text in it.
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -64,13 +70,17 @@ public class MenuLabel implements MenuItem
 				+ height / 2 + strHeight / 4);
 	}
 	
+	/**
+	 * Sets the text of this label to the given string
+	 * @param t the new next of this label
+	 */
 	public void setText(String t)
 	{
 		text = t;
 	}
 
 	/**
-	 * Highlights this label
+	 * Highlights this label to a lighter colour
 	 */
 	public void highlight()
 	{

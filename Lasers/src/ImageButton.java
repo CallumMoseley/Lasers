@@ -17,6 +17,12 @@ public abstract class ImageButton implements MenuItem
 	
 	private Image img;
 	
+	/**
+	 * Initialises this menu button to a position and an image
+	 * @param x the x coordinate of the button
+	 * @param y the y coordinate of the button
+	 * @param filename the path to the image for this button
+	 */
 	public ImageButton(int x, int y, String filename)
 	{
 		this.x = x;
