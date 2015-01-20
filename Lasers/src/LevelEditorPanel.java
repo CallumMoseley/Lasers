@@ -1,19 +1,12 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+/**
+ * A level editor, for graphically creating levels for Lasers
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
@@ -30,6 +23,9 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 	private Tile[] tiles;
 	private int selectedTile;
 
+	/**
+	 * Initialises the tiles and panel
+	 */
 	public LevelEditorPanel()
 	{
 		setPreferredSize(new Dimension(1024, 768));
@@ -77,6 +73,9 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		repaint();
 	}
 	
+	/**
+	 * Undoes the most recent action done by the user
+	 */
 	public void undo()
 	{
 		for (int row = 0; row < 24; row++)
@@ -86,6 +85,9 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		repaint();
 	}
 
+	/**
+	 * Clears the level
+	 */
 	public void newLevel()
 	{
 		for (int row = 0; row < 24; row++)
@@ -102,14 +104,21 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		repaint();
 	}
 
+	/**
+	 * Writes the current level to the given file
+	 * @param saveTo the file to write to
+	 */
 	public void saveLevel(File saveTo)
 	{
 		PrintWriter pw;
 		try
 		{
+			// Print out metadata
 			pw = new PrintWriter(new FileWriter(saveTo));
 			pw.println(name);
 			pw.println(optimal);
+			
+			// Print out level data
 			for (int row = 0; row < 24; row++)
 			{
 				for (int col = 0; col < 24; col++)
@@ -132,8 +141,12 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(file));
+			
+			// Read metadata
 			name = br.readLine();
 			optimal = Integer.parseInt(br.readLine());
+			
+			// Read level data
 			for (int i = 0; i < 24; i++)
 			{
 				String line = br.readLine();
@@ -154,14 +167,17 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 	{
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, 1024, 768);
+		// For every square, find it's sprite and draw
 		for (int row = 0; row < 24; row++)
 		{
 			for (int col = 0; col < 24; col++)
 			{
+				// Find the sprite of this char
 				for (int tile = 0; tile < tiles.length; tile++)
 				{
 					if (tiles[tile].getChar() == level[row][col])
 					{
+						// If it is a laser source, draw a background tile behind it
 						if (">V<^".indexOf(level[row][col]) >= 0)
 						{
 							g.drawImage(tiles[0].getImage(), col * 32, row * 32, null);
@@ -171,12 +187,18 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 				}
 			}
 		}
+		
+		// Highlight the currently selected tile
 		g.setColor(Color.red);
 		g.fillRect(tiles[selectedTile].box.x - 10, tiles[selectedTile].box.y - 10, 52, 52);
+		
+		// Drraw tiles
 		for (int tile = 0; tile < tiles.length; tile++)
 		{
 			tiles[tile].draw(g);
 		}
+		
+		// Draw buttons and labels
 		g.setColor(Color.DARK_GRAY);
 		g.fillRect(800, 100, 200, 50);
 		g.setColor(Color.WHITE);
@@ -188,6 +210,7 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
+		// Find which tile is being selected
 		for (int tile = 0; tile < tiles.length; tile++)
 		{
 			if (tiles[tile].intersects(e.getPoint()))
@@ -195,6 +218,8 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 				selectedTile = tile;
 			}
 		}
+		
+		// If the player clicks the level, add the current tile at the selected square
 		if (new Rectangle(0, 0, 768, 768).contains(e.getPoint()))
 		{
 			for (int row = 0; row < 24; row++)
@@ -206,6 +231,8 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 
 			level[ySquare][xSquare] = tiles[selectedTile].getChar();
 		}
+		
+		// Rename button
 		if (new Rectangle(800, 100, 200, 50).contains(e.getPoint()))
 		{
 			name = JOptionPane.showInputDialog("New name:");
@@ -216,6 +243,7 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
+		// Dragging the mouse over the level draws
 		if (new Rectangle(0, 0, 768, 768).contains(e.getPoint()))
 		{
 			int xSquare = e.getX() / 32;
@@ -251,12 +279,22 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 	{
 	}
 
+	/**
+	 * A tile is a button which is used to select what to draw on the level
+	 * @author Callum Moseley
+	 */
 	class Tile
 	{
 		private Image sprite;
 		private Rectangle box;
 		private char tile;
 
+		/**
+		 * Initialises this tile to have an image, bounding box, and char to draw on the level
+		 * @param i the image of this button
+		 * @param r the bounding box of this button
+		 * @param c the character of this tile
+		 */
 		public Tile(Image i, Rectangle r, char c)
 		{
 			sprite = i;
@@ -264,21 +302,38 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 			tile = c;
 		}
 
+		/**
+		 * Draws this tile
+		 * @param g the graphics context to draw with
+		 */
 		public void draw(Graphics g)
 		{
 			g.drawImage(sprite, (int) box.getX(), (int) box.getY(), null);
 		}
 
+		/**
+		 * Finds whether the given point is in this tile's bounding box
+		 * @param p the point to check 
+		 * @return whether the given point is in this tile's bounding box
+		 */
 		public boolean intersects(Point p)
 		{
 			return box.contains(p);
 		}
 
+		/**
+		 * Gets the char of this tile
+		 * @return the char of this tile
+		 */
 		public char getChar()
 		{
 			return tile;
 		}
 		
+		/**
+		 * Gets the image of this tile
+		 * @return the image of this tile
+		 */
 		public Image getImage()
 		{
 			return sprite;
