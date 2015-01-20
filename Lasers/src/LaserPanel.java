@@ -52,7 +52,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 	private Placeable selectedObject;
 	private boolean isHeld;
 	private boolean isHeldNew;
-	private boolean controlHeld;
 
 	private ArrayList<Level> levels;
 
@@ -68,8 +67,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 		addMouseMotionListener(this);
 		addKeyListener(this);
 		setFocusable(true);
-
-		controlHeld = false;
 
 		// Load static resources
 		Block.loadSprite("gfx/block.png");
@@ -729,37 +726,30 @@ public class LaserPanel extends JPanel implements MouseListener,
 		if (inGame && !currentLevel.isSimulating())
 		{
 			// Rotate the current mirror
+			int amountToRotate = 5;
+			
+			// If control is pressed, use fine rotation
+			if ((arg0.getModifiers() & KeyEvent.CTRL_MASK) != 0)
+			{
+				amountToRotate = 1;
+			}
+			
+			// Rotate the proper direction
 			if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
 			{
 				if (selectedObject != null)
 				{
-					int amountToRotate = 5;
-					if (controlHeld)
-					{
-						amountToRotate = 1;
-					}
-					selectedObject.rotateCCW(amountToRotate);
+					selectedObject.rotate(-amountToRotate);
 				}
 			}
 			else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT)
 			{
 				if (selectedObject != null)
 				{
-					int amountToRotate = 5;
-					if (controlHeld)
-					{
-						amountToRotate = 1;
-					}
-					selectedObject.rotateCW(amountToRotate);
+					selectedObject.rotate(amountToRotate);
 				}
 			}
 			currentLevel.updatePlacementValid();
-		}
-		
-		// Used for fine control
-		if (arg0.getKeyCode() == KeyEvent.VK_CONTROL)
-		{
-			controlHeld = true;
 		}
 		
 		// Removes the current mirror
@@ -775,10 +765,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 	@Override
 	public void keyReleased(KeyEvent arg0)
 	{
-		if (arg0.getKeyCode() == KeyEvent.VK_CONTROL)
-		{
-			controlHeld = false;
-		}
 	}
 
 	@Override

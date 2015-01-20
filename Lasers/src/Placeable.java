@@ -11,16 +11,11 @@ public interface Placeable
 	public void moveTo(int x, int y);
 
 	/**
-	 * Rotates this object counter-clockwise the given number of degrees
+	 * Rotates this object the given number of degrees. Positive numbers are
+	 * clockwise, negative numbers are counter-clockwise
 	 * @param degrees the number of degrees to rotate this
 	 */
-	public void rotateCCW(int degrees);
-
-	/**
-	 * Rotates this object clockwise the given number of degrees
-	 * @param degrees the number of degrees to rotate this
-	 */
-	public void rotateCW(int degrees);
+	public void rotate(int degrees);
 
 	/**
 	 * Finds whether a click at the given point is on this object

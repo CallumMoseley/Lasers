@@ -115,15 +115,7 @@ public class Mirror extends Collidable implements Placeable
 	}
 
 	@Override
-	public void rotateCCW(int degrees)
-	{
-		angle -= degrees;
-		normal = new Vector2D(angle).getNormalized();
-		angle = (angle + 360) % 360;
-	}
-
-	@Override
-	public void rotateCW(int degrees)
+	public void rotate(int degrees)
 	{
 		angle += degrees;
 		normal = new Vector2D(angle).getNormalized();
