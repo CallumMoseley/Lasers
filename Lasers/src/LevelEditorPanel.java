@@ -4,9 +4,24 @@
  * @version January 2015
  */
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
@@ -14,7 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class LevelEditorPanel extends JPanel implements MouseListener,
-		MouseMotionListener
+		MouseMotionListener, KeyListener
 {
 	private char[][] level;
 	private char[][] lastLevel;
@@ -32,7 +47,8 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 
 		level = new char[24][24];
 		lastLevel = new char[24][24];
-
+		name = "Untitled";
+		
 		tiles = new Tile[8];
 		try
 		{
@@ -67,6 +83,8 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		addKeyListener(this);
+		setFocusable(true);
 		
 		newLevel();
 
@@ -222,6 +240,7 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		// If the player clicks the level, add the current tile at the selected square
 		if (new Rectangle(0, 0, 768, 768).contains(e.getPoint()))
 		{
+			// Store current state for undoing
 			for (int row = 0; row < 24; row++)
 			{
 				lastLevel[row] = level[row].clone();
@@ -255,28 +274,15 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e)
+	public void keyPressed(KeyEvent e)
 	{
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e)
-	{
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e)
-	{
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e)
-	{
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e)
-	{
+		if (e.getKeyCode() == KeyEvent.VK_Z)
+		{
+			if ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)
+			{
+				undo();
+			}
+		}
 	}
 
 	/**
@@ -338,5 +344,40 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		{
 			return sprite;
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e)
+	{
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e)
+	{
 	}
 }
