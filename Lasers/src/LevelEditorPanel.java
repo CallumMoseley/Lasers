@@ -219,10 +219,14 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		// Draw buttons and labels
 		g.setColor(Color.DARK_GRAY);
 		g.fillRect(800, 100, 200, 50);
+		g.fillRect(780, 600, 240, 50);
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Consolas", 0, 30));
 		g.drawString("Rename", 850, 135);
 		g.drawString(name, 780, 50);
+		g.drawString("Change target", 790, 635);
+		g.drawString("Target:", 810, 720);
+		g.drawString("" + optimal, 940, 720);
 	}
 
 	@Override
@@ -255,6 +259,19 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		if (new Rectangle(800, 100, 200, 50).contains(e.getPoint()))
 		{
 			name = JOptionPane.showInputDialog("New name:");
+		}
+		
+		// Change target button
+		if (new Rectangle(780, 600, 240, 50).contains(e.getPoint()))
+		{
+			try
+			{
+				optimal = Integer.parseInt(JOptionPane.showInputDialog("New target:"));
+			}
+			catch (Exception ex)
+			{
+				JOptionPane.showMessageDialog(this, "That is not a valid number", "Invalid number", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		repaint();
 	}

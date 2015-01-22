@@ -17,7 +17,6 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class LaserPanel extends JPanel implements MouseListener,
@@ -25,6 +24,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 {
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
+	private static final Color MESSAGE_BOX_COLOUR = new Color(100, 100, 100);
+	private static final Color MESSAGE_BOX_OUTLINE = new Color(80, 80, 80);
 
 	private Level currentLevel;
 	private Menu currentMenu;
@@ -51,7 +52,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 
 	private Placeable selectedObject;
 	private boolean isHeld;
-	private boolean isHeldNew;
+	private boolean messageShowing;
+	private String messageText;
 
 	private ArrayList<Level> levels;
 
@@ -88,7 +90,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 				levels.add(newLevel);
 		}
 
-		// Initialize menus
+		// Initialise menus
 		mainMenu = new Menu();
 		levelSelect = new Menu();
 		optionsMenu = new Menu();
@@ -423,14 +425,19 @@ public class LaserPanel extends JPanel implements MouseListener,
 					repaint();
 					if (completed)
 					{
-						JOptionPane.showMessageDialog(null,
-								"You beat the level!");
+						if (currentLevel.getObjectsUsed() <= currentLevel.getOptimal())
+						{
+							showMessageBox("You beat the level with the target number of objects!");
+						}
+						else
+						{
+							showMessageBox("You beat the level!");
+						}
 					}
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,
-							"Some object positions are not valid!");
+					showMessageBox("Some object positions are not valid!");
 				}
 				repaint();
 			}
@@ -477,9 +484,14 @@ public class LaserPanel extends JPanel implements MouseListener,
 			@Override
 			public void onClick(Point point)
 			{
-				selectedObject = new Mirror(800, 400, 0);
-				isHeldNew = true;
+				selectedObject = new Mirror((int) point.getX(), (int) point.getY(), 0);
+				currentLevel.addPlaceable(selectedObject);
 				isHeld = true;
+
+				// Update objects used label
+				currentLevel.updatePlacementValid();
+				currentMoves.setText("" + currentLevel.getObjectsUsed());
+				
 				repaint();
 			}
 
@@ -578,6 +590,13 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// Start main menu
 		currentMenu = mainMenu;
 	}
+	
+	public void showMessageBox(String text)
+	{
+		messageText = text;
+		messageShowing = true;
+		repaint();
+	}
 
 	/**
 	 * Draws the game with the given graphics context
@@ -639,24 +658,56 @@ public class LaserPanel extends JPanel implements MouseListener,
 
 		// Draw the menu if one is loaded
 		currentMenu.draw(g);
+		
+		// Draw the message box on top if showing
+		if (messageShowing)
+		{
+			g.setFont(new Font("Consolas", 0, 30));
+			
+			// Calculate message box size and position based on the font
+			int x = WIDTH / 2 - g.getFontMetrics().stringWidth(messageText) / 2 - 10;
+			int y = HEIGHT / 2 - g.getFontMetrics().getHeight() / 2 - 10;
+			int w = g.getFontMetrics().stringWidth(messageText) + 20;
+			int h = g.getFontMetrics().getHeight() + 20;
+			
+			// Draw outline of box
+			g.setColor(MESSAGE_BOX_OUTLINE);
+			g.fillRect(x - 10, y - 10, w + 20, h + 20);
+			
+			// Draw inside of box
+			g.setColor(MESSAGE_BOX_COLOUR);
+			g.fillRect(x, y, w, h);
+			
+			// Draw text
+			g.setColor(Color.WHITE);
+			g.drawString(messageText, x + 10, y + g.getFontMetrics().getHeight() + 5);
+		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0)
 	{
-		// Pass the click to the current menu
-		currentMenu.click(arg0.getPoint());
-
-		// Select a mirror if the player is in game
-		if (inGame && arg0.getX() < 32 * 24 && !currentLevel.isSimulating())
+		// Clicking dismisses message boxes
+		if (messageShowing)
 		{
-			selectedObject = currentLevel.getClicked(arg0.getPoint());
-			if (selectedObject != null)
+			messageShowing = false;
+		}
+		else
+		{
+			// Pass the click to the current menu
+			currentMenu.click(arg0.getPoint());
+	
+			// Select a mirror if the player is in game
+			if (inGame && arg0.getX() < 32 * 24 && !currentLevel.isSimulating())
 			{
-				isHeld = true;
-				isHeldNew = false;
+				selectedObject = currentLevel.getClicked(arg0.getPoint());
+				if (selectedObject != null)
+				{
+					isHeld = true;
+				}
 			}
 		}
+		repaint();
 	}
 
 	@Override
@@ -666,6 +717,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		if (inGame && selectedObject != null && isHeld)
 		{
 			selectedObject.moveTo(arg0.getX(), arg0.getY());
+			currentLevel.updatePlacementValid();
 		}
 		
 		// Scrolling on the level select screen
@@ -694,15 +746,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		{
 			if (isHeld)
 			{
-				if (arg0.getX() < 32 * 24)
-				{
-					if (isHeldNew)
-					{
-						// Place a new item
-						currentLevel.addPlaceable(selectedObject);
-					}
-				}
-				else
+				if (arg0.getX() > 32 * 24)
 				{
 					// Remove this item
 					currentLevel.removePlaceable(selectedObject);
@@ -710,7 +754,6 @@ public class LaserPanel extends JPanel implements MouseListener,
 				}
 			}
 
-			isHeldNew = false;
 			isHeld = false;
 			
 			// Update placement validity and objects used label
@@ -723,40 +766,120 @@ public class LaserPanel extends JPanel implements MouseListener,
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{
-		if (inGame && !currentLevel.isSimulating())
+		// Keys dismiss message boxes
+		if (messageShowing)
 		{
-			// Rotate the current mirror
-			int amountToRotate = 5;
-			
-			// If control is pressed, use fine rotation
-			if ((arg0.getModifiers() & KeyEvent.CTRL_MASK) != 0)
-			{
-				amountToRotate = 1;
-			}
-			
-			// Rotate the proper direction
-			if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
-			{
-				if (selectedObject != null)
-				{
-					selectedObject.rotate(-amountToRotate);
-				}
-			}
-			else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT)
-			{
-				if (selectedObject != null)
-				{
-					selectedObject.rotate(amountToRotate);
-				}
-			}
-			currentLevel.updatePlacementValid();
+			messageShowing = false;
 		}
-		
-		// Removes the current mirror
-		if (arg0.getKeyCode() == KeyEvent.VK_DELETE)
+		else
 		{
-			currentLevel.removePlaceable(selectedObject);
-			selectedObject = null;
+			if (inGame)
+			{
+				// Space bar can start and stop the simulation
+				if (arg0.getKeyCode() == KeyEvent.VK_SPACE)
+				{
+					if (currentLevel.isSimulating())
+					{
+						// Stop simulation
+						currentLevel.stopLaser();
+						currentMenu = inGameMenu;
+						repaint();
+					}
+					else
+					{
+						// Try to start simulation
+						if (currentLevel.allPlacementsValid())
+						{
+							boolean completed = currentLevel.runLaser();
+							currentMenu = inGameRunningMenu;
+							repaint();
+							if (completed)
+							{
+								if (currentLevel.getObjectsUsed() <= currentLevel.getOptimal())
+								{
+									showMessageBox("You beat the level with the target number of objects!");
+								}
+								else
+								{
+									showMessageBox("You beat the level!");
+								}
+							}
+						}
+						else
+						{
+							showMessageBox("Some object positions are not valid!");
+						}
+						repaint();
+					}
+				}
+			}
+			if (inGame && !currentLevel.isSimulating())
+			{
+				// If the player is holding shift, do movement rather than rotation
+				if ((arg0.getModifiers() & KeyEvent.SHIFT_MASK) != 0)
+				{
+					int pixelsToMove = 5;
+					
+					// If control is pressed, use fine rotation
+					if ((arg0.getModifiers() & KeyEvent.CTRL_MASK) != 0)
+					{
+						pixelsToMove = 1;
+					}
+					
+					// Move the object in the correct direction
+					if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
+					{
+						selectedObject.moveRelative(-pixelsToMove, 0);
+					}
+					else if (arg0.getKeyCode() == KeyEvent.VK_UP)
+					{
+						selectedObject.moveRelative(0, -pixelsToMove);
+					}
+					else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT)
+					{
+						selectedObject.moveRelative(pixelsToMove, 0);
+					}
+					else if (arg0.getKeyCode() == KeyEvent.VK_DOWN)
+					{
+						selectedObject.moveRelative(0, pixelsToMove);
+					}
+				}
+				// Otherwise rotate the mirror
+				else
+				{
+					int amountToRotate = 5;
+					
+					// If control is pressed, use fine rotation
+					if ((arg0.getModifiers() & KeyEvent.CTRL_MASK) != 0)
+					{
+						amountToRotate = 1;
+					}
+					
+					// Rotate the proper direction
+					if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
+					{
+						if (selectedObject != null)
+						{
+							selectedObject.rotate(-amountToRotate);
+						}
+					}
+					else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT)
+					{
+						if (selectedObject != null)
+						{
+							selectedObject.rotate(amountToRotate);
+						}
+					}
+				}
+				currentLevel.updatePlacementValid();
+			}
+			
+			// Removes the current mirror
+			if (arg0.getKeyCode() == KeyEvent.VK_DELETE)
+			{
+				currentLevel.removePlaceable(selectedObject);
+				selectedObject = null;
+			}
 		}
 
 		repaint();

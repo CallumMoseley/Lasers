@@ -106,10 +106,23 @@ public class Mirror extends Collidable implements Placeable
 	@Override
 	public void drawAngle(Graphics g)
 	{
-		// Find the middle of this mirror, and draw the angle there
-		int stringWidth = g.getFontMetrics().stringWidth("" + angle);
-		g.setColor(Color.WHITE);
 		g.setFont(new Font("Consolas", 0, 15));
+		
+		int stringWidth = g.getFontMetrics().stringWidth("" + angle);
+		int stringHeight = g.getFontMetrics().getHeight();
+		
+		// Calculate box for background
+		int x = getX() - stringWidth / 2 - 5;
+		int y = getY() - (LENGTH / 2) - stringHeight - 10;
+		int w = stringWidth + 10;
+		int h = stringHeight + 10;
+		
+		// Draw Background
+		g.setColor(new Color(0, 0, 0, 90));
+		g.fillRect(x, y, w, h);
+		
+		// Draw angle text
+		g.setColor(Color.WHITE);
 		g.drawString("" + angle, getX() - stringWidth / 2, getY()
 				- (LENGTH / 2 + 10));
 	}
@@ -119,7 +132,13 @@ public class Mirror extends Collidable implements Placeable
 	{
 		angle += degrees;
 		normal = new Vector2D(angle).getNormalized();
-		angle = (angle + 360) % 360;
+		angle = (angle + 180) % 180;
+	}
+	
+	@Override
+	public void moveRelative(int x, int y)
+	{
+		moveTo(getX() + x, getY() + y);
 	}
 
 	@Override

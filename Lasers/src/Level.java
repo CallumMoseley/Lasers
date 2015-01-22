@@ -5,6 +5,8 @@
  * @version January 2015
  */
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -394,6 +396,14 @@ public class Level
 		{
 			sources.get(source).draw(g);
 		}
+		
+		// Draw title
+		g.setFont(new Font("Consolas", 0, 25));
+		g.setColor(new Color(0, 0, 0, 90));
+		g.fillRect(0, 0, g.getFontMetrics().stringWidth(name) + 20, g.getFontMetrics().getHeight() + 15);
+		
+		g.setColor(Color.WHITE);
+		g.drawString(name, 10, g.getFontMetrics().getHeight());
 	}
 
 	/**

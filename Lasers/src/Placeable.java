@@ -11,6 +11,13 @@ public interface Placeable
 	public void moveTo(int x, int y);
 
 	/**
+	 * Moves this object to the given position relative to the current position
+	 * @param x the relative x coordinate
+	 * @param y the relative y coordinate
+	 */
+	public void moveRelative(int x, int y);
+
+	/**
 	 * Rotates this object the given number of degrees. Positive numbers are
 	 * clockwise, negative numbers are counter-clockwise
 	 * @param degrees the number of degrees to rotate this
