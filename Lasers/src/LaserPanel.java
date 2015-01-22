@@ -425,7 +425,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 					repaint();
 					if (completed)
 					{
-						if (currentLevel.getObjectsUsed() <= currentLevel.getOptimal())
+						if (currentLevel.getObjectsUsed() <= currentLevel
+								.getOptimal())
 						{
 							showMessageBox("You beat the level with the target number of objects!");
 						}
@@ -484,14 +485,15 @@ public class LaserPanel extends JPanel implements MouseListener,
 			@Override
 			public void onClick(Point point)
 			{
-				selectedObject = new Mirror((int) point.getX(), (int) point.getY(), 0);
+				selectedObject = new Mirror((int) point.getX(), (int) point
+						.getY(), 0);
 				currentLevel.addPlaceable(selectedObject);
 				isHeld = true;
 
 				// Update objects used label
 				currentLevel.updatePlacementValid();
 				currentMoves.setText("" + currentLevel.getObjectsUsed());
-				
+
 				repaint();
 			}
 
@@ -590,7 +592,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		// Start main menu
 		currentMenu = mainMenu;
 	}
-	
+
 	public void showMessageBox(String text)
 	{
 		messageText = text;
@@ -658,29 +660,31 @@ public class LaserPanel extends JPanel implements MouseListener,
 
 		// Draw the menu if one is loaded
 		currentMenu.draw(g);
-		
+
 		// Draw the message box on top if showing
 		if (messageShowing)
 		{
 			g.setFont(new Font("Consolas", 0, 30));
-			
+
 			// Calculate message box size and position based on the font
-			int x = WIDTH / 2 - g.getFontMetrics().stringWidth(messageText) / 2 - 10;
+			int x = WIDTH / 2 - g.getFontMetrics().stringWidth(messageText) / 2
+					- 10;
 			int y = HEIGHT / 2 - g.getFontMetrics().getHeight() / 2 - 10;
 			int w = g.getFontMetrics().stringWidth(messageText) + 20;
 			int h = g.getFontMetrics().getHeight() + 20;
-			
+
 			// Draw outline of box
 			g.setColor(MESSAGE_BOX_OUTLINE);
 			g.fillRect(x - 10, y - 10, w + 20, h + 20);
-			
+
 			// Draw inside of box
 			g.setColor(MESSAGE_BOX_COLOUR);
 			g.fillRect(x, y, w, h);
-			
+
 			// Draw text
 			g.setColor(Color.WHITE);
-			g.drawString(messageText, x + 10, y + g.getFontMetrics().getHeight() + 5);
+			g.drawString(messageText, x + 10, y
+					+ g.getFontMetrics().getHeight() + 5);
 		}
 	}
 
@@ -696,7 +700,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 		{
 			// Pass the click to the current menu
 			currentMenu.click(arg0.getPoint());
-	
+
 			// Select a mirror if the player is in game
 			if (inGame && arg0.getX() < 32 * 24 && !currentLevel.isSimulating())
 			{
@@ -719,13 +723,13 @@ public class LaserPanel extends JPanel implements MouseListener,
 			selectedObject.moveTo(arg0.getX(), arg0.getY());
 			currentLevel.updatePlacementValid();
 		}
-		
+
 		// Scrolling on the level select screen
 		if (currentMenu == levelSelect)
 		{
 			levelScroll.scrollTo(arg0.getY());
 		}
-		
+
 		// Using the slider on the options menu
 		if (currentMenu == optionsMenu)
 		{
@@ -740,7 +744,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 	{
 		// Pass this event to the current menu;
 		currentMenu.release();
-		
+
 		// Drop the currently held mirror
 		if (selectedObject != null)
 		{
@@ -755,7 +759,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 
 			isHeld = false;
-			
+
 			// Update placement validity and objects used label
 			currentLevel.updatePlacementValid();
 			currentMoves.setText("" + currentLevel.getObjectsUsed());
@@ -795,7 +799,8 @@ public class LaserPanel extends JPanel implements MouseListener,
 							repaint();
 							if (completed)
 							{
-								if (currentLevel.getObjectsUsed() <= currentLevel.getOptimal())
+								if (currentLevel.getObjectsUsed() <= currentLevel
+										.getOptimal())
 								{
 									showMessageBox("You beat the level with the target number of objects!");
 								}
@@ -815,46 +820,51 @@ public class LaserPanel extends JPanel implements MouseListener,
 			}
 			if (inGame && !currentLevel.isSimulating())
 			{
-				// If the player is holding shift, do movement rather than rotation
+				// If the player is holding shift, do movement rather than
+				// rotation
 				if ((arg0.getModifiers() & KeyEvent.SHIFT_MASK) != 0)
 				{
 					int pixelsToMove = 5;
-					
+
 					// If control is pressed, use fine rotation
 					if ((arg0.getModifiers() & KeyEvent.CTRL_MASK) != 0)
 					{
 						pixelsToMove = 1;
 					}
-					
+
 					// Move the object in the correct direction
+					int newX = selectedObject.getX();
+					int newY = selectedObject.getY();
 					if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
 					{
-						selectedObject.moveRelative(-pixelsToMove, 0);
+						newX = Math.max(0, newX - pixelsToMove);
 					}
 					else if (arg0.getKeyCode() == KeyEvent.VK_UP)
 					{
-						selectedObject.moveRelative(0, -pixelsToMove);
+						newY = Math.max(0, newY - pixelsToMove);
 					}
 					else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT)
 					{
-						selectedObject.moveRelative(pixelsToMove, 0);
+						newX = Math.min(768, newX + pixelsToMove);
 					}
 					else if (arg0.getKeyCode() == KeyEvent.VK_DOWN)
 					{
-						selectedObject.moveRelative(0, pixelsToMove);
+						newY = Math.min(768, newY + pixelsToMove);
 					}
+					
+					selectedObject.moveTo(newX, newY);
 				}
 				// Otherwise rotate the mirror
 				else
 				{
 					int amountToRotate = 5;
-					
+
 					// If control is pressed, use fine rotation
 					if ((arg0.getModifiers() & KeyEvent.CTRL_MASK) != 0)
 					{
 						amountToRotate = 1;
 					}
-					
+
 					// Rotate the proper direction
 					if (arg0.getKeyCode() == KeyEvent.VK_LEFT)
 					{
@@ -873,7 +883,7 @@ public class LaserPanel extends JPanel implements MouseListener,
 				}
 				currentLevel.updatePlacementValid();
 			}
-			
+
 			// Removes the current mirror
 			if (arg0.getKeyCode() == KeyEvent.VK_DELETE)
 			{

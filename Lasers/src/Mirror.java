@@ -134,12 +134,6 @@ public class Mirror extends Collidable implements Placeable
 		normal = new Vector2D(angle).getNormalized();
 		angle = (angle + 180) % 180;
 	}
-	
-	@Override
-	public void moveRelative(int x, int y)
-	{
-		moveTo(getX() + x, getY() + y);
-	}
 
 	@Override
 	public boolean intersects(Point click)
