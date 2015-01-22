@@ -1,4 +1,5 @@
 /**
+ * Main class and frame for the level editor
  * @author Callum Moseley
  * @version January 2015
  */

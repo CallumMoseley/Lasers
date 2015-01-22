@@ -1,3 +1,9 @@
+/**
+ * A button to be placed on a menu, but with an image rather than text
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;

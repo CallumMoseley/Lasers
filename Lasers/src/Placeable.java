@@ -1,3 +1,9 @@
+/**
+ * An object which the player can place into a level, and manipulate
+ * @author Callum Moseley
+ * @version January 2015
+ */
+
 import java.awt.Graphics;
 import java.awt.Point;
 

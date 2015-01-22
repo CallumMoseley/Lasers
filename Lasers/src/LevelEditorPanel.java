@@ -154,6 +154,10 @@ public class LevelEditorPanel extends JPanel implements MouseListener,
 		repaint();
 	}
 
+	/**
+	 * Loads a level from the given file
+	 * @param file the file to load from
+	 */
 	public void loadLevel(File file)
 	{
 		try
